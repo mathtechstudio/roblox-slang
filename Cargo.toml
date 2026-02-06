@@ -1,0 +1,13 @@
+[package]
+name = "roblox-slang"
+version = "0.1.0"
+rust-version = "1.88"
+authors = [
+    "Iqbal Fauzi <iqbalfauzien@proton.me>"
+]
+license = "MIT"
+readme = "README.md"
+edition = "2024"
+build = "build.rs"
+
+[dependencies]
