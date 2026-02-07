@@ -1,0 +1,34 @@
+# CODEOWNERS
+# This file defines code ownership for automatic review requests.
+# More specific patterns override general patterns.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @protheeuz
+
+# Require reviews from the release approvers for critical files.
+# These patterns override the rule above.
+/Cargo.toml @protheeuz
+/Cargo.lock @protheeuz
+/.github/ @protheeuz
+/.gitignore @protheeuz
+
+# Core source code
+/src/ @protheeuz
+
+# Code generation (critical for output correctness)
+/src/generator/ @protheeuz
+
+# Parser logic (critical for input handling)
+/src/parser/ @protheeuz
+
+# Configuration schema (breaking changes affect users)
+/src/config/ @protheeuz
+
+# Documentation
+/docs/ @protheeuz
+/README.md @protheeuz
+/CHANGELOG.md @protheeuz
+/CONTRIBUTING.md @protheeuz
+
+# Tests
+/tests/ @protheeuz
