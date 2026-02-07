@@ -1,10 +1,11 @@
 # Roblox Slang
 
+[![GitHub Release](https://img.shields.io/github/v/release/protheeuz/roblox-slang?style=for-the-badge&logo=github)](https://github.com/protheeuz/roblox-slang/releases)
 [![Roblox](https://img.shields.io/badge/Platform-Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com)
 [![Rust](https://img.shields.io/badge/Built_with-Rust-orange?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org)
 [![Generates](https://img.shields.io/badge/Generates-Luau-00A2FF?style=for-the-badge&logo=lua&logoColor=white)](https://luau-lang.org)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-In_Development-yellow?style=for-the-badge)](CHANGELOG.md)
+[![Tests](https://img.shields.io/badge/Tests-103_passing-success?style=for-the-badge)](tests/)
 
 Type-safe internationalization (i18n) code generator for Roblox games. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
 
