@@ -1,0 +1,262 @@
+# Getting Started
+
+Complete guide to get started with Roblox Slang in your project.
+
+## Prerequisites
+
+- Roblox Studio installed
+- Basic knowledge of Luau scripting
+- A Roblox game project (or create a new one)
+
+## Installation
+
+### Step 1: Install the CLI Tool
+
+Choose your preferred toolchain manager:
+
+#### Option A: Rokit (Recommended)
+
+```bash
+rokit add protheeuz/roblox-slang
+rokit install
+```
+
+#### Option B: Aftman
+
+```bash
+aftman add protheeuz/roblox-slang
+aftman install
+```
+
+#### Option C: Foreman
+
+Add to `foreman.toml`:
+
+```toml
+[tools]
+roblox-slang = { github = "protheeuz/roblox-slang" }
+```
+
+Then install:
+
+```bash
+foreman install
+```
+
+#### Option D: From Source
+
+```bash
+git clone https://github.com/protheeuz/roblox-slang.git
+cd roblox-slang
+cargo install --locked --path .
+```
+
+### Step 2: Verify Installation
+
+```bash
+roblox-slang --version
+```
+
+You should see: `roblox-slang 0.1.0`
+
+## Creating Your First Translation Project
+
+### 1. Initialize Project
+
+Navigate to your Roblox project directory and run:
+
+```bash
+roblox-slang init
+```
+
+This creates:
+
+- `slang-roblox.yaml` - Configuration file
+- `translations/` - Directory for translation files
+
+### 2. Configure Your Project
+
+Edit `slang-roblox.yaml`:
+
+```yaml
+# Base locale (fallback when translation missing)
+base_locale: en
+
+# List of supported locales
+supported_locales:
+  - en
+  - es
+  - id
+
+# Where to find translation files
+input_directory: translations
+
+# Where to generate Luau code
+output_directory: src/shared/Translations
+```
+
+### 3. Create Translation Files
+
+Create `translations/en.json`:
+
+```json
+{
+  "welcome": "Welcome to my game!",
+  "ui": {
+    "buttons": {
+      "play": "Play",
+      "settings": "Settings",
+      "quit": "Quit"
+    },
+    "messages": {
+      "loading": "Loading...",
+      "playerJoined": "{name} joined the game"
+    }
+  }
+}
+```
+
+Create `translations/es.json`:
+
+```json
+{
+  "welcome": "¡Bienvenido a mi juego!",
+  "ui": {
+    "buttons": {
+      "play": "Jugar",
+      "settings": "Configuración",
+      "quit": "Salir"
+    },
+    "messages": {
+      "loading": "Cargando...",
+      "playerJoined": "{name} se unió al juego"
+    }
+  }
+}
+```
+
+### 4. Build Translations
+
+```bash
+roblox-slang build
+```
+
+This generates:
+
+- `src/shared/Translations/Translations.lua` - Main module
+- `src/shared/Translations/types/Translations.d.luau` - Type definitions
+- `src/shared/Translations/roblox_upload.csv` - CSV for Roblox Cloud
+
+### 5. Use in Your Game
+
+In a LocalScript or Script:
+
+```lua
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Translations = require(ReplicatedStorage.Translations)
+
+-- Create translation instance
+local t = Translations.new("en")
+
+-- Use translations
+print(t.welcome())  -- "Welcome to my game!"
+print(t.ui.buttons.play())  -- "Play"
+
+-- With parameters
+print(t.ui.messages.playerJoined({ name = "Player1" }))
+-- Output: "Player1 joined the game"
+
+-- Switch locale at runtime
+t:setLocale("es")
+print(t.welcome())  -- "¡Bienvenido a mi juego!"
+```
+
+### 6. Auto-Detect Player Locale
+
+For multiplayer games, automatically use player's locale:
+
+```lua
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Translations = require(ReplicatedStorage.Translations)
+
+Players.PlayerAdded:Connect(function(player)
+    -- Automatically detects player's country/locale
+    local t = Translations.newForPlayer(player)
+    
+    -- Send localized welcome message
+    local welcomeMsg = t.welcome()
+    -- Send to player...
+end)
+```
+
+## Development Workflow
+
+### Watch Mode
+
+For faster development, use watch mode to auto-rebuild on file changes:
+
+```bash
+roblox-slang build --watch
+```
+
+Now when you edit translation files, the Luau code is automatically regenerated.
+
+### Validation
+
+Check for missing translations or unused keys:
+
+```bash
+roblox-slang validate
+```
+
+This will report:
+
+- Missing translations (keys in base locale but not in others)
+- Unused keys (keys defined but never used in code)
+- Conflicts (duplicate keys)
+
+## Next Steps
+
+- [Configuration Guide](guides/configuration.md) - Learn all configuration options
+- [Pluralization](guides/pluralization.md) - Handle plural forms correctly
+- [String Interpolation](guides/string-interpolation.md) - Advanced parameter usage
+- [Roblox Cloud Integration](guides/roblox-cloud.md) - Upload to Roblox Cloud for access to Roblox features
+- [Rojo Integration](integration/rojo.md) - Use with Rojo for automatic file syncing
+
+## Common Issues
+
+### Issue: "Command not found: roblox-slang"
+
+**Solution:** Make sure the toolchain manager added the binary to your PATH. Try:
+
+```bash
+# For Rokit
+rokit list
+
+# For Aftman
+aftman list
+
+# For Foreman
+foreman list
+```
+
+### Issue: "Failed to read config file"
+
+**Solution:** Make sure you're in the project directory with `slang-roblox.yaml`. Run:
+
+```bash
+ls -la slang-roblox.yaml
+```
+
+### Issue: "Translation file not found"
+
+**Solution:** Check that translation files exist in the `input_directory` specified in config:
+
+```bash
+ls -la translations/
+```
+
+## Getting Help
+
+- [GitHub Issues](https://github.com/protheeuz/roblox-slang/issues) - Report bugs or request features

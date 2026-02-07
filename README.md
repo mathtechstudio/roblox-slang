@@ -1,1 +1,419 @@
-# roblox-slang
+# Roblox Slang
+
+[![Roblox](https://img.shields.io/badge/Platform-Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com)
+[![Rust](https://img.shields.io/badge/Built_with-Rust-orange?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org)
+[![Generates](https://img.shields.io/badge/Generates-Luau-00A2FF?style=for-the-badge&logo=lua&logoColor=white)](https://luau-lang.org)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-In_Development-yellow?style=for-the-badge)](CHANGELOG.md)
+
+Type-safe internationalization (i18n) code generator for Roblox games. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
+
+## Why Roblox Slang?
+
+Roblox's native localization system uses string literals for translation keys, leading to runtime errors from typos and no IDE support. Roblox Slang solves this by generating type-safe Luau code at build time.
+
+**Before (Roblox native):**
+
+```lua
+local translator = LocalizationService:GetTranslatorForPlayerAsync(player)
+local text = translator:FormatByKey("UI_Buttons_Confirm") -- Typo-prone, no autocomplete
+
+-- Typo = runtime error
+local text = translator:FormatByKey("UI_Buttns_Confirm") -- ERROR at runtime!
+```
+
+**After (Roblox Slang):**
+
+```lua
+local t = Translations.new("en")
+local text = t.ui.buttons.confirm() -- Autocomplete works, type-safe
+
+-- Typo = build-time error
+local text = t.ui.buttns.confirm() -- ERROR: Property doesn't exist (caught at build time)
+```
+
+## Features
+
+- **Type-safe translation access** - Autocomplete and type checking in your IDE
+- **String interpolation** - `{name}`, `{count:int}` with parameter validation
+- **Pluralization** - CLDR rules (zero/one/two/few/many/other)
+- **Nested namespaces** - Clean syntax: `t.ui.buttons.buy()`
+- **Watch mode** - Auto-rebuild on file changes
+- **CSV generation** - Export to Roblox Cloud Localization format
+- **Zero runtime dependencies** - Generated code is pure Luau
+- **Multiple input formats** - JSON, YAML, or CSV
+- **Translation overrides** - A/B testing and seasonal events support
+
+## Installation
+
+Roblox Slang is a CLI tool that generates code. Choose your preferred installation method:
+
+### Via Rokit (Recommended)
+
+```bash
+rokit add protheeuz/roblox-slang
+rokit install
+```
+
+### Via Aftman
+
+```bash
+aftman add protheeuz/roblox-slang
+aftman install
+```
+
+### Via Foreman
+
+```toml
+# foreman.toml
+[tools]
+roblox-slang = { github = "protheeuz/roblox-slang" }
+```
+
+```bash
+foreman install
+```
+
+### From GitHub Releases
+
+Download pre-built binaries from [Releases](https://github.com/protheeuz/roblox-slang/releases).
+
+### From Source
+
+```bash
+cargo install --locked --path .
+```
+
+## Quick Start
+
+### 1. Initialize Project
+
+```bash
+roblox-slang init
+```
+
+Creates:
+
+- `slang-roblox.yaml` - Configuration file
+- `translations/` - Translation files directory
+
+### 2. Create Translations
+
+`translations/en.json`:
+
+```json
+{
+  "ui": {
+    "buttons": {
+      "buy": "Buy",
+      "sell": "Sell"
+    },
+    "messages": {
+      "greeting": "Hello, {name}!",
+      "items": {
+        "zero": "No items",
+        "one": "1 item",
+        "other": "{count} items"
+      }
+    }
+  }
+}
+```
+
+`translations/es.json`:
+
+```json
+{
+  "ui": {
+    "buttons": {
+      "buy": "Comprar",
+      "sell": "Vender"
+    },
+    "messages": {
+      "greeting": "¡Hola, {name}!",
+      "items": {
+        "zero": "Sin artículos",
+        "one": "1 artículo",
+        "other": "{count} artículos"
+      }
+    }
+  }
+}
+```
+
+### 3. Build
+
+```bash
+# One-time build
+roblox-slang build
+
+# Watch mode (auto-rebuild on changes)
+roblox-slang build --watch
+```
+
+Generates:
+
+- `output/Translations.lua` - Main module
+- `output/types/Translations.d.luau` - Type definitions for LSP
+- `output/roblox_upload.csv` - Roblox Cloud format
+
+### 4. Add to Your Game
+
+#### Option A: Manual (Roblox Studio)
+
+1. Copy `output/Translations.lua` to `ReplicatedStorage` in Roblox Studio
+2. Rename to `Translations` (ModuleScript)
+3. Optionally copy `output/types/Translations.d.luau` for LSP autocomplete
+
+#### Option B: Rojo (Automatic Sync)
+
+Set output directory to match your Rojo project structure:
+
+**slang-roblox.yaml:**
+
+```yaml
+output_directory: src/ReplicatedStorage/Translations
+```
+
+**default.project.json:**
+
+```json
+{
+  "name": "MyGame",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$path": "src/ReplicatedStorage"
+    }
+  }
+}
+```
+
+Run `roblox-slang build` and Rojo will automatically sync to Studio!
+
+### 5. Use in Game
+
+```lua
+local Translations = require(ReplicatedStorage.Translations)
+
+-- Create instance for locale
+local t = Translations.new("en")
+
+-- Simple translations
+print(t.ui.buttons.buy())  -- "Buy"
+
+-- With parameters
+print(t.ui.messages.greeting({ name = "Player123" }))  -- "Hello, Player123!"
+
+-- Pluralization
+print(t.ui.messages.items(0))  -- "No items"
+print(t.ui.messages.items(1))  -- "1 item"
+print(t.ui.messages.items(5))  -- "5 items"
+
+-- Switch locale at runtime
+t:setLocale("es")
+print(t.ui.buttons.buy())  -- "Comprar"
+
+-- Auto-detect player locale
+local function onPlayerAdded(player)
+    local t = Translations.newForPlayer(player)
+    print(t.ui.messages.greeting({ name = player.DisplayName }))
+end
+```
+
+## Configuration
+
+`slang-roblox.yaml`:
+
+```yaml
+# Base locale (fallback when translation missing)
+base_locale: en
+
+# Supported locales
+supported_locales:
+  - en
+  - es
+  - id
+
+# Input directory for translation files
+input_directory: translations
+
+# Output directory for generated code
+# For Rojo users: Set to your Rojo-tracked folder (e.g., src/ReplicatedStorage/Translations)
+# For manual users: Keep as "output" and copy to Studio manually
+output_directory: output
+
+# Optional: Translation overrides (for A/B testing, seasonal events)
+overrides:
+  enabled: true
+  file: overrides.yaml
+
+# Optional: Analytics tracking
+analytics:
+  enabled: true
+  track_missing: true
+  track_usage: true
+```
+
+## Main Features
+
+### String Interpolation
+
+```json
+{
+  "welcome": "Welcome, {name}!",
+  "score": "Score: {points:int}",
+  "price": "Price: ${amount:fixed}"
+}
+```
+
+```lua
+print(t.welcome({ name = "Player" }))  -- "Welcome, Player!"
+print(t.score({ points = 1234 }))      -- "Score: 1234"
+print(t.price({ amount = 99.99 }))     -- "Price: $99.99"
+```
+
+### Pluralization (CLDR Rules)
+
+```json
+{
+  "items": {
+    "zero": "No items",
+    "one": "1 item",
+    "other": "{count} items"
+  }
+}
+```
+
+```lua
+print(t.items(0))  -- "No items"
+print(t.items(1))  -- "1 item"
+print(t.items(5))  -- "5 items"
+```
+
+### Locale Switching
+
+```lua
+local t = Translations.new("en")
+print(t.ui.buttons.buy())  -- "Buy"
+
+t:setLocale("es")
+print(t.ui.buttons.buy())  -- "Comprar"
+```
+
+### Auto-Detect Player Locale
+
+```lua
+-- Automatically uses player's country/locale
+local t = Translations.newForPlayer(player)
+```
+
+### Translation Overrides
+
+For A/B testing or seasonal events:
+
+`overrides.yaml`:
+
+```yaml
+en:
+  ui.buttons.buy: "Purchase Now!"  # Override for A/B test
+  
+es:
+  ui.buttons.buy: "¡Comprar Ahora!"
+```
+
+Priority: `overrides.yaml` > `translations/*.json`
+
+## Documentation
+
+📚 **[Complete Documentation](docs/index.md)**
+
+Quick links:
+
+- **[Getting Started](docs/getting-started.md)** - Installation and first project
+- **[Configuration](docs/guides/configuration.md)** - Config file reference
+- **[String Interpolation](docs/guides/string-interpolation.md)** - Parameter usage
+- **[Pluralization](docs/guides/pluralization.md)** - CLDR plural rules
+- **[Roblox Cloud Integration](docs/guides/roblox-cloud.md)** - Upload to Roblox Cloud
+- **[Rojo Integration](docs/integration/rojo.md)** - Use with Rojo for automatic syncing
+- **[CLI Reference](docs/reference/cli-reference.md)** - Complete command reference
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `roblox-slang init` | Initialize new project |
+| `roblox-slang init --with-overrides` | Initialize with overrides template |
+| `roblox-slang build` | Build translations once |
+| `roblox-slang build --watch` | Watch mode (auto-rebuild) |
+| `roblox-slang validate` | Check for missing/unused keys |
+| `roblox-slang migrate <format>` | Import from other formats |
+
+See [CLI Reference](docs/reference/cli-reference.md) for complete command documentation.
+
+## Roblox Cloud Integration
+
+Export to Roblox Cloud Localization format:
+
+```bash
+roblox-slang build
+# Generates: output/roblox_upload.csv
+```
+
+Upload `roblox_upload.csv` to your game's Localization Table via:
+
+- [Roblox Creator Dashboard](https://create.roblox.com/)
+- [Open Cloud API](https://create.roblox.com/docs/cloud/open-cloud/localization-api)
+
+Benefits of uploading to Roblox Cloud:
+
+- Automatic Text Capture (ATC) - Roblox captures UI strings automatically
+- Automatic translation - Roblox AI translates to supported languages
+- Translator Portal - Collaborate with translators via Roblox
+- Analytics - Track translation coverage via Roblox Dashboard
+- Multi-game synchronization
+
+## Examples
+
+See [`tests/basic/`](tests/basic/) for a complete example with 173 translation keys across 3 locales.
+
+## Development
+
+For contributors:
+
+```bash
+# Clone repository
+git clone https://github.com/protheeuz/roblox-slang.git
+cd roblox-slang
+
+# Install Rust (1.88+)
+rustup override set 1.88.0
+
+# Build
+cargo build
+
+# Run tests (103 tests)
+cargo test
+
+# Run CLI
+cargo run -- --help
+```
+
+## Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+MIT License - see [LICENSE](LICENSE)
+
+## Maintainer
+
+Iqbal Fauzi ([@protheeuz](https://github.com/protheeuz))
+
+## References
+
+- [Roblox Localization Documentation](https://create.roblox.com/docs/production/localization)
+- [Unicode CLDR Plural Rules](https://cldr.unicode.org/)
+- [Luau Language Reference](https://luau-lang.org/)

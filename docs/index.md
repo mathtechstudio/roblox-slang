@@ -1,0 +1,128 @@
+# Roblox Slang Documentation
+
+Complete documentation for Roblox Slang - type-safe internationalization for Roblox games.
+
+## Getting Started
+
+New to Roblox Slang? Start here:
+
+- **[Getting Started](getting-started.md)** - Installation and first project setup
+
+## Guides
+
+Learn about the main features:
+
+- **[Configuration](guides/configuration.md)** - Complete configuration reference
+- **[String Interpolation](guides/string-interpolation.md)** - Use parameters in translations
+- **[Pluralization](guides/pluralization.md)** - Handle plural forms with CLDR rules
+- **[Roblox Cloud Integration](guides/roblox-cloud.md)** - Upload to Roblox Cloud for access to Roblox features
+
+## Integration
+
+- **[Rojo Integration](integration/rojo.md)** - Use with Rojo for automatic file syncing
+
+## Reference
+
+Detailed reference documentation:
+
+- **[CLI Reference](reference/cli-reference.md)** - Complete command-line interface guide
+
+## Quick Links
+
+### Installation
+
+```bash
+# Via Rokit (recommended)
+rokit add protheeuz/roblox-slang
+rokit install
+
+# Via Aftman
+aftman add protheeuz/roblox-slang
+aftman install
+```
+
+### Quick Start
+
+```bash
+# Initialize project
+roblox-slang init
+
+# Create translations (edit translations/en.json)
+
+# Build
+roblox-slang build
+
+# Watch mode
+roblox-slang build --watch
+```
+
+### Basic Usage
+
+```lua
+local Translations = require(ReplicatedStorage.Translations)
+local t = Translations.new("en")
+
+-- Simple translation
+print(t.ui.buttons.buy())  -- "Buy"
+
+-- With parameters
+print(t.greeting({ name = "Player1" }))  -- "Hello, Player1!"
+
+-- Pluralization
+print(t.items(5))  -- "5 items"
+
+-- Switch locale
+t:setLocale("es")
+print(t.ui.buttons.buy())  -- "Comprar"
+```
+
+## Documentation Structure
+
+```yaml
+docs/
+├── README.md                    # This file
+├── getting-started.md           # Installation and setup
+├── configuration.md             # Config file reference
+├── string-interpolation.md      # Parameter usage
+├── pluralization.md             # Plural forms
+├── roblox-cloud.md             # Cloud integration
+└── cli-reference.md            # CLI commands
+```
+
+## External Resources
+
+### Official Documentation
+
+- [Roblox Localization Docs](https://create.roblox.com/docs/production/localization) - Official Roblox localization guide
+- [Roblox Language Codes](https://create.roblox.com/docs/production/localization/language-codes) - Supported locales
+- [Open Cloud API](https://create.roblox.com/docs/cloud/open-cloud/localization-api) - API reference
+
+### Standards
+
+- [Unicode CLDR](https://cldr.unicode.org/) - Common Locale Data Repository
+- [CLDR Plural Rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html) - Plural form rules
+- [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) - Message formatting
+
+### Inspiration
+
+- [Flutter Slang](https://pub.dev/packages/slang) - Primary inspiration for this project
+- [Luau Language](https://luau-lang.org/) - Roblox's scripting language
+
+## Contributing
+
+Want to contribute? See:
+
+- [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
+- [AGENTS.md](../AGENTS.md) - Developer guide
+- [GitHub Issues](https://github.com/protheeuz/roblox-slang/issues) - Report bugs or request features
+
+## Support
+
+Need help?
+
+- [GitHub Issues](https://github.com/protheeuz/roblox-slang/issues) - Report bugs
+- [Roblox DevForum](https://devforum.roblox.com/) - Community support
+
+## License
+
+Roblox Slang is licensed under the [MIT License](../LICENSE).
