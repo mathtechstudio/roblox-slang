@@ -66,7 +66,7 @@ Source,Context,Key,en,es,id
 
 ## Upload to Roblox Cloud
 
-### Method 1: Manual Upload (Recommended for First Time)
+### Manual Upload via Creator Dashboard
 
 1. Go to [Creator Dashboard](https://create.roblox.com/)
 2. Select your game
@@ -75,13 +75,6 @@ Source,Context,Key,en,es,id
 5. Select `output/roblox_upload.csv`
 6. Review changes
 7. Click **Upload**
-
-### Method 2: Open Cloud API (Coming Soon)
-
-```bash
-# Future feature
-roblox-slang upload --api-key YOUR_API_KEY
-```
 
 ## Roblox's Automatic Translation
 
@@ -151,47 +144,18 @@ Translators can:
 
 ### Download Updated Translations
 
-After translators make changes:
+After translators make changes in Roblox Cloud:
+
+1. Go to Creator Dashboard → **Localization** → **Localization Table**
+2. Click **Export** → **Download CSV**
+3. Save the CSV file
+4. Import back to Roblox Slang:
 
 ```bash
-# Future feature
-roblox-slang pull --strategy=merge
+roblox-slang import downloaded_translations.csv
 ```
 
-This downloads updated translations and merges with local files.
-
-## Bi-Directional Sync
-
-Keep local translations in sync with Roblox Cloud:
-
-### Upload Local Changes
-
-```bash
-roblox-slang build
-# Upload output/roblox_upload.csv manually
-```
-
-### Download Cloud Changes
-
-```bash
-# Future feature
-roblox-slang pull
-```
-
-### Merge Strategy
-
-Choose how to handle conflicts:
-
-```bash
-# Keep local changes
-roblox-slang pull --strategy=local
-
-# Keep cloud changes
-roblox-slang pull --strategy=cloud
-
-# Merge both (manual conflict resolution)
-roblox-slang pull --strategy=merge
-```
+This imports the updated translations into your local `translations/` directory.
 
 ## Best Practices
 
@@ -233,15 +197,24 @@ Prevent Roblox's automatic translation from overwriting manual translations:
 2. Click **Actions** → **Lock Translation**
 3. Locked rows won't be updated by automatic translation
 
-### 4. Regular Sync
+### 4. Regular Workflow
 
-Sync regularly to get translator updates:
+Recommended workflow for keeping translations in sync:
 
 ```bash
-# Weekly sync recommended
-roblox-slang pull --strategy=merge
+# 1. Build locally
 roblox-slang build
-# Upload to cloud
+
+# 2. Upload to Roblox Cloud (manual via Creator Dashboard)
+# - Go to Creator Dashboard
+# - Upload output/roblox_upload.csv
+
+# 3. After translators make changes in Cloud:
+# - Download CSV from Creator Dashboard
+# - Import back: roblox-slang import downloaded.csv
+
+# 4. Rebuild
+roblox-slang build
 ```
 
 ### 5. Test in Game
@@ -294,7 +267,7 @@ analytics:
 
 **Solution:**
 
-1. Validate CSV: `roblox-slang validate`
+1. Validate CSV: `roblox-slang validate --all`
 2. Check for:
    - Special characters (quotes, commas)
    - Missing columns
@@ -374,7 +347,7 @@ If you have existing manual localization:
 ### Step 2: Import to Roblox Slang
 
 ```bash
-roblox-slang migrate csv existing_translations.csv
+roblox-slang import existing_translations.csv
 ```
 
 This converts CSV to JSON format in `translations/` directory.
@@ -383,33 +356,7 @@ This converts CSV to JSON format in `translations/` directory.
 
 ```bash
 roblox-slang build
-# Upload output/roblox_upload.csv
-```
-
-## Advanced: Open Cloud API
-
-For automated workflows, use Open Cloud API (coming soon):
-
-### Setup API Key
-
-1. Go to [Creator Dashboard](https://create.roblox.com/)
-2. Navigate to **Open Cloud** → **API Keys**
-3. Create new API key with **Localization** permissions
-4. Save API key securely
-
-### Upload via API
-
-```bash
-# Future feature
-export ROBLOX_API_KEY="your_api_key"
-roblox-slang upload --auto-translate
-```
-
-### Download via API
-
-```bash
-# Future feature
-roblox-slang pull --strategy=merge
+# Upload output/roblox_upload.csv via Creator Dashboard
 ```
 
 ## See Also
@@ -419,4 +366,3 @@ roblox-slang pull --strategy=merge
 - [Rojo Integration](../integration/rojo.md) - Use with Rojo
 - [Roblox Localization Docs](https://create.roblox.com/docs/production/localization) - Official documentation
 - [Automatic Translations](https://create.roblox.com/docs/production/localization/automatic-translations) - Roblox's automatic translation feature
-- [Open Cloud API](https://create.roblox.com/docs/cloud/open-cloud/localization-api) - API reference

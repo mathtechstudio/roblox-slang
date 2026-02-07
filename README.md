@@ -347,8 +347,9 @@ Quick links:
 | `roblox-slang init --with-overrides` | Initialize with overrides template |
 | `roblox-slang build` | Build translations once |
 | `roblox-slang build --watch` | Watch mode (auto-rebuild) |
-| `roblox-slang validate` | Check for missing/unused keys |
-| `roblox-slang migrate <format>` | Import from other formats |
+| `roblox-slang import <CSV_FILE>` | Import from Roblox CSV file |
+| `roblox-slang validate --all` | Check for missing/unused keys and conflicts |
+| `roblox-slang migrate --from <format>` | Migrate from other formats |
 
 See [CLI Reference](docs/reference/cli-reference.md) for complete command documentation.
 
