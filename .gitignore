@@ -1,1 +1,37 @@
+# Rust build artifacts
 /target
+**/*.rs.bk
+
+# Generated files from test projects
+test-projects/*/output/
+**/roblox_upload.csv
+
+# Toolchain manager installed tools
+.foreman/
+.aftman/
+.rokit/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment variables and secrets
+.env
+secrets/
+
+# Kiro
+.kiro/
+
+# Local development documentation
+AGENTS.md
+roblox-docs/
+
+# Internal development tracking
+.dev-notes/

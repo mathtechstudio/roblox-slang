@@ -1,0 +1,66 @@
+use super::KeyTransform;
+
+/// Transform a key according to the specified strategy
+pub fn transform_key(key: &str, strategy: KeyTransform) -> String {
+    match strategy {
+        KeyTransform::SnakeToCamel => snake_to_camel(key),
+        KeyTransform::UpperToLower => key.to_lowercase(),
+        KeyTransform::DotToNested => key.to_string(), // Already handled by unflatten
+        KeyTransform::None => key.to_string(),
+    }
+}
+
+/// Convert snake_case to camelCase
+fn snake_to_camel(s: &str) -> String {
+    let mut result = String::new();
+    let mut capitalize_next = false;
+
+    for c in s.chars() {
+        if c == '_' {
+            capitalize_next = true;
+        } else if capitalize_next {
+            result.push(c.to_ascii_uppercase());
+            capitalize_next = false;
+        } else {
+            result.push(c);
+        }
+    }
+
+    result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_snake_to_camel() {
+        assert_eq!(snake_to_camel("hello_world"), "helloWorld");
+        assert_eq!(snake_to_camel("ui_button_buy"), "uiButtonBuy");
+        assert_eq!(snake_to_camel("simple"), "simple");
+    }
+
+    #[test]
+    fn test_transform_key_snake_to_camel() {
+        assert_eq!(
+            transform_key("hello_world", KeyTransform::SnakeToCamel),
+            "helloWorld"
+        );
+    }
+
+    #[test]
+    fn test_transform_key_upper_to_lower() {
+        assert_eq!(
+            transform_key("HELLO_WORLD", KeyTransform::UpperToLower),
+            "hello_world"
+        );
+    }
+
+    #[test]
+    fn test_transform_key_none() {
+        assert_eq!(
+            transform_key("hello_world", KeyTransform::None),
+            "hello_world"
+        );
+    }
+}

@@ -1,0 +1,225 @@
+{
+  "ui": {
+    "buttons": {
+      "buy": "Comprar",
+      "sell": "Vender",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "close": "Cerrar",
+      "save": "Guardar",
+      "load": "Cargar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "create": "Crear",
+      "submit": "Enviar",
+      "reset": "Restablecer",
+      "apply": "Aplicar"
+    },
+    "labels": {
+      "welcome": "¡Bienvenido al juego!",
+      "player": "Jugador",
+      "displayName": "Nombre para Mostrar",
+      "level": "Nivel",
+      "experience": "Experiencia",
+      "health": "Salud",
+      "mana": "Maná",
+      "stamina": "Resistencia",
+      "coins": "Monedas",
+      "gems": "Gemas",
+      "robux": "Robux"
+    },
+    "messages": {
+      "greeting": "¡Hola, {name}!",
+      "itemCount": "Tienes {count} objetos",
+      "items(one)": "{count} objeto",
+      "items(other)": "{count} objetos",
+      "price": "Precio: ${price:fixed(2)}",
+      "score": "Puntuación: {score:int}",
+      "loading": "Cargando...",
+      "saving": "Guardando...",
+      "success": "¡Éxito!",
+      "error": "Ocurrió un error",
+      "warning": "¡Advertencia!",
+      "playerJoined": "{name} se unió al juego",
+      "playerLeft": "{name} salió del juego"
+    },
+    "tooltips": {
+      "buyItem": "Haz clic para comprar este objeto",
+      "sellItem": "Haz clic para vender este objeto",
+      "equipItem": "Haz clic para equipar este objeto",
+      "unequipItem": "Haz clic para desequipar este objeto",
+      "upgradeItem": "Haz clic para mejorar este objeto"
+    }
+  },
+  "game": {
+    "menu": {
+      "play": "Jugar",
+      "settings": "Configuración",
+      "quit": "Salir",
+      "help": "Ayuda",
+      "about": "Acerca de",
+      "credits": "Créditos",
+      "leaderboard": "Tabla de Clasificación",
+      "achievements": "Logros",
+      "profile": "Perfil",
+      "friends": "Amigos"
+    },
+    "modes": {
+      "singleplayer": "Un Jugador",
+      "multiplayer": "Multijugador",
+      "coop": "Cooperativo",
+      "versus": "Versus",
+      "practice": "Práctica",
+      "tutorial": "Tutorial",
+      "campaign": "Campaña",
+      "survival": "Supervivencia",
+      "arena": "Arena",
+      "raid": "Incursión"
+    },
+    "status": {
+      "online": "En línea",
+      "offline": "Desconectado",
+      "away": "Ausente",
+      "busy": "Ocupado",
+      "inGame": "En Juego",
+      "inLobby": "En Sala",
+      "searching": "Buscando...",
+      "connecting": "Conectando...",
+      "connected": "Conectado",
+      "disconnected": "Desconectado"
+    },
+    "notifications": {
+      "friendRequest": "{name} te envió una solicitud de amistad",
+      "partyInvite": "{name} te invitó a un grupo",
+      "tradeRequest": "{name} quiere comerciar contigo",
+      "achievementUnlocked": "Logro desbloqueado: {achievement}",
+      "levelUp": "¡Subiste de nivel! Ahora eres nivel {level}",
+      "questComplete": "Misión completada: {quest}"
+    }
+  },
+  "shop": {
+    "categories": {
+      "weapons": "Armas",
+      "armor": "Armadura",
+      "potions": "Pociones",
+      "materials": "Materiales",
+      "consumables": "Consumibles",
+      "equipment": "Equipo",
+      "accessories": "Accesorios",
+      "pets": "Mascotas",
+      "vehicles": "Vehículos",
+      "emotes": "Gestos",
+      "gamepasses": "Pases de Juego",
+      "bundles": "Paquetes",
+      "featured": "Destacados"
+    },
+    "actions": {
+      "purchase": "Comprar",
+      "preview": "Vista Previa",
+      "compare": "Comparar",
+      "addToCart": "Añadir al Carrito",
+      "removeFromCart": "Quitar del Carrito",
+      "checkout": "Pagar",
+      "viewCart": "Ver Carrito",
+      "clearCart": "Vaciar Carrito"
+    },
+    "messages": {
+      "purchaseSuccess": "¡Compra exitosa!",
+      "purchaseFailed": "Compra fallida",
+      "insufficientFunds": "Fondos insuficientes",
+      "insufficientRobux": "No hay suficientes Robux",
+      "itemAdded": "Objeto añadido al carrito",
+      "itemRemoved": "Objeto eliminado del carrito",
+      "cartEmpty": "Tu carrito está vacío",
+      "requiresGamepass": "Requiere pase de juego: {gamepass}"
+    }
+  },
+  "inventory": {
+    "tabs": {
+      "all": "Todo",
+      "weapons": "Armas",
+      "armor": "Armadura",
+      "consumables": "Consumibles",
+      "materials": "Materiales",
+      "quest": "Objetos de Misión",
+      "pets": "Mascotas",
+      "vehicles": "Vehículos"
+    },
+    "actions": {
+      "use": "Usar",
+      "equip": "Equipar",
+      "unequip": "Desequipar",
+      "drop": "Soltar",
+      "destroy": "Destruir",
+      "upgrade": "Mejorar",
+      "repair": "Reparar",
+      "enchant": "Encantar",
+      "trade": "Comerciar",
+      "gift": "Regalar"
+    },
+    "info": {
+      "weight": "Peso: {weight:fixed(1)}",
+      "durability": "Durabilidad: {current}/{max}",
+      "damage": "Daño: {damage:int}",
+      "defense": "Defensa: {defense:int}",
+      "rarity": "Rareza: {rarity}",
+      "quantity": "Cantidad: {quantity:int}"
+    }
+  },
+  "social": {
+    "friends": {
+      "online": "Amigos en Línea",
+      "offline": "Amigos Desconectados",
+      "requests": "Solicitudes de Amistad",
+      "add": "Añadir Amigo",
+      "remove": "Eliminar Amigo",
+      "block": "Bloquear",
+      "unblock": "Desbloquear",
+      "invite": "Invitar al Juego"
+    },
+    "party": {
+      "create": "Crear Grupo",
+      "join": "Unirse al Grupo",
+      "leave": "Salir del Grupo",
+      "kick": "Expulsar del Grupo",
+      "promote": "Promover a Líder",
+      "invite": "Invitar al Grupo"
+    },
+    "chat": {
+      "send": "Enviar",
+      "whisper": "Susurrar",
+      "mute": "Silenciar",
+      "unmute": "Desilenciar",
+      "report": "Reportar",
+      "teamChat": "Chat de Equipo",
+      "globalChat": "Chat Global"
+    }
+  },
+  "settings": {
+    "categories": {
+      "general": "General",
+      "graphics": "Gráficos",
+      "audio": "Audio",
+      "controls": "Controles",
+      "gameplay": "Jugabilidad",
+      "accessibility": "Accesibilidad"
+    },
+    "options": {
+      "language": "Idioma",
+      "volume": "Volumen",
+      "musicVolume": "Volumen de Música",
+      "sfxVolume": "Volumen de Efectos",
+      "brightness": "Brillo",
+      "quality": "Calidad Gráfica",
+      "fullscreen": "Pantalla Completa",
+      "vsync": "Sincronización Vertical",
+      "shadows": "Sombras",
+      "particles": "Partículas",
+      "fov": "Campo de Visión",
+      "mouseSensitivity": "Sensibilidad del Ratón",
+      "invertY": "Invertir Eje Y"
+    }
+  }
+}

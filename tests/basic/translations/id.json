@@ -1,0 +1,225 @@
+{
+  "ui": {
+    "buttons": {
+      "buy": "Beli",
+      "sell": "Jual",
+      "cancel": "Batal",
+      "confirm": "Konfirmasi",
+      "back": "Kembali",
+      "next": "Lanjut",
+      "close": "Tutup",
+      "save": "Simpan",
+      "load": "Muat",
+      "delete": "Hapus",
+      "edit": "Edit",
+      "create": "Buat",
+      "submit": "Kirim",
+      "reset": "Atur Ulang",
+      "apply": "Terapkan"
+    },
+    "labels": {
+      "welcome": "Selamat datang di game!",
+      "player": "Pemain",
+      "displayName": "Nama Tampilan",
+      "level": "Level",
+      "experience": "Pengalaman",
+      "health": "Kesehatan",
+      "mana": "Mana",
+      "stamina": "Stamina",
+      "coins": "Koin",
+      "gems": "Permata",
+      "robux": "Robux"
+    },
+    "messages": {
+      "greeting": "Halo, {name}!",
+      "itemCount": "Kamu memiliki {count} item",
+      "items(one)": "{count} item",
+      "items(other)": "{count} item",
+      "price": "Harga: ${price:fixed(2)}",
+      "score": "Skor: {score:int}",
+      "loading": "Memuat...",
+      "saving": "Menyimpan...",
+      "success": "Berhasil!",
+      "error": "Terjadi kesalahan",
+      "warning": "Peringatan!",
+      "playerJoined": "{name} bergabung ke game",
+      "playerLeft": "{name} keluar dari game"
+    },
+    "tooltips": {
+      "buyItem": "Klik untuk membeli item ini",
+      "sellItem": "Klik untuk menjual item ini",
+      "equipItem": "Klik untuk melengkapi item ini",
+      "unequipItem": "Klik untuk melepas item ini",
+      "upgradeItem": "Klik untuk meningkatkan item ini"
+    }
+  },
+  "game": {
+    "menu": {
+      "play": "Main",
+      "settings": "Pengaturan",
+      "quit": "Keluar",
+      "help": "Bantuan",
+      "about": "Tentang",
+      "credits": "Kredit",
+      "leaderboard": "Papan Peringkat",
+      "achievements": "Pencapaian",
+      "profile": "Profil",
+      "friends": "Teman"
+    },
+    "modes": {
+      "singleplayer": "Pemain Tunggal",
+      "multiplayer": "Multipemain",
+      "coop": "Kerjasama",
+      "versus": "Versus",
+      "practice": "Latihan",
+      "tutorial": "Tutorial",
+      "campaign": "Kampanye",
+      "survival": "Bertahan Hidup",
+      "arena": "Arena",
+      "raid": "Serangan"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "away": "Tidak Ada",
+      "busy": "Sibuk",
+      "inGame": "Sedang Bermain",
+      "inLobby": "Di Lobi",
+      "searching": "Mencari...",
+      "connecting": "Menghubungkan...",
+      "connected": "Terhubung",
+      "disconnected": "Terputus"
+    },
+    "notifications": {
+      "friendRequest": "{name} mengirim permintaan pertemanan",
+      "partyInvite": "{name} mengundangmu ke grup",
+      "tradeRequest": "{name} ingin berdagang denganmu",
+      "achievementUnlocked": "Pencapaian terbuka: {achievement}",
+      "levelUp": "Naik level! Kamu sekarang level {level}",
+      "questComplete": "Quest selesai: {quest}"
+    }
+  },
+  "shop": {
+    "categories": {
+      "weapons": "Senjata",
+      "armor": "Armor",
+      "potions": "Ramuan",
+      "materials": "Material",
+      "consumables": "Barang Habis Pakai",
+      "equipment": "Perlengkapan",
+      "accessories": "Aksesoris",
+      "pets": "Hewan Peliharaan",
+      "vehicles": "Kendaraan",
+      "emotes": "Emote",
+      "gamepasses": "Game Pass",
+      "bundles": "Paket",
+      "featured": "Unggulan"
+    },
+    "actions": {
+      "purchase": "Beli",
+      "preview": "Pratinjau",
+      "compare": "Bandingkan",
+      "addToCart": "Tambah ke Keranjang",
+      "removeFromCart": "Hapus dari Keranjang",
+      "checkout": "Bayar",
+      "viewCart": "Lihat Keranjang",
+      "clearCart": "Kosongkan Keranjang"
+    },
+    "messages": {
+      "purchaseSuccess": "Pembelian berhasil!",
+      "purchaseFailed": "Pembelian gagal",
+      "insufficientFunds": "Dana tidak cukup",
+      "insufficientRobux": "Robux tidak cukup",
+      "itemAdded": "Item ditambahkan ke keranjang",
+      "itemRemoved": "Item dihapus dari keranjang",
+      "cartEmpty": "Keranjangmu kosong",
+      "requiresGamepass": "Memerlukan game pass: {gamepass}"
+    }
+  },
+  "inventory": {
+    "tabs": {
+      "all": "Semua",
+      "weapons": "Senjata",
+      "armor": "Armor",
+      "consumables": "Barang Habis Pakai",
+      "materials": "Material",
+      "quest": "Item Quest",
+      "pets": "Hewan Peliharaan",
+      "vehicles": "Kendaraan"
+    },
+    "actions": {
+      "use": "Gunakan",
+      "equip": "Lengkapi",
+      "unequip": "Lepas",
+      "drop": "Jatuhkan",
+      "destroy": "Hancurkan",
+      "upgrade": "Tingkatkan",
+      "repair": "Perbaiki",
+      "enchant": "Sihir",
+      "trade": "Perdagangan",
+      "gift": "Hadiah"
+    },
+    "info": {
+      "weight": "Berat: {weight:fixed(1)}",
+      "durability": "Daya Tahan: {current}/{max}",
+      "damage": "Kerusakan: {damage:int}",
+      "defense": "Pertahanan: {defense:int}",
+      "rarity": "Kelangkaan: {rarity}",
+      "quantity": "Jumlah: {quantity:int}"
+    }
+  },
+  "social": {
+    "friends": {
+      "online": "Teman Online",
+      "offline": "Teman Offline",
+      "requests": "Permintaan Pertemanan",
+      "add": "Tambah Teman",
+      "remove": "Hapus Teman",
+      "block": "Blokir",
+      "unblock": "Buka Blokir",
+      "invite": "Undang ke Game"
+    },
+    "party": {
+      "create": "Buat Grup",
+      "join": "Gabung Grup",
+      "leave": "Keluar dari Grup",
+      "kick": "Keluarkan dari Grup",
+      "promote": "Promosikan ke Pemimpin",
+      "invite": "Undang ke Grup"
+    },
+    "chat": {
+      "send": "Kirim",
+      "whisper": "Bisik",
+      "mute": "Bisukan",
+      "unmute": "Buka Bisu",
+      "report": "Laporkan",
+      "teamChat": "Chat Tim",
+      "globalChat": "Chat Global"
+    }
+  },
+  "settings": {
+    "categories": {
+      "general": "Umum",
+      "graphics": "Grafis",
+      "audio": "Audio",
+      "controls": "Kontrol",
+      "gameplay": "Gameplay",
+      "accessibility": "Aksesibilitas"
+    },
+    "options": {
+      "language": "Bahasa",
+      "volume": "Volume",
+      "musicVolume": "Volume Musik",
+      "sfxVolume": "Volume Efek Suara",
+      "brightness": "Kecerahan",
+      "quality": "Kualitas Grafis",
+      "fullscreen": "Layar Penuh",
+      "vsync": "VSync",
+      "shadows": "Bayangan",
+      "particles": "Partikel",
+      "fov": "Bidang Pandang",
+      "mouseSensitivity": "Sensitivitas Mouse",
+      "invertY": "Balik Sumbu Y"
+    }
+  }
+}

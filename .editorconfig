@@ -1,0 +1,29 @@
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = false
+
+[*.{json,js,css}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+indent_style = space
+indent_size = 4
+
+[*.{rs,toml}]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.snap]
+insert_final_newline = true
+
+[*.lua]
+indent_style = tab
+
+[*.luau]
+indent_style = tab
