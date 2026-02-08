@@ -41,6 +41,7 @@ local text = t.ui.buttns.confirm() -- ERROR: Property doesn't exist (caught at b
 - **Nested namespaces** - Clean syntax: `t.ui.buttons.buy()`
 - **Watch mode** - Auto-rebuild on file changes
 - **CSV generation** - Export to Roblox Cloud Localization format
+- **Cloud sync** - Bidirectional sync with Roblox Cloud Localization Tables
 - **Zero runtime dependencies** - Generated code is pure Luau
 - **Multiple input formats** - JSON, YAML, or CSV
 - **Translation overrides** - A/B testing and seasonal events support
@@ -399,6 +400,9 @@ Quick links:
 | `roblox-slang init --with-overrides` | Initialize with overrides template |
 | `roblox-slang build` | Build translations once |
 | `roblox-slang build --watch` | Watch mode (auto-rebuild) |
+| `roblox-slang upload` | Upload translations to Roblox Cloud |
+| `roblox-slang download` | Download translations from Roblox Cloud |
+| `roblox-slang sync` | Bidirectional sync with merge strategies |
 | `roblox-slang import <CSV_FILE>` | Import from Roblox CSV file |
 | `roblox-slang validate --all` | Check for missing/unused keys and conflicts |
 | `roblox-slang migrate --from <format>` | Migrate from other formats |
@@ -407,25 +411,68 @@ See [CLI Reference](docs/reference/cli-reference.md) for complete command docume
 
 ## Roblox Cloud Integration
 
-Export to Roblox Cloud Localization format:
+Roblox Slang provides seamless integration with Roblox Cloud Localization Tables through bidirectional sync commands.
 
-```bash
-roblox-slang build
-# Generates: output/roblox_upload.csv
+### Quick Start
+
+1. **Get your API key** from [Roblox Creator Dashboard](https://create.roblox.com/credentials)
+
+2. **Set environment variable**:
+   ```bash
+   export ROBLOX_CLOUD_API_KEY=your_api_key_here
+   ```
+
+3. **Upload translations**:
+   ```bash
+   roblox-slang upload --table-id YOUR_TABLE_ID
+   ```
+
+4. **Download translations**:
+   ```bash
+   roblox-slang download --table-id YOUR_TABLE_ID
+   ```
+
+5. **Bidirectional sync**:
+   ```bash
+   roblox-slang sync --table-id YOUR_TABLE_ID --strategy merge
+   ```
+
+### Cloud Sync Commands
+
+| Command | Description |
+|---------|-------------|
+| `roblox-slang upload` | Upload local translations to Roblox Cloud |
+| `roblox-slang download` | Download translations from Roblox Cloud |
+| `roblox-slang sync` | Bidirectional sync with merge strategies |
+
+### Merge Strategies
+
+- **overwrite** - Upload all local translations (cloud is overwritten)
+- **merge** - Upload local-only, download cloud-only, prefer cloud for conflicts
+- **skip-conflicts** - Upload local-only, download cloud-only, skip conflicts
+
+### Configuration
+
+Add cloud settings to `slang-roblox.yaml`:
+
+```yaml
+cloud:
+  table_id: YOUR_TABLE_ID
+  game_id: YOUR_GAME_ID
+  api_key: ${ROBLOX_CLOUD_API_KEY}  # Or set directly (not recommended)
+  default_merge_strategy: merge
 ```
 
-Upload `roblox_upload.csv` to your game's Localization Table via:
+### Benefits of Cloud Sync
 
-- [Roblox Creator Dashboard](https://create.roblox.com/)
-- [Open Cloud API](https://create.roblox.com/docs/cloud/open-cloud/localization-api)
+- **Automatic Text Capture (ATC)** - Roblox captures UI strings automatically
+- **Automatic translation** - Roblox AI translates to supported languages
+- **Translator Portal** - Collaborate with translators via Roblox
+- **Analytics** - Track translation coverage via Roblox Dashboard
+- **Multi-game synchronization** - Share translations across games
+- **Version control** - Keep local and cloud in sync
 
-Benefits of uploading to Roblox Cloud:
-
-- Automatic Text Capture (ATC) - Roblox captures UI strings automatically
-- Automatic translation - Roblox AI translates to supported languages
-- Translator Portal - Collaborate with translators via Roblox
-- Analytics - Track translation coverage via Roblox Dashboard
-- Multi-game synchronization
+See [Roblox Cloud Integration Guide](docs/guides/roblox-cloud.md) for complete documentation.
 
 ## Examples
 
