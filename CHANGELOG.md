@@ -55,8 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated release profile for maximum optimization (opt-level="z", lto=true, strip=true)
 - Improved error messages with context snippets and suggestions
 - Fixed all compiler and clippy warnings
-- Downgraded MSRV (Minimum Supported Rust Version) from 1.88 to 1.75 for broader compatibility
-- Regenerated Cargo.lock with lockfile version 3 (compatible with Rust 1.75+)
+- Set MSRV (Minimum Supported Rust Version) to 1.77 for dependency compatibility
+- Regenerated Cargo.lock with lockfile version 3
 - Updated all repository references from protheeuz to mathtechstudio organization
 
 ### Fixed
