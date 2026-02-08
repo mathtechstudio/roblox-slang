@@ -5,7 +5,7 @@
 [![Rust](https://img.shields.io/badge/Built_with-Rust-orange?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org)
 [![Generates](https://img.shields.io/badge/Generates-Luau-00A2FF?style=for-the-badge&logo=lua&logoColor=white)](https://luau-lang.org)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-103_passing-success?style=for-the-badge)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-168_passing-success?style=for-the-badge)](tests/)
 
 Type-safe internationalization (i18n) code generator for Roblox experiences. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
 
