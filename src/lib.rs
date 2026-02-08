@@ -32,21 +32,21 @@
 //! ## Library Usage
 //!
 //! ```no_run
-//! use roblox_slang::{Config, parser, generator};
+//! use roblox_slang::{Config, parser, generator, config};
 //! use std::path::Path;
 //!
 //! # fn main() -> anyhow::Result<()> {
 //! // Load configuration
-//! let config = Config::load(Path::new("slang-roblox.yaml"))?;
+//! let cfg = config::load_config(Path::new("slang-roblox.yaml"))?;
 //!
 //! // Parse translations
-//! let translations = parser::json::parse_file(
+//! let translations = parser::json::parse_json_file(
 //!     Path::new("translations/en.json"),
 //!     "en"
 //! )?;
 //!
 //! // Generate Luau code
-//! let luau_code = generator::luau::generate(&translations, &config)?;
+//! let luau_code = generator::luau::generate_luau(&translations, &cfg.base_locale)?;
 //! # Ok(())
 //! # }
 //! ```
