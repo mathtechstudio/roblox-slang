@@ -9,14 +9,17 @@ mod validator;
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use std::path::Path;
+use utils::validation;
 
 #[derive(Parser)]
 #[command(name = "roblox-slang")]
 #[command(version)]
 #[command(about = "Type-safe internationalization for Roblox")]
-#[command(long_about = "Roblox Slang is a CLI tool that generates type-safe Luau code from translation files.\n\
+#[command(
+    long_about = "Roblox Slang is a CLI tool that generates type-safe Luau code from translation files.\n\
                         Write translations in JSON/YAML, generate type-safe code with autocomplete support.\n\n\
-                        For more information, visit: https://github.com/protheeuz/roblox-slang")]
+                        For more information, visit: https://github.com/protheeuz/roblox-slang"
+)]
 #[command(author = "Iqbal Fauzi <iqbalfauzien@proton.me>")]
 struct Cli {
     #[command(subcommand)]
@@ -26,7 +29,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     /// Initialize a new Roblox Slang project
-    /// 
+    ///
     /// Creates a new project with default configuration file and translation directory.
     /// Use --with-overrides to also create an overrides.yaml template for A/B testing.
     Init {
@@ -36,7 +39,7 @@ enum Commands {
     },
 
     /// Build translations and generate Luau code
-    /// 
+    ///
     /// Parses translation files (JSON/YAML) and generates type-safe Luau code.
     /// Outputs: Translations.lua, type definitions, and CSV for Roblox Cloud.
     Build {
@@ -46,7 +49,7 @@ enum Commands {
     },
 
     /// Import translations from a Roblox CSV file
-    /// 
+    ///
     /// Converts Roblox Cloud CSV format to JSON translation files.
     /// Useful for migrating existing translations or syncing with Roblox Cloud.
     Import {
@@ -56,7 +59,7 @@ enum Commands {
     },
 
     /// Validate translations for errors and inconsistencies
-    /// 
+    ///
     /// Checks for missing translations, unused keys, conflicts, and coverage.
     /// Use --all to run all checks at once.
     Validate {
@@ -86,12 +89,16 @@ enum Commands {
     },
 
     /// Migrate translations from another format
-    /// 
+    ///
     /// Converts translations from other formats (custom-json, gettext) to Roblox Slang format.
     /// Supports key transformation strategies for compatibility.
     Migrate {
         /// Format to migrate from
-        #[arg(long, value_name = "FORMAT", help = "Source format (custom-json, gettext)")]
+        #[arg(
+            long,
+            value_name = "FORMAT",
+            help = "Source format (custom-json, gettext)"
+        )]
         from: String,
 
         /// Input file path
@@ -103,7 +110,11 @@ enum Commands {
         output: String,
 
         /// Key transformation strategy
-        #[arg(long, value_name = "TRANSFORM", help = "Key transformation (snake-to-camel, upper-to-lower, dot-to-nested, none)")]
+        #[arg(
+            long,
+            value_name = "TRANSFORM",
+            help = "Key transformation (snake-to-camel, upper-to-lower, dot-to-nested, none)"
+        )]
         transform: Option<String>,
     },
 }
@@ -129,6 +140,11 @@ fn main() -> Result<()> {
         }
         Commands::Import { csv_file } => {
             let csv_path = Path::new(&csv_file);
+
+            // Validate file path
+            validation::validate_safe_path(csv_path)?;
+            validation::validate_file_exists(csv_path, "CSV file")?;
+
             let config_path = Path::new("slang-roblox.yaml");
             cli::import_csv(csv_path, config_path)?;
         }
@@ -148,7 +164,14 @@ fn main() -> Result<()> {
             let check_conflicts = all || conflicts;
             let show_coverage = all || coverage;
 
-            let source_dir = source.as_ref().map(|s| Path::new(s.as_str()));
+            let source_dir = if let Some(ref s) = source {
+                let path = Path::new(s.as_str());
+                validation::validate_safe_path(path)?;
+                validation::validate_directory_exists(path, "source directory")?;
+                Some(path)
+            } else {
+                None
+            };
 
             cli::validate(
                 config_path,
@@ -167,6 +190,12 @@ fn main() -> Result<()> {
         } => {
             let input_path = Path::new(&input);
             let output_path = Path::new(&output);
+
+            // Validate file paths
+            validation::validate_safe_path(input_path)?;
+            validation::validate_file_exists(input_path, "input file")?;
+            validation::validate_safe_path(output_path)?;
+
             let transform_str = transform.as_deref();
 
             cli::migrate(&from, input_path, output_path, transform_str)?;
