@@ -455,15 +455,11 @@ cargo run -- --help
 
 ## Contributing
 
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
 MIT License - see [LICENSE](LICENSE)
-
-## Maintainer
-
-Iqbal Fauzi ([@protheeuz](https://github.com/protheeuz))
 
 ## References
 
