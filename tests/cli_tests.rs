@@ -254,12 +254,12 @@ fn test_watch_mode_starts() {
         .arg("--watch")
         .timeout(Duration::from_secs(2))
         .assert();
-    
+
     // Watch mode should either be interrupted by timeout or exit with code 1
     // (Windows sometimes exits with code 1 instead of being interrupted)
     let output = assert.get_output();
     let stdout = String::from_utf8_lossy(&output.stdout);
-    
+
     // Verify watch mode started successfully by checking output
     assert!(
         stdout.contains("Starting watch mode") || stdout.contains("Watching for changes"),
