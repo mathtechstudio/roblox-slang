@@ -9,7 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Nothing yet
+- Cloud sync feature for bidirectional synchronization with Roblox Cloud Localization Tables
+- `upload` command to push local translations to Roblox Cloud
+- `download` command to pull translations from Roblox Cloud
+- `sync` command with merge strategies (overwrite, merge, skip-conflicts)
+- Authentication via environment variable (`ROBLOX_CLOUD_API_KEY`) or config file
+- Rate limiting with exponential backoff (1s, 2s, 4s, 8s)
+- Retry-After header support for 429 responses
+- Conflict detection and reporting (conflicts.yaml)
+- Merge engine with three strategies for handling conflicts
+- Progress reporting for upload/download/sync operations
+- Dry-run mode for all cloud sync commands (`--dry-run`)
+- Pre-upload validation with `--skip-validation` flag
+- Cloud configuration section in slang-roblox.yaml
+- Comprehensive error messages for API failures
+- API documentation for all public cloud sync functions
+- User guide for Roblox Cloud integration (docs/guides/roblox-cloud.md)
 
 ### Changed
 
