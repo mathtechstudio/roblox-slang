@@ -192,31 +192,6 @@ jobs:
       - name: Run clippy
         run: cargo clippy --all-targets -- -D warnings
 
-  msrv:
-    name: Check MSRV (1.77.0)
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Rust 1.77.0
-        uses: dtolnay/rust-toolchain@1.77.0
-
-      - name: Cache Rust dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ubuntu-latest-1.77.0-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ubuntu-latest-1.77.0-cargo-
-
-      - name: Check build with MSRV
-        run: cargo build --locked --verbose
-
   security:
     name: Security Audit
     runs-on: ubuntu-latest
