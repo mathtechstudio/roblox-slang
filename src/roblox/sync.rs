@@ -9,6 +9,29 @@ use std::path::Path;
 use std::time::Instant;
 
 /// Orchestrates synchronization between local translation files and Roblox Cloud
+///
+/// The `SyncOrchestrator` provides high-level operations for syncing translations:
+/// - `upload()` - Push local translations to cloud
+/// - `download()` - Pull translations from cloud
+/// - `sync()` - Bidirectional sync with merge strategies
+///
+/// # Example
+///
+/// ```no_run
+/// use roblox_slang::roblox::{RobloxCloudClient, SyncOrchestrator};
+/// use roblox_slang::config::Config;
+///
+/// # async fn example() -> anyhow::Result<()> {
+/// let client = RobloxCloudClient::new("api_key".to_string())?;
+/// let config = Config::default();
+/// let orchestrator = SyncOrchestrator::new(client, config);
+///
+/// // Upload translations
+/// let stats = orchestrator.upload("table_id", false).await?;
+/// println!("Uploaded {} entries", stats.entries_uploaded);
+/// # Ok(())
+/// # }
+/// ```
 pub struct SyncOrchestrator {
     /// HTTP client for Roblox Cloud API
     client: RobloxCloudClient,
@@ -18,11 +41,51 @@ pub struct SyncOrchestrator {
 
 impl SyncOrchestrator {
     /// Create a new sync orchestrator
+    ///
+    /// # Arguments
+    ///
+    /// * `client` - Authenticated Roblox Cloud API client
+    /// * `config` - Project configuration
     pub fn new(client: RobloxCloudClient, config: Config) -> Self {
         Self { client, config }
     }
 
     /// Upload local translations to Roblox Cloud
+    ///
+    /// Reads all translation files from the input directory, converts them to
+    /// Roblox Cloud format, and uploads to the specified localization table.
+    ///
+    /// # Arguments
+    ///
+    /// * `table_id` - Roblox localization table ID
+    /// * `dry_run` - If true, skip actual upload (preview only)
+    ///
+    /// # Returns
+    ///
+    /// Statistics about the upload operation including entries uploaded,
+    /// locales processed, and duration.
+    ///
+    /// # Errors
+    ///
+    /// Returns error if:
+    /// - Translation files cannot be read
+    /// - API request fails
+    /// - Network error occurs
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use roblox_slang::roblox::{RobloxCloudClient, SyncOrchestrator};
+    /// # use roblox_slang::config::Config;
+    /// # async fn example() -> anyhow::Result<()> {
+    /// # let client = RobloxCloudClient::new("api_key".to_string())?;
+    /// # let config = Config::default();
+    /// # let orchestrator = SyncOrchestrator::new(client, config);
+    /// let stats = orchestrator.upload("table_id", false).await?;
+    /// println!("Uploaded {} entries in {:?}", stats.entries_uploaded, stats.duration);
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn upload(&self, table_id: &str, dry_run: bool) -> Result<UploadStats> {
         let start = Instant::now();
 
@@ -55,6 +118,43 @@ impl SyncOrchestrator {
     }
 
     /// Download translations from Roblox Cloud
+    ///
+    /// Fetches all translations from the specified localization table and writes
+    /// them to local translation files (one file per locale).
+    ///
+    /// # Arguments
+    ///
+    /// * `table_id` - Roblox localization table ID
+    /// * `dry_run` - If true, skip file writes (preview only)
+    ///
+    /// # Returns
+    ///
+    /// Statistics about the download operation including entries downloaded,
+    /// locales created/updated, and duration.
+    ///
+    /// # Errors
+    ///
+    /// Returns error if:
+    /// - API request fails
+    /// - Files cannot be written
+    /// - Network error occurs
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use roblox_slang::roblox::{RobloxCloudClient, SyncOrchestrator};
+    /// # use roblox_slang::config::Config;
+    /// # async fn example() -> anyhow::Result<()> {
+    /// # let client = RobloxCloudClient::new("api_key".to_string())?;
+    /// # let config = Config::default();
+    /// # let orchestrator = SyncOrchestrator::new(client, config);
+    /// let stats = orchestrator.download("table_id", false).await?;
+    /// println!("Downloaded {} entries", stats.entries_downloaded);
+    /// println!("Created {} locales, updated {} locales", 
+    ///          stats.locales_created, stats.locales_updated);
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn download(&self, table_id: &str, dry_run: bool) -> Result<DownloadStats> {
         let start = Instant::now();
 
@@ -123,6 +223,49 @@ impl SyncOrchestrator {
     }
 
     /// Synchronize translations between local and cloud with merge strategy
+    ///
+    /// Performs bidirectional sync by comparing local and cloud translations,
+    /// computing differences, and applying the specified merge strategy.
+    ///
+    /// # Merge Strategies
+    ///
+    /// - `Overwrite` - Upload all local translations (cloud is overwritten)
+    /// - `Merge` - Upload local-only, download cloud-only, prefer cloud for conflicts
+    /// - `SkipConflicts` - Upload local-only, download cloud-only, skip conflicts
+    ///
+    /// # Arguments
+    ///
+    /// * `table_id` - Roblox localization table ID
+    /// * `strategy` - Merge strategy to use
+    /// * `dry_run` - If true, skip all writes (preview only)
+    ///
+    /// # Returns
+    ///
+    /// Statistics about the sync operation including entries added/updated/deleted,
+    /// conflicts skipped, and duration.
+    ///
+    /// # Errors
+    ///
+    /// Returns error if:
+    /// - API requests fail
+    /// - Files cannot be read/written
+    /// - Network error occurs
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use roblox_slang::roblox::{RobloxCloudClient, SyncOrchestrator, MergeStrategy};
+    /// # use roblox_slang::config::Config;
+    /// # async fn example() -> anyhow::Result<()> {
+    /// # let client = RobloxCloudClient::new("api_key".to_string())?;
+    /// # let config = Config::default();
+    /// # let orchestrator = SyncOrchestrator::new(client, config);
+    /// let stats = orchestrator.sync("table_id", MergeStrategy::Merge, false).await?;
+    /// println!("Added: {}, Updated: {}, Conflicts: {}", 
+    ///          stats.entries_added, stats.entries_updated, stats.conflicts_skipped);
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn sync(
         &self,
         table_id: &str,
