@@ -1,0 +1,7 @@
+# Rokit toolchain configuration for Roblox Slang
+# https://github.com/rojo-rbx/rokit
+
+[tools]
+rojo = "rojo-rbx/rojo@7.6.1"
+stylua = "JohnnyMorganz/stylua@0.20.0"
+selene = "Kampfkarren/selene@0.29.0"
