@@ -71,7 +71,7 @@ jobs:
           gh release create ${{ steps.version.outputs.tag }} \
             --draft \
             --verify-tag \
-            --title "Roblox Slang ${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
             --notes "$CHANGELOG_CONTENT"
 
   build-release:
