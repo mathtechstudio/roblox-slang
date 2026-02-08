@@ -430,6 +430,7 @@ pub fn validate_safe_path(path: &Path) -> Result<()> {
 ///     namespace: None,
 ///     overrides: None,
 ///     analytics: None,
+///     cloud: None,
 /// };
 ///
 /// validate_config(&config).unwrap();
@@ -636,6 +637,7 @@ mod tests {
             namespace: None,
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         assert!(validate_config(&config).is_ok());
@@ -651,6 +653,7 @@ mod tests {
             namespace: Some("MyGame".to_string()),
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         assert!(validate_config(&config).is_ok());
@@ -666,6 +669,7 @@ mod tests {
             namespace: None,
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         let result = validate_config(&config);
@@ -686,6 +690,7 @@ mod tests {
             namespace: None,
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         let result = validate_config(&config);
@@ -706,6 +711,7 @@ mod tests {
             namespace: Some("".to_string()), // Empty namespace
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         let result = validate_config(&config);
@@ -724,6 +730,7 @@ mod tests {
             namespace: Some("My-Game".to_string()), // Hyphen not allowed
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         let result = validate_config(&config);
@@ -742,6 +749,7 @@ mod tests {
             namespace: Some("123Game".to_string()), // Starts with digit
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         let result = validate_config(&config);
@@ -760,6 +768,7 @@ mod tests {
             namespace: None,
             overrides: None,
             analytics: None,
+            cloud: None,
         };
 
         let result = validate_config(&config);
