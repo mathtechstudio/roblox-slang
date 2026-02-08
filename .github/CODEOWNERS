@@ -3,32 +3,32 @@
 # More specific patterns override general patterns.
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-* @protheeuz
+* @mathtechstudio/maintainers
 
 # Require reviews from the release approvers for critical files.
 # These patterns override the rule above.
-/Cargo.toml @protheeuz
-/Cargo.lock @protheeuz
-/.github/ @protheeuz
-/.gitignore @protheeuz
+/Cargo.toml @mathtechstudio/maintainers
+/Cargo.lock @mathtechstudio/maintainers
+/.github/ @mathtechstudio/maintainers
+/.gitignore @mathtechstudio/maintainers
 
 # Core source code
-/src/ @protheeuz
+/src/ @mathtechstudio/maintainers
 
 # Code generation (critical for output correctness)
-/src/generator/ @protheeuz
+/src/generator/ @mathtechstudio/maintainers
 
 # Parser logic (critical for input handling)
-/src/parser/ @protheeuz
+/src/parser/ @mathtechstudio/maintainers
 
 # Configuration schema (breaking changes affect users)
-/src/config/ @protheeuz
+/src/config/ @mathtechstudio/maintainers
 
 # Documentation
-/docs/ @protheeuz
-/README.md @protheeuz
-/CHANGELOG.md @protheeuz
-/CONTRIBUTING.md @protheeuz
+/docs/ @mathtechstudio/maintainers
+/README.md @mathtechstudio/maintainers
+/CHANGELOG.md @mathtechstudio/maintainers
+/CONTRIBUTING.md @mathtechstudio/maintainers
 
 # Tests
-/tests/ @protheeuz
+/tests/ @mathtechstudio/maintainers

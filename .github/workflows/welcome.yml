@@ -47,7 +47,7 @@ jobs:
                   '**Quick reminders:**',
                   '- Update `CHANGELOG.md` under `[Unreleased]` (or add `skip changelog` label)',
                   '- Make sure CI checks pass',
-                  '- Check out [CONTRIBUTING.md](https://github.com/protheeuz/roblox-slang/blob/main/CONTRIBUTING.md) if you need help',
+                  '- Check out [CONTRIBUTING.md](https://github.com/mathtechstudio/roblox-slang/blob/main/CONTRIBUTING.md) if you need help',
                   '',
                   'A maintainer will review your changes soon. Thanks for contributing! 🚀'
                 ].join('\n');
@@ -78,7 +78,7 @@ jobs:
                   '',
                   'A maintainer will review and label this soon. Feel free to add more details if needed.',
                   '',
-                  'Want to work on this yourself? Check out [CONTRIBUTING.md](https://github.com/protheeuz/roblox-slang/blob/main/CONTRIBUTING.md) to get started!'
+                  'Want to work on this yourself? Check out [CONTRIBUTING.md](https://github.com/mathtechstudio/roblox-slang/blob/main/CONTRIBUTING.md) to get started!'
                 ].join('\n');
                 
                 await github.rest.issues.createComment({

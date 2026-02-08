@@ -33,11 +33,11 @@ Detailed reference documentation:
 
 ```bash
 # Via Rokit (recommended)
-rokit add protheeuz/roblox-slang
+rokit add mathtechstudio/roblox-slang
 rokit install
 
 # Via Aftman
-aftman add protheeuz/roblox-slang
+aftman add mathtechstudio/roblox-slang
 aftman install
 ```
 
@@ -114,13 +114,13 @@ Want to contribute? See:
 
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 - [AGENTS.md](../AGENTS.md) - Developer guide
-- [GitHub Issues](https://github.com/protheeuz/roblox-slang/issues) - Report bugs or request features
+- [GitHub Issues](https://github.com/mathtechstudio/roblox-slang/issues) - Report bugs or request features
 
 ## Support
 
 Need help?
 
-- [GitHub Issues](https://github.com/protheeuz/roblox-slang/issues) - Report bugs
+- [GitHub Issues](https://github.com/mathtechstudio/roblox-slang/issues) - Report bugs
 - [Roblox DevForum](https://devforum.roblox.com/) - Community support
 
 ## License

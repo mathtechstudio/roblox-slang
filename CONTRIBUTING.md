@@ -4,9 +4,12 @@
 
 ```bash
 # Clone and setup
-git clone https://github.com/protheeuz/roblox-slang.git
+git clone https://github.com/mathtechstudio/roblox-slang.git
 cd roblox-slang
-rustup override set 1.88.0
+
+# Install Rust (stable recommended)
+rustup update stable
+rustup override set stable
 
 # Build and test
 cargo build

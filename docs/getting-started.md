@@ -20,17 +20,17 @@ Choose your preferred toolchain manager. All three options work identically - th
 
 ```bash
 # Add to your project
-rokit add protheeuz/roblox-slang
+rokit add mathtechstudio/roblox-slang
 
 # Or install globally
-rokit add --global protheeuz/roblox-slang
+rokit add --global mathtechstudio/roblox-slang
 ```
 
 **rokit.toml:**
 
 ```toml
 [tools]
-roblox-slang = "protheeuz/roblox-slang@1.0.0"
+roblox-slang = "mathtechstudio/roblox-slang@1.0.0"
 ```
 
 #### Option B: Aftman
@@ -41,17 +41,17 @@ roblox-slang = "protheeuz/roblox-slang@1.0.0"
 
 ```bash
 # Add to your project
-aftman add protheeuz/roblox-slang
+aftman add mathtechstudio/roblox-slang
 
 # Or install globally
-aftman add --global protheeuz/roblox-slang
+aftman add --global mathtechstudio/roblox-slang
 ```
 
 **aftman.toml:**
 
 ```toml
 [tools]
-roblox-slang = "protheeuz/roblox-slang@1.0.0"
+roblox-slang = "mathtechstudio/roblox-slang@1.0.0"
 ```
 
 #### Option C: Foreman
@@ -62,7 +62,7 @@ roblox-slang = "protheeuz/roblox-slang@1.0.0"
 
 ```toml
 [tools]
-roblox-slang = { github = "protheeuz/roblox-slang", version = "1.0.0" }
+roblox-slang = { github = "mathtechstudio/roblox-slang", version = "1.0.0" }
 ```
 
 ```bash
@@ -71,7 +71,7 @@ foreman install
 
 #### Option D: Manual Installation
 
-Download pre-built binaries from [GitHub Releases](https://github.com/protheeuz/roblox-slang/releases):
+Download pre-built binaries from [GitHub Releases](https://github.com/mathtechstudio/roblox-slang/releases):
 
 - `roblox-slang-1.0.0-linux-x86_64.zip`
 - `roblox-slang-1.0.0-linux-aarch64.zip`
@@ -89,7 +89,7 @@ Extract the archive and add the binary to your PATH.
 cargo install roblox-slang
 
 # Or build from source
-git clone https://github.com/protheeuz/roblox-slang.git
+git clone https://github.com/mathtechstudio/roblox-slang.git
 cd roblox-slang
 cargo install --locked --path .
 ```
@@ -302,4 +302,4 @@ ls -la translations/
 
 ## Getting Help
 
-- [GitHub Issues](https://github.com/protheeuz/roblox-slang/issues) - Report bugs or request features
+- [GitHub Issues](https://github.com/mathtechstudio/roblox-slang/issues) - Report bugs or request features

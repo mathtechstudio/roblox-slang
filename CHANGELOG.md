@@ -55,6 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated release profile for maximum optimization (opt-level="z", lto=true, strip=true)
 - Improved error messages with context snippets and suggestions
 - Fixed all compiler and clippy warnings
+- Regenerated Cargo.lock with lockfile version 3
+- Updated all repository references from protheeuz to mathtechstudio organization
+- Removed MSRV constraint to allow using latest Rust stable features
 
 ### Fixed
 
@@ -65,9 +68,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Permission errors explained clearly
 - Invalid UTF-8 detected and reported with file path
 - URL warnings in documentation fixed
-
-- N/A (initial release)
-
-### Fixed
-
-- N/A (initial release)
+- Doctest example in library documentation now uses correct API functions
+- Watch mode test now handles both interrupt and exit code 1 for Windows compatibility

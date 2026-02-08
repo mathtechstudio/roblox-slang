@@ -25,7 +25,7 @@ pub fn generate_type_definitions(
     code.push_str("    Place this file alongside your Translations.lua module.\n");
     code.push_str("    Your IDE/LSP will automatically provide autocomplete and type checking.\n");
     code.push_str("    \n");
-    code.push_str("    Learn more: https://github.com/protheeuz/roblox-slang\n");
+    code.push_str("    Learn more: https://github.com/mathtechstudio/roblox-slang\n");
     code.push_str("--]]\n\n");
 
     // Get base locale translations

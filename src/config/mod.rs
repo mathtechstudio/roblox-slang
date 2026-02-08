@@ -109,7 +109,7 @@ pub fn load_config(path: &Path) -> Result<Config> {
 /// Create a default configuration file
 pub fn create_default_config(path: &Path) -> Result<()> {
     let yaml = r#"# Roblox Slang Configuration
-# Documentation: https://github.com/protheeuz/roblox-slang
+# Documentation: https://github.com/mathtechstudio/roblox-slang
 
 # Base locale (fallback when translation is missing)
 base_locale: en
