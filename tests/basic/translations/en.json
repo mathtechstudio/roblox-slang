@@ -1,0 +1,225 @@
+{
+  "ui": {
+    "buttons": {
+      "buy": "Buy now",
+      "sell": "Sell",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "back": "Back",
+      "next": "Next",
+      "close": "Close",
+      "save": "Save",
+      "load": "Load",
+      "delete": "Delete",
+      "edit": "Edit",
+      "create": "Create",
+      "submit": "Submit",
+      "reset": "Reset",
+      "apply": "Apply"
+    },
+    "labels": {
+      "welcome": "Welcome to the game!",
+      "player": "Player",
+      "displayName": "Display Name",
+      "level": "Level",
+      "experience": "Experience",
+      "health": "Health",
+      "mana": "Mana",
+      "stamina": "Stamina",
+      "coins": "Coins",
+      "gems": "Gems",
+      "robux": "Robux"
+    },
+    "messages": {
+      "greeting": "Hello, {name}!",
+      "itemCount": "You have {count} items",
+      "items(one)": "{count} item",
+      "items(other)": "{count} items",
+      "price": "Price: ${price:fixed(2)}",
+      "score": "Score: {score:int}",
+      "loading": "Loading...",
+      "saving": "Saving...",
+      "success": "Success!",
+      "error": "Error occurred",
+      "warning": "Warning!",
+      "playerJoined": "{name} joined the game",
+      "playerLeft": "{name} left the game"
+    },
+    "tooltips": {
+      "buyItem": "Click to purchase this item",
+      "sellItem": "Click to sell this item",
+      "equipItem": "Click to equip this item",
+      "unequipItem": "Click to unequip this item",
+      "upgradeItem": "Click to upgrade this item"
+    }
+  },
+  "game": {
+    "menu": {
+      "play": "Play",
+      "settings": "Settings",
+      "quit": "Quit",
+      "help": "Help",
+      "about": "About",
+      "credits": "Credits",
+      "leaderboard": "Leaderboard",
+      "achievements": "Achievements",
+      "profile": "Profile",
+      "friends": "Friends"
+    },
+    "modes": {
+      "singleplayer": "Single Player",
+      "multiplayer": "Multiplayer",
+      "coop": "Co-op",
+      "versus": "Versus",
+      "practice": "Practice",
+      "tutorial": "Tutorial",
+      "campaign": "Campaign",
+      "survival": "Survival",
+      "arena": "Arena",
+      "raid": "Raid"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "away": "Away",
+      "busy": "Busy",
+      "inGame": "In Game",
+      "inLobby": "In Lobby",
+      "searching": "Searching...",
+      "connecting": "Connecting...",
+      "connected": "Connected",
+      "disconnected": "Disconnected"
+    },
+    "notifications": {
+      "friendRequest": "{name} sent you a friend request",
+      "partyInvite": "{name} invited you to a party",
+      "tradeRequest": "{name} wants to trade with you",
+      "achievementUnlocked": "Achievement unlocked: {achievement}",
+      "levelUp": "Level up! You are now level {level}",
+      "questComplete": "Quest completed: {quest}"
+    }
+  },
+  "shop": {
+    "categories": {
+      "weapons": "Weapons",
+      "armor": "Armor",
+      "potions": "Potions",
+      "materials": "Materials",
+      "consumables": "Consumables",
+      "equipment": "Equipment",
+      "accessories": "Accessories",
+      "pets": "Pets",
+      "vehicles": "Vehicles",
+      "emotes": "Emotes",
+      "gamepasses": "Game Passes",
+      "bundles": "Bundles",
+      "featured": "Featured"
+    },
+    "actions": {
+      "purchase": "Purchase",
+      "preview": "Preview",
+      "compare": "Compare",
+      "addToCart": "Add to Cart",
+      "removeFromCart": "Remove from Cart",
+      "checkout": "Checkout",
+      "viewCart": "View Cart",
+      "clearCart": "Clear Cart"
+    },
+    "messages": {
+      "purchaseSuccess": "Purchase successful!",
+      "purchaseFailed": "Purchase failed",
+      "insufficientFunds": "Insufficient funds",
+      "insufficientRobux": "Not enough Robux",
+      "itemAdded": "Item added to cart",
+      "itemRemoved": "Item removed from cart",
+      "cartEmpty": "Your cart is empty",
+      "requiresGamepass": "Requires game pass: {gamepass}"
+    }
+  },
+  "inventory": {
+    "tabs": {
+      "all": "All",
+      "weapons": "Weapons",
+      "armor": "Armor",
+      "consumables": "Consumables",
+      "materials": "Materials",
+      "quest": "Quest Items",
+      "pets": "Pets",
+      "vehicles": "Vehicles"
+    },
+    "actions": {
+      "use": "Use",
+      "equip": "Equip",
+      "unequip": "Unequip",
+      "drop": "Drop",
+      "destroy": "Destroy",
+      "upgrade": "Upgrade",
+      "repair": "Repair",
+      "enchant": "Enchant",
+      "trade": "Trade",
+      "gift": "Gift"
+    },
+    "info": {
+      "weight": "Weight: {weight:fixed(1)}",
+      "durability": "Durability: {current}/{max}",
+      "damage": "Damage: {damage:int}",
+      "defense": "Defense: {defense:int}",
+      "rarity": "Rarity: {rarity}",
+      "quantity": "Quantity: {quantity:int}"
+    }
+  },
+  "social": {
+    "friends": {
+      "online": "Online Friends",
+      "offline": "Offline Friends",
+      "requests": "Friend Requests",
+      "add": "Add Friend",
+      "remove": "Remove Friend",
+      "block": "Block",
+      "unblock": "Unblock",
+      "invite": "Invite to Game"
+    },
+    "party": {
+      "create": "Create Party",
+      "join": "Join Party",
+      "leave": "Leave Party",
+      "kick": "Kick from Party",
+      "promote": "Promote to Leader",
+      "invite": "Invite to Party"
+    },
+    "chat": {
+      "send": "Send",
+      "whisper": "Whisper",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "report": "Report",
+      "teamChat": "Team Chat",
+      "globalChat": "Global Chat"
+    }
+  },
+  "settings": {
+    "categories": {
+      "general": "General",
+      "graphics": "Graphics",
+      "audio": "Audio",
+      "controls": "Controls",
+      "gameplay": "Gameplay",
+      "accessibility": "Accessibility"
+    },
+    "options": {
+      "language": "Language",
+      "volume": "Volume",
+      "musicVolume": "Music Volume",
+      "sfxVolume": "SFX Volume",
+      "brightness": "Brightness",
+      "quality": "Graphics Quality",
+      "fullscreen": "Fullscreen",
+      "vsync": "VSync",
+      "shadows": "Shadows",
+      "particles": "Particles",
+      "fov": "Field of View",
+      "mouseSensitivity": "Mouse Sensitivity",
+      "invertY": "Invert Y-Axis"
+    }
+  }
+}

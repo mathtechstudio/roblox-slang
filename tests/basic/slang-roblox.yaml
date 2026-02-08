@@ -1,0 +1,31 @@
+# Roblox Slang Configuration
+# Documentation: https://github.com/protheeuz/roblox-slang
+
+# Base locale (fallback when translation is missing)
+base_locale: en
+
+# Supported locales for your game
+supported_locales:
+  - en
+  - id
+  - es
+
+# Directory containing translation files (JSON/YAML)
+input_directory: translations
+
+# Directory for generated Luau code
+output_directory: output
+
+# Optional: Namespace for generated module (null = no namespace)
+namespace: null
+
+# Optional: Translation overrides
+overrides:
+  enabled: true
+  file: overrides.yaml
+
+# Optional: Analytics for tracking missing translations
+analytics:
+  enabled: true
+  track_missing: true
+  track_usage: true

@@ -1,0 +1,13 @@
+# Translation Overrides
+# Override specific translations per locale without modifying source files
+# Useful for A/B testing, seasonal events, or quick fixes
+
+en:
+  ui.buttons.buy: "Purchase Now!"
+  ui.messages.greeting: "Hey there, {name}!"
+
+es:
+  ui.buttons.buy: "¡Comprar Ahora!"
+
+id:
+  ui.buttons.buy: "Beli Sekarang!"

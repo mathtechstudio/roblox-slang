@@ -1,0 +1,14 @@
+ui:
+  buttons:
+    buy: Comprar
+    sell: Vender
+    cancel: Cancelar
+  labels:
+    welcome: ¡Bienvenido al juego!
+  messages:
+    greeting: "¡Hola, {name}!"
+    itemCount: "Tienes {count} artículos"
+    items(one): "{count} artículo"
+    items(other): "{count} artículos"
+    price: "Precio: ${price:fixed(2)}"
+    score: "Puntuación: {score:int}"
