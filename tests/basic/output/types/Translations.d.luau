@@ -12,7 +12,7 @@
     Place this file alongside your Translations.lua module.
     Your IDE/LSP will automatically provide autocomplete and type checking.
     
-    Learn more: https://github.com/protheeuz/roblox-slang
+    Learn more: https://github.com/mathtechstudio/roblox-slang
 --]]
 
 export type Translations = {

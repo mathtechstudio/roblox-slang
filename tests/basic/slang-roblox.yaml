@@ -1,5 +1,5 @@
 # Roblox Slang Configuration
-# Documentation: https://github.com/protheeuz/roblox-slang
+# Documentation: https://github.com/mathtechstudio/roblox-slang
 
 # Base locale (fallback when translation is missing)
 base_locale: en

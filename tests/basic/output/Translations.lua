@@ -16,7 +16,7 @@
     - Automatic player locale detection
     - Analytics tracking (if enabled)
     
-    Learn more: https://github.com/protheeuz/roblox-slang
+    Learn more: https://github.com/mathtechstudio/roblox-slang
 --]]
 
 local Translations = {}
