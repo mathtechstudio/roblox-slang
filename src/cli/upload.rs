@@ -39,6 +39,9 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
     let client =
         RobloxCloudClient::new(auth.api_key).context("Failed to create Roblox Cloud client")?;
 
+    // Save locales before moving config
+    let locales_str = config.supported_locales.join(", ");
+
     // Create orchestrator
     let orchestrator = SyncOrchestrator::new(client, config);
 
@@ -48,6 +51,8 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
     }
 
     println!("{} Uploading translations to cloud...", "→".blue());
+    println!("  Table ID: {}", table_id);
+    println!("  Locales: {}", locales_str);
 
     let stats = orchestrator
         .upload(&table_id, dry_run)
@@ -62,6 +67,8 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
 
     if dry_run {
         println!("\n{} This was a dry-run. No changes were made.", "ℹ".cyan());
+    } else {
+        println!("\n{} Translations successfully uploaded to Roblox Cloud", "✓".green());
     }
 
     Ok(())

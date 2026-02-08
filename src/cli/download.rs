@@ -31,6 +31,7 @@ pub async fn download(table_id: Option<String>, dry_run: bool) -> Result<()> {
     }
 
     println!("{} Downloading translations from cloud...", "→".blue());
+    println!("  Table ID: {}", table_id);
 
     let stats = orchestrator
         .download(&table_id, dry_run)
@@ -49,6 +50,8 @@ pub async fn download(table_id: Option<String>, dry_run: bool) -> Result<()> {
             "\n{} This was a dry-run. No files were written.",
             "ℹ".cyan()
         );
+    } else {
+        println!("\n{} Translations successfully downloaded from Roblox Cloud", "✓".green());
     }
 
     Ok(())

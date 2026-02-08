@@ -62,6 +62,8 @@ pub async fn sync(table_id: Option<String>, strategy: Option<String>, dry_run: b
         "→".blue(),
         strategy_str
     );
+    println!("  Table ID: {}", table_id);
+    println!("  Merge strategy: {}", strategy_str);
 
     let stats = orchestrator
         .sync(&table_id, merge_strategy, dry_run)
@@ -94,6 +96,8 @@ pub async fn sync(table_id: Option<String>, strategy: Option<String>, dry_run: b
 
     if dry_run {
         println!("\n{} This was a dry-run. No changes were made.", "ℹ".cyan());
+    } else {
+        println!("\n{} Translations successfully synchronized", "✓".green());
     }
 
     Ok(())
