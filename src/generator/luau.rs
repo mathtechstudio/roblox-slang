@@ -27,7 +27,7 @@ pub fn generate_luau_with_config(
     code.push_str("    To update translations, edit your JSON/YAML files and run:\n");
     code.push_str("        roblox-slang build\n");
     code.push_str("    \n");
-    code.push_str("    Learn more: https://github.com/protheeuz/roblox-slang\n");
+    code.push_str("    Learn more: https://github.com/mathtechstudio/roblox-slang\n");
     code.push_str("--]]\n\n");
 
     // Get all unique keys from base locale
