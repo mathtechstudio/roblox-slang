@@ -12,40 +12,83 @@ Complete guide to get started with Roblox Slang in your project.
 
 ### Step 1: Install the CLI Tool
 
-Choose your preferred toolchain manager:
+Choose your preferred toolchain manager. All three options work identically - they automatically download the correct pre-built binary for your platform from GitHub Releases.
 
 #### Option A: Rokit (Recommended)
 
+[Rokit](https://github.com/rojo-rbx/rokit) is the fastest and most modern toolchain manager.
+
 ```bash
+# Add to your project
 rokit add protheeuz/roblox-slang
-rokit install
+
+# Or install globally
+rokit add --global protheeuz/roblox-slang
+```
+
+**rokit.toml:**
+
+```toml
+[tools]
+roblox-slang = "protheeuz/roblox-slang@1.0.0"
 ```
 
 #### Option B: Aftman
 
+> **Note:** Aftman is no longer actively maintained. We recommend using [Rokit](#option-a-rokit-recommended) or [Foreman](#option-c-foreman) for new projects.
+
+[Aftman](https://github.com/LPGhatguy/aftman) provides exact version dependencies and trust-based security.
+
 ```bash
+# Add to your project
 aftman add protheeuz/roblox-slang
-aftman install
+
+# Or install globally
+aftman add --global protheeuz/roblox-slang
+```
+
+**aftman.toml:**
+
+```toml
+[tools]
+roblox-slang = "protheeuz/roblox-slang@1.0.0"
 ```
 
 #### Option C: Foreman
 
-Add to `foreman.toml`:
+[Foreman](https://github.com/Roblox/foreman) is the original Roblox toolchain manager, battle-tested in production.
+
+**foreman.toml:**
 
 ```toml
 [tools]
-roblox-slang = { github = "protheeuz/roblox-slang" }
+roblox-slang = { github = "protheeuz/roblox-slang", version = "1.0.0" }
 ```
-
-Then install:
 
 ```bash
 foreman install
 ```
 
-#### Option D: From Source
+#### Option D: Manual Installation
+
+Download pre-built binaries from [GitHub Releases](https://github.com/protheeuz/roblox-slang/releases):
+
+- `roblox-slang-1.0.0-linux-x86_64.zip`
+- `roblox-slang-1.0.0-linux-aarch64.zip`
+- `roblox-slang-1.0.0-windows-x86_64.zip`
+- `roblox-slang-1.0.0-windows-aarch64.zip`
+- `roblox-slang-1.0.0-macos-x86_64.zip`
+- `roblox-slang-1.0.0-macos-aarch64.zip`
+
+Extract the archive and add the binary to your PATH.
+
+#### Option E: From Source (Cargo)
 
 ```bash
+# Install from crates.io
+cargo install roblox-slang
+
+# Or build from source
 git clone https://github.com/protheeuz/roblox-slang.git
 cd roblox-slang
 cargo install --locked --path .

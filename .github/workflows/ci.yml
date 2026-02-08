@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 env:
   CARGO_TERM_COLOR: always
@@ -12,12 +12,13 @@ env:
 
 jobs:
   test:
-    name: Test
+    name: Test Suite
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable, 1.70.0]
+        rust: [stable, beta]
     
     steps:
       - name: Checkout code
@@ -28,32 +29,113 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
 
-      - name: Cache cargo registry
+      - name: Cache Rust dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ matrix.os }}-${{ matrix.rust }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.rust }}-cargo-
 
-      - name: Cache cargo index
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run unit tests
+        run: cargo test --lib --verbose
 
-      - name: Cache cargo build
-        uses: actions/cache@v4
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run integration tests
+        run: cargo test --test integration_tests --verbose
 
-      - name: Run tests
-        run: cargo test --all-features --verbose
+      - name: Run CLI tests
+        run: cargo test --test cli_tests --verbose
+
+      - name: Run edge case tests
+        run: cargo test --test edge_cases --verbose
 
       - name: Run doc tests
         run: cargo test --doc --verbose
 
-  clippy:
-    name: Clippy
+  stress-tests:
+    name: Stress Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ubuntu-latest-stable-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ubuntu-latest-stable-cargo-
+
+      - name: Run stress tests
+        run: cargo test --test stress_tests --verbose -- --ignored --test-threads=1
+        timeout-minutes: 30
+
+  benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ubuntu-latest-stable-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ubuntu-latest-stable-cargo-
+
+      - name: Run benchmarks
+        run: cargo bench --verbose -- --output-format bencher | tee benchmark-results.txt
+
+      - name: Check performance regression
+        shell: bash
+        run: |
+          # Extract complete_build/1000_translations time
+          if grep -q "complete_build/1000_translations" benchmark-results.txt; then
+            BUILD_TIME=$(grep "complete_build/1000_translations" benchmark-results.txt | awk '{print $5}' | sed 's/ms//' || echo "0")
+            echo "Build time for 1K translations: ${BUILD_TIME}ms"
+            
+            # Check if build time exceeds 200ms (target)
+            if command -v bc &> /dev/null; then
+              if (( $(echo "$BUILD_TIME > 200" | bc -l) )); then
+                echo "::warning::Build time ${BUILD_TIME}ms exceeds target of 200ms"
+              else
+                echo "✓ Build time ${BUILD_TIME}ms is within target"
+              fi
+            else
+              echo "::notice::bc not available, skipping performance check"
+            fi
+          else
+            echo "::warning::Benchmark results not found in expected format"
+          fi
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark-results.txt
+
+  lint:
+    name: Linting
     runs-on: ubuntu-latest
     
     steps:
@@ -63,31 +145,109 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          components: clippy
+          components: rustfmt, clippy
 
-      - name: Run clippy
-        run: cargo clippy --all-features -- -D warnings
-
-  fmt:
-    name: Format
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
         with:
-          components: rustfmt
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ubuntu-latest-stable-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ubuntu-latest-stable-cargo-
 
       - name: Check formatting
         run: cargo fmt --all -- --check
 
+      - name: Run clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+  msrv:
+    name: Check MSRV (1.70.0)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust 1.70.0
+        uses: dtolnay/rust-toolchain@1.70.0
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ubuntu-latest-1.70.0-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ubuntu-latest-1.70.0-cargo-
+
+      - name: Check build with MSRV
+        run: cargo build --locked --verbose
+
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run security audit
+        run: cargo audit
+
+  coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ubuntu-latest-stable-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ubuntu-latest-stable-cargo-
+
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Generate coverage report
+        run: cargo tarpaulin --verbose --all-features --workspace --timeout 300 --out xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./cobertura.xml
+          fail_ci_if_error: false
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   build:
-    name: Build
+    name: Build Release
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     
@@ -98,8 +258,44 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Build
-        run: cargo build --release --locked
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ matrix.os }}-stable-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-stable-cargo-
+
+      - name: Build release binary
+        run: cargo build --release --locked --verbose
+
+      - name: Check binary size (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          SIZE=$(ls -lh target/release/roblox-slang | awk '{print $5}')
+          echo "Binary size: $SIZE"
+          SIZE_BYTES=$(stat -f%z target/release/roblox-slang 2>/dev/null || stat -c%s target/release/roblox-slang)
+          if [ $SIZE_BYTES -gt 5242880 ]; then
+            echo "::warning::Binary size exceeds 5MB target"
+          else
+            echo "✓ Binary size is within 5MB target"
+          fi
+
+      - name: Check binary size (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $size = (Get-Item target/release/roblox-slang.exe).Length
+          $sizeMB = [math]::Round($size / 1MB, 2)
+          Write-Host "Binary size: $sizeMB MB"
+          if ($size -gt 5242880) {
+            Write-Host "::warning::Binary size exceeds 5MB target"
+          } else {
+            Write-Host "✓ Binary size is within 5MB target"
+          }
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

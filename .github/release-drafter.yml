@@ -1,0 +1,153 @@
+# Release Drafter Configuration
+# Automatically generates draft releases from PR labels and titles
+
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+# Categories for grouping PRs
+categories:
+  - title: 'Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'feat'
+  - title: 'Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: 'Maintenance'
+    labels:
+      - 'chore'
+      - 'dependencies'
+      - 'deps'
+  - title: 'Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+  - title: 'Styling'
+    labels:
+      - 'style'
+      - 'styling'
+  - title: 'Refactoring'
+    labels:
+      - 'refactor'
+      - 'refactoring'
+  - title: 'Performance'
+    labels:
+      - 'performance'
+      - 'perf'
+  - title: 'Testing'
+    labels:
+      - 'test'
+      - 'testing'
+  - title: 'Security'
+    labels:
+      - 'security'
+
+# Version resolver
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking'
+      - 'breaking-change'
+  minor:
+    labels:
+      - 'minor'
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'patch'
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'chore'
+      - 'dependencies'
+  default: patch
+
+# Change template for each PR
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+change-title-escapes: '\<*_&' # Escape special markdown characters
+
+# Template for the release body
+template: |
+  ## What's Changed
+  
+  $CHANGES
+  
+  ## Installation
+  
+  ### Via Rokit (Recommended)
+  ```bash
+  rokit add protheeuz/roblox-slang@$RESOLVED_VERSION
+  ```
+  
+  ### Via Aftman
+  ```bash
+  aftman add protheeuz/roblox-slang@$RESOLVED_VERSION
+  ```
+  
+  ### Via Foreman
+  ```toml
+  [tools]
+  roblox-slang = { github = "protheeuz/roblox-slang", version = "$RESOLVED_VERSION" }
+  ```
+  
+  ### From GitHub Releases
+  Download pre-built binaries for your platform from the assets below.
+  
+  ### From Cargo
+  ```bash
+  cargo install roblox-slang --version $RESOLVED_VERSION
+  ```
+  
+  ---
+  
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+# Exclude labels from changelog
+exclude-labels:
+  - 'skip-changelog'
+  - 'skip changelog'
+  - 'duplicate'
+  - 'invalid'
+  - 'wontfix'
+
+# Exclude contributors
+exclude-contributors:
+  - 'dependabot'
+  - 'dependabot[bot]'
+
+# Autolabeler - automatically add labels based on PR content
+autolabeler:
+  - label: 'documentation'
+    files:
+      - '*.md'
+      - 'docs/**/*'
+    branch:
+      - '/docs{0,1}\/.+/'
+  - label: 'bug'
+    branch:
+      - '/fix\/.+/'
+    title:
+      - '/fix/i'
+  - label: 'feature'
+    branch:
+      - '/feat(ure){0,1}\/.+/'
+    title:
+      - '/feat/i'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+    title:
+      - '/chore/i'
+  - label: 'test'
+    files:
+      - 'tests/**/*'
+      - '**/*.test.*'
+  - label: 'dependencies'
+    files:
+      - 'Cargo.toml'
+      - 'Cargo.lock'

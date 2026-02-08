@@ -7,58 +7,115 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  BIN: roblox-slang
 
 jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for changelog
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          
+          # Extract changelog section for this version
+          CHANGELOG=$(awk -v ver="$VERSION" '
+            /^## \['"$VERSION"'\]/ { flag=1; next }
+            /^## \[/ { flag=0 }
+            flag && NF { print }
+          ' CHANGELOG.md)
+          
+          # If no changelog found, generate from commits
+          if [ -z "$CHANGELOG" ]; then
+            echo "No changelog found for version $VERSION, generating from commits..."
+            
+            # Get previous tag
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            
+            if [ -z "$PREV_TAG" ]; then
+              # First release, get all commits
+              CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges)
+            else
+              # Get commits since previous tag
+              CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+            fi
+          fi
+          
+          # Save to file to preserve formatting
+          echo "$CHANGELOG" > /tmp/changelog.txt
+          echo "changelog_file=/tmp/changelog.txt" >> $GITHUB_OUTPUT
+
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+        run: |
+          CHANGELOG_CONTENT=$(cat ${{ steps.changelog.outputs.changelog_file }})
+          
+          # Create release with changelog
+          gh release create ${{ steps.version.outputs.tag }} \
+            --draft \
+            --verify-tag \
+            --title "Roblox Slang ${{ steps.version.outputs.tag }}" \
+            --notes "$CHANGELOG_CONTENT"
 
   build-release:
-    name: Build Release
-    needs: create-release
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            artifact_name: roblox-slang.exe
-            asset_name: roblox-slang-${{ github.ref_name }}-windows-x86_64.zip
-          
-          - os: macos-latest
-            target: x86_64-apple-darwin
-            artifact_name: roblox-slang
-            asset_name: roblox-slang-${{ github.ref_name }}-macos-x86_64.zip
-          
-          - os: macos-latest
-            target: aarch64-apple-darwin
-            artifact_name: roblox-slang
-            asset_name: roblox-slang-${{ github.ref_name }}-macos-aarch64.zip
-          
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            artifact_name: roblox-slang
-            asset_name: roblox-slang-${{ github.ref_name }}-linux-x86_64.tar.gz
-          
-          - os: ubuntu-latest
-            target: aarch64-unknown-linux-gnu
-            artifact_name: roblox-slang
-            asset_name: roblox-slang-${{ github.ref_name }}-linux-aarch64.tar.gz
-
+    name: Build (${{ matrix.target }})
+    needs: [create-release]
     runs-on: ${{ matrix.os }}
-    
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://doc.rust-lang.org/rustc/platform-support.html
+        include:
+          # Linux x86_64
+          - host: linux
+            os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            label: linux-x86_64
+
+          # Linux ARM64
+          - host: linux
+            os: ubuntu-22.04-arm
+            target: aarch64-unknown-linux-gnu
+            label: linux-aarch64
+
+          # Windows x86_64
+          - host: windows
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            label: windows-x86_64
+
+          # Windows ARM64
+          - host: windows
+            os: windows-11-arm
+            target: aarch64-pc-windows-msvc
+            label: windows-aarch64
+
+          # macOS x86_64
+          - host: macos
+            os: macos-latest
+            target: x86_64-apple-darwin
+            label: macos-x86_64
+
+          # macOS ARM64 (Apple Silicon)
+          - host: macos
+            os: macos-latest
+            target: aarch64-apple-darwin
+            label: macos-aarch64
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -68,39 +125,81 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install cross-compilation tools (Linux ARM64)
-        if: matrix.target == 'aarch64-unknown-linux-gnu'
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ matrix.os }}-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.target }}-cargo-
+
+      - name: Build release binary
+        run: cargo build --release --locked --verbose --target ${{ matrix.target }}
+
+      - name: Generate artifact name
+        shell: bash
+        env:
+          TAG_NAME: ${{ github.ref_name }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
+          echo "ARTIFACT_NAME=$BIN-${TAG_NAME#v}-${{ matrix.label }}.zip" >> "$GITHUB_ENV"
 
-      - name: Build
-        run: cargo build --release --locked --target ${{ matrix.target }}
-
-      - name: Create archive (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          cd target/${{ matrix.target }}/release
-          7z a ../../../${{ matrix.asset_name }} ${{ matrix.artifact_name }}
-
-      - name: Create archive (macOS)
-        if: matrix.os == 'macos-latest'
-        run: |
-          cd target/${{ matrix.target }}/release
-          zip ../../../${{ matrix.asset_name }} ${{ matrix.artifact_name }}
-
-      - name: Create archive (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          cd target/${{ matrix.target }}/release
-          tar czf ../../../${{ matrix.asset_name }} ${{ matrix.artifact_name }}
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+      - name: Create archive and upload to release
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir staging
+          
+          if [ "${{ matrix.host }}" = "windows" ]; then
+            cp "target/${{ matrix.target }}/release/$BIN.exe" staging/
+            cd staging
+            7z a ../$ARTIFACT_NAME *
+          else
+            cp "target/${{ matrix.target }}/release/$BIN" staging/
+            cd staging
+            zip ../$ARTIFACT_NAME *
+          fi
+          
+          gh release upload ${{ github.ref_name }} ../$ARTIFACT_NAME
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./${{ matrix.asset_name }}
-          asset_name: ${{ matrix.asset_name }}
-          asset_content_type: application/octet-stream
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}
+
+  publish-crates-io:
+    name: Publish to crates.io
+    needs: [build-release]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Publish to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish --locked
+
+  update-release:
+    name: Update Release
+    needs: [build-release, publish-crates-io]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Mark release as published
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit ${{ github.ref_name }} --draft=false

@@ -1,13 +1,13 @@
 # Roblox Slang
 
-[![GitHub Release](https://img.shields.io/github/v/release/protheeuz/roblox-slang?style=for-the-badge&logo=github)](https://github.com/protheeuz/roblox-slang/releases)
+[![Version](https://img.shields.io/github/v/release/protheeuz/roblox-slang?style=for-the-badge&logo=github)](https://github.com/protheeuz/roblox-slang/releases)
 [![Roblox](https://img.shields.io/badge/Platform-Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com)
 [![Rust](https://img.shields.io/badge/Built_with-Rust-orange?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org)
 [![Generates](https://img.shields.io/badge/Generates-Luau-00A2FF?style=for-the-badge&logo=lua&logoColor=white)](https://luau-lang.org)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-103_passing-success?style=for-the-badge)](tests/)
 
-Type-safe internationalization (i18n) code generator for Roblox games. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
+Type-safe internationalization (i18n) code generator for Roblox experiences. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
 
 ## Why Roblox Slang?
 
@@ -51,38 +51,89 @@ Roblox Slang is a CLI tool that generates code. Choose your preferred installati
 
 ### Via Rokit (Recommended)
 
+[Rokit](https://github.com/rojo-rbx/rokit) is the fastest and most modern toolchain manager for Roblox projects.
+
 ```bash
+# Add to your project
 rokit add protheeuz/roblox-slang
-rokit install
+
+# Or install globally
+rokit add --global protheeuz/roblox-slang
+```
+
+**rokit.toml:**
+
+```toml
+[tools]
+roblox-slang = "protheeuz/roblox-slang@1.0.0"
 ```
 
 ### Via Aftman
 
+> **Note:** Aftman is no longer actively maintained. We recommend using [Rokit](#via-rokit-recommended) or [Foreman](#via-foreman) for new projects.
+
+[Aftman](https://github.com/LPGhatguy/aftman) provides exact version dependencies and a trust-based security model.
+
 ```bash
+# Add to your project
 aftman add protheeuz/roblox-slang
-aftman install
+
+# Or install globally
+aftman add --global protheeuz/roblox-slang
+```
+
+**aftman.toml:**
+
+```toml
+[tools]
+roblox-slang = "protheeuz/roblox-slang@1.0.0"
 ```
 
 ### Via Foreman
 
+[Foreman](https://github.com/Roblox/foreman) is the original Roblox toolchain manager, battle-tested in production.
+
+**foreman.toml:**
+
 ```toml
-# foreman.toml
 [tools]
-roblox-slang = { github = "protheeuz/roblox-slang" }
+roblox-slang = { github = "protheeuz/roblox-slang", version = "1.0.0" }
 ```
 
 ```bash
 foreman install
 ```
 
-### From GitHub Releases
+### From GitHub Releases (Manual)
 
-Download pre-built binaries from [Releases](https://github.com/protheeuz/roblox-slang/releases).
+Download pre-built binaries for your platform:
 
-### From Source
+- `roblox-slang-1.0.0-linux-x86_64.zip`
+- `roblox-slang-1.0.0-linux-aarch64.zip`
+- `roblox-slang-1.0.0-windows-x86_64.zip`
+- `roblox-slang-1.0.0-windows-aarch64.zip`
+- `roblox-slang-1.0.0-macos-x86_64.zip`
+- `roblox-slang-1.0.0-macos-aarch64.zip`
+
+Extract and add to your PATH, or use a tool manager for automatic updates.
+
+### From Source (Cargo)
 
 ```bash
+# Install from crates.io
+cargo install roblox-slang
+
+# Or build from source
+git clone https://github.com/protheeuz/roblox-slang.git
+cd roblox-slang
 cargo install --locked --path .
+```
+
+### Verify Installation
+
+```bash
+roblox-slang --version
+# Output: roblox-slang 1.0.0
 ```
 
 ## Quick Start
