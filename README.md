@@ -1,6 +1,6 @@
 # Roblox Slang
 
-[![Version](https://img.shields.io/github/v/release/protheeuz/roblox-slang?style=for-the-badge&logo=github)](https://github.com/protheeuz/roblox-slang/releases)
+[![Version](https://img.shields.io/github/v/release/mathtechstudio/roblox-slang?style=for-the-badge&logo=github)](https://github.com/mathtechstudio/roblox-slang/releases)
 [![Roblox](https://img.shields.io/badge/Platform-Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com)
 [![Rust](https://img.shields.io/badge/Built_with-Rust-orange?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org)
 [![Generates](https://img.shields.io/badge/Generates-Luau-00A2FF?style=for-the-badge&logo=lua&logoColor=white)](https://luau-lang.org)
@@ -55,17 +55,17 @@ Roblox Slang is a CLI tool that generates code. Choose your preferred installati
 
 ```bash
 # Add to your project
-rokit add protheeuz/roblox-slang
+rokit add mathtechstudio/roblox-slang
 
 # Or install globally
-rokit add --global protheeuz/roblox-slang
+rokit add --global mathtechstudio/roblox-slang
 ```
 
 **rokit.toml:**
 
 ```toml
 [tools]
-roblox-slang = "protheeuz/roblox-slang@1.0.0"
+roblox-slang = "mathtechstudio/roblox-slang@1.0.0"
 ```
 
 ### Via Aftman
@@ -76,17 +76,17 @@ roblox-slang = "protheeuz/roblox-slang@1.0.0"
 
 ```bash
 # Add to your project
-aftman add protheeuz/roblox-slang
+aftman add mathtechstudio/roblox-slang
 
 # Or install globally
-aftman add --global protheeuz/roblox-slang
+aftman add --global mathtechstudio/roblox-slang
 ```
 
 **aftman.toml:**
 
 ```toml
 [tools]
-roblox-slang = "protheeuz/roblox-slang@1.0.0"
+roblox-slang = "mathtechstudio/roblox-slang@1.0.0"
 ```
 
 ### Via Foreman
@@ -97,7 +97,7 @@ roblox-slang = "protheeuz/roblox-slang@1.0.0"
 
 ```toml
 [tools]
-roblox-slang = { github = "protheeuz/roblox-slang", version = "1.0.0" }
+roblox-slang = { github = "mathtechstudio/roblox-slang", version = "1.0.0" }
 ```
 
 ```bash
@@ -124,7 +124,7 @@ Extract and add to your PATH, or use a tool manager for automatic updates.
 cargo install roblox-slang
 
 # Or build from source
-git clone https://github.com/protheeuz/roblox-slang.git
+git clone https://github.com/mathtechstudio/roblox-slang.git
 cd roblox-slang
 cargo install --locked --path .
 ```
@@ -437,7 +437,7 @@ For contributors:
 
 ```bash
 # Clone repository
-git clone https://github.com/protheeuz/roblox-slang.git
+git clone https://github.com/mathtechstudio/roblox-slang.git
 cd roblox-slang
 
 # Install Rust (1.88+)
