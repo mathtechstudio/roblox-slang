@@ -137,6 +137,29 @@ namespace: null
 #   enabled: true
 #   track_missing: true
 #   track_usage: true
+
+# Optional: Roblox Cloud integration for syncing translations
+# Enables upload, download, and bidirectional sync with Roblox Cloud Localization Tables
+# cloud:
+#   # Localization table ID (UUID format)
+#   # Get from: Creator Dashboard > Localization > Table Settings
+#   table_id: "your-table-id-here"
+#   
+#   # Game/Universe ID (numeric)
+#   # Get from: Creator Dashboard > Game Settings > Basic Info
+#   game_id: "your-game-id-here"
+#   
+#   # API Key (RECOMMENDED: Use environment variable instead)
+#   # Set via: export ROBLOX_CLOUD_API_KEY=your_key_here
+#   # Get from: https://create.roblox.com/credentials
+#   # api_key: "your-api-key-here"
+#   
+#   # Default merge strategy for sync command
+#   # Options:
+#   #   - merge: Upload local-only, download cloud-only, prefer cloud for conflicts (recommended)
+#   #   - overwrite: Replace all cloud translations with local (destructive)
+#   #   - skip-conflicts: Only sync non-conflicting entries
+#   strategy: merge
 "#;
 
     std::fs::write(path, yaml).map_err(|e| {
