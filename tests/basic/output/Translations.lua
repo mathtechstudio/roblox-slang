@@ -8,14 +8,6 @@
     To update translations, edit your JSON/YAML files and run:
         roblox-slang build
     
-    Features:
-    - Type-safe translation access with autocomplete
-    - Runtime locale switching
-    - Parameter interpolation support
-    - Pluralization with CLDR rules
-    - Automatic player locale detection
-    - Analytics tracking (if enabled)
-    
     Learn more: https://github.com/mathtechstudio/roblox-slang
 --]]
 
@@ -29,13 +21,6 @@ function Translations.new(locale)
     local self = setmetatable({}, Translations)
     self._locale = locale or "en"
     self._localeChangedCallbacks = {}
-    
-    -- Analytics initialization
-    self._analytics_enabled = true
-    self._track_missing = true
-    self._track_usage = true
-    self._usage_stats = {}
-    self._analytics_callback = nil
     
     -- Get LocalizationService translator
     local LocalizationService = game:GetService("LocalizationService")
@@ -185,7 +170,6 @@ function Translations.detectLocale(player)
         ["VN"] = "vi",
         ["PL"] = "pl",
         ["CN"] = "zh-cn",
-        ["SG"] = "zh-cn",
         ["TW"] = "zh-tw",
         ["HK"] = "zh-tw",
         ["MO"] = "zh-tw",
@@ -203,1781 +187,715 @@ function Translations.newForPlayer(player)
     return Translations.new(locale)
 end
 
---- Track missing translation
---- @param key string The translation key
-function Translations:_trackMissing(key)
-    if not self._analytics_enabled or not self._track_missing then
-        return
-    end
-    
-    -- Try custom callback first
-    if self._analytics_callback then
-        pcall(function()
-            self._analytics_callback("missing_translation", {
-                key = key,
-                locale = self._locale,
-                timestamp = os.time()
-            })
-        end)
-        return
-    end
-    
-    -- Default: warn in output
-    warn(string.format("[Slang] Missing translation: %s (%s)", key, self._locale))
-end
-
---- Track translation usage
---- @param key string The translation key
-function Translations:_trackUsage(key)
-    if not self._analytics_enabled or not self._track_usage then
-        return
-    end
-    
-    -- Increment usage counter
-    self._usage_stats[key] = (self._usage_stats[key] or 0) + 1
-end
-
---- Get usage statistics
---- @return table Usage statistics
-function Translations:getUsageStats()
-    return self._usage_stats
-end
-
 -- Internal methods (flat keys)
 
-function Translations:game_menu_friends()
-    self:_trackUsage("game.menu.friends")
-    local value = self._translator:FormatByKey("game.menu.friends")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.friends")
-        return "game.menu.friends"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_info_rarity(params)
-    params = params or {}
-    self:_trackUsage("inventory.info.rarity")
-    local value = self._translator:FormatByKey("inventory.info.rarity", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.info.rarity")
-        return "inventory.info.rarity"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_tutorial()
-    self:_trackUsage("game.modes.tutorial")
-    local value = self._translator:FormatByKey("game.modes.tutorial")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.tutorial")
-        return "game.modes.tutorial"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_messages_itemAdded()
-    self:_trackUsage("shop.messages.itemAdded")
-    local value = self._translator:FormatByKey("shop.messages.itemAdded")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.itemAdded")
-        return "shop.messages.itemAdded"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_vehicles()
-    self:_trackUsage("shop.categories.vehicles")
-    local value = self._translator:FormatByKey("shop.categories.vehicles")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.vehicles")
-        return "shop.categories.vehicles"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_save()
-    self:_trackUsage("ui.buttons.save")
-    local value = self._translator:FormatByKey("ui.buttons.save")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.save")
-        return "ui.buttons.save"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_destroy()
-    self:_trackUsage("inventory.actions.destroy")
-    local value = self._translator:FormatByKey("inventory.actions.destroy")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.destroy")
-        return "inventory.actions.destroy"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_arena()
-    self:_trackUsage("game.modes.arena")
-    local value = self._translator:FormatByKey("game.modes.arena")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.arena")
-        return "game.modes.arena"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_particles()
-    self:_trackUsage("settings.options.particles")
-    local value = self._translator:FormatByKey("settings.options.particles")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.particles")
-        return "settings.options.particles"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_categories_accessibility()
-    self:_trackUsage("settings.categories.accessibility")
-    local value = self._translator:FormatByKey("settings.categories.accessibility")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.categories.accessibility")
-        return "settings.categories.accessibility"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_party_kick()
-    self:_trackUsage("social.party.kick")
-    local value = self._translator:FormatByKey("social.party.kick")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.party.kick")
-        return "social.party.kick"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_messages_purchaseSuccess()
-    self:_trackUsage("shop.messages.purchaseSuccess")
-    local value = self._translator:FormatByKey("shop.messages.purchaseSuccess")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.purchaseSuccess")
-        return "shop.messages.purchaseSuccess"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_playerLeft(params)
-    params = params or {}
-    self:_trackUsage("ui.messages.playerLeft")
-    local value = self._translator:FormatByKey("ui.messages.playerLeft", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.playerLeft")
-        return "ui.messages.playerLeft"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_tabs_quest()
-    self:_trackUsage("inventory.tabs.quest")
-    local value = self._translator:FormatByKey("inventory.tabs.quest")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.quest")
-        return "inventory.tabs.quest"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_sell()
-    self:_trackUsage("ui.buttons.sell")
-    local value = self._translator:FormatByKey("ui.buttons.sell")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.sell")
-        return "ui.buttons.sell"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_success()
-    self:_trackUsage("ui.messages.success")
-    local value = self._translator:FormatByKey("ui.messages.success")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.success")
-        return "ui.messages.success"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_level()
-    self:_trackUsage("ui.labels.level")
-    local value = self._translator:FormatByKey("ui.labels.level")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.level")
-        return "ui.labels.level"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_categories_controls()
-    self:_trackUsage("settings.categories.controls")
-    local value = self._translator:FormatByKey("settings.categories.controls")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.categories.controls")
-        return "settings.categories.controls"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_back()
-    self:_trackUsage("ui.buttons.back")
-    local value = self._translator:FormatByKey("ui.buttons.back")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.back")
-        return "ui.buttons.back"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_remove()
-    self:_trackUsage("social.friends.remove")
-    local value = self._translator:FormatByKey("social.friends.remove")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.remove")
-        return "social.friends.remove"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_coop()
-    self:_trackUsage("game.modes.coop")
-    local value = self._translator:FormatByKey("game.modes.coop")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.coop")
-        return "game.modes.coop"  -- Return key as fallback
-    end
-    return value
+function Translations:social_party_promote()
+    return self._translator:FormatByKey("social.party.promote")
 end
 
 function Translations:game_menu_achievements()
-    self:_trackUsage("game.menu.achievements")
-    local value = self._translator:FormatByKey("game.menu.achievements")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.achievements")
-        return "game.menu.achievements"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("game.menu.achievements")
 end
 
-function Translations:inventory_info_defense(params)
-    params = params or {}
-    self:_trackUsage("inventory.info.defense")
-    params.defense = math.floor(tonumber(params.defense) or 0)
-    local value = self._translator:FormatByKey("inventory.info.defense", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.info.defense")
-        return "inventory.info.defense"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_unequip()
-    self:_trackUsage("inventory.actions.unequip")
-    local value = self._translator:FormatByKey("inventory.actions.unequip")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.unequip")
-        return "inventory.actions.unequip"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_practice()
-    self:_trackUsage("game.modes.practice")
-    local value = self._translator:FormatByKey("game.modes.practice")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.practice")
-        return "game.modes.practice"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_potions()
-    self:_trackUsage("shop.categories.potions")
-    local value = self._translator:FormatByKey("shop.categories.potions")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.potions")
-        return "shop.categories.potions"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_info_durability(params)
-    params = params or {}
-    self:_trackUsage("inventory.info.durability")
-    local value = self._translator:FormatByKey("inventory.info.durability", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.info.durability")
-        return "inventory.info.durability"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_shadows()
-    self:_trackUsage("settings.options.shadows")
-    local value = self._translator:FormatByKey("settings.options.shadows")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.shadows")
-        return "settings.options.shadows"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_disconnected()
-    self:_trackUsage("game.status.disconnected")
-    local value = self._translator:FormatByKey("game.status.disconnected")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.disconnected")
-        return "game.status.disconnected"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_messages_purchaseFailed()
-    self:_trackUsage("shop.messages.purchaseFailed")
-    local value = self._translator:FormatByKey("shop.messages.purchaseFailed")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.purchaseFailed")
-        return "shop.messages.purchaseFailed"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_categories_graphics()
-    self:_trackUsage("settings.categories.graphics")
-    local value = self._translator:FormatByKey("settings.categories.graphics")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.categories.graphics")
-        return "settings.categories.graphics"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_requests()
-    self:_trackUsage("social.friends.requests")
-    local value = self._translator:FormatByKey("social.friends.requests")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.requests")
-        return "social.friends.requests"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_trade()
-    self:_trackUsage("inventory.actions.trade")
-    local value = self._translator:FormatByKey("inventory.actions.trade")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.trade")
-        return "inventory.actions.trade"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_buy()
-    self:_trackUsage("ui.buttons.buy")
-    local value = self._translator:FormatByKey("ui.buttons.buy")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.buy")
-        return "ui.buttons.buy"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_create()
-    self:_trackUsage("ui.buttons.create")
-    local value = self._translator:FormatByKey("ui.buttons.create")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.create")
-        return "ui.buttons.create"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_confirm()
-    self:_trackUsage("ui.buttons.confirm")
-    local value = self._translator:FormatByKey("ui.buttons.confirm")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.confirm")
-        return "ui.buttons.confirm"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_categories_general()
-    self:_trackUsage("settings.categories.general")
-    local value = self._translator:FormatByKey("settings.categories.general")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.categories.general")
-        return "settings.categories.general"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_loading()
-    self:_trackUsage("ui.messages.loading")
-    local value = self._translator:FormatByKey("ui.messages.loading")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.loading")
-        return "ui.messages.loading"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_menu_help()
-    self:_trackUsage("game.menu.help")
-    local value = self._translator:FormatByKey("game.menu.help")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.help")
-        return "game.menu.help"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_edit()
-    self:_trackUsage("ui.buttons.edit")
-    local value = self._translator:FormatByKey("ui.buttons.edit")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.edit")
-        return "ui.buttons.edit"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_mouseSensitivity()
-    self:_trackUsage("settings.options.mouseSensitivity")
-    local value = self._translator:FormatByKey("settings.options.mouseSensitivity")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.mouseSensitivity")
-        return "settings.options.mouseSensitivity"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_tabs_all()
-    self:_trackUsage("inventory.tabs.all")
-    local value = self._translator:FormatByKey("inventory.tabs.all")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.all")
-        return "inventory.tabs.all"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_block()
-    self:_trackUsage("social.friends.block")
-    local value = self._translator:FormatByKey("social.friends.block")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.block")
-        return "social.friends.block"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_invertY()
-    self:_trackUsage("settings.options.invertY")
-    local value = self._translator:FormatByKey("settings.options.invertY")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.invertY")
-        return "settings.options.invertY"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_health()
-    self:_trackUsage("ui.labels.health")
-    local value = self._translator:FormatByKey("ui.labels.health")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.health")
-        return "ui.labels.health"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_reset()
-    self:_trackUsage("ui.buttons.reset")
-    local value = self._translator:FormatByKey("ui.buttons.reset")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.reset")
-        return "ui.buttons.reset"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_saving()
-    self:_trackUsage("ui.messages.saving")
-    local value = self._translator:FormatByKey("ui.messages.saving")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.saving")
-        return "ui.messages.saving"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_info_weight(params)
-    params = params or {}
-    self:_trackUsage("inventory.info.weight")
-    params.weight = string.format("%.1f", tonumber(params.weight) or 0)
-    local value = self._translator:FormatByKey("inventory.info.weight", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.info.weight")
-        return "inventory.info.weight"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_chat_globalChat()
-    self:_trackUsage("social.chat.globalChat")
-    local value = self._translator:FormatByKey("social.chat.globalChat")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.globalChat")
-        return "social.chat.globalChat"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_inLobby()
-    self:_trackUsage("game.status.inLobby")
-    local value = self._translator:FormatByKey("game.status.inLobby")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.inLobby")
-        return "game.status.inLobby"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_menu_profile()
-    self:_trackUsage("game.menu.profile")
-    local value = self._translator:FormatByKey("game.menu.profile")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.profile")
-        return "game.menu.profile"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_actions_addToCart()
-    self:_trackUsage("shop.actions.addToCart")
-    local value = self._translator:FormatByKey("shop.actions.addToCart")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.addToCart")
-        return "shop.actions.addToCart"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_pets()
-    self:_trackUsage("shop.categories.pets")
-    local value = self._translator:FormatByKey("shop.categories.pets")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.pets")
-        return "shop.categories.pets"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_close()
-    self:_trackUsage("ui.buttons.close")
-    local value = self._translator:FormatByKey("ui.buttons.close")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.close")
-        return "ui.buttons.close"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_chat_teamChat()
-    self:_trackUsage("social.chat.teamChat")
-    local value = self._translator:FormatByKey("social.chat.teamChat")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.teamChat")
-        return "social.chat.teamChat"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_drop()
-    self:_trackUsage("inventory.actions.drop")
-    local value = self._translator:FormatByKey("inventory.actions.drop")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.drop")
-        return "inventory.actions.drop"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_connected()
-    self:_trackUsage("game.status.connected")
-    local value = self._translator:FormatByKey("game.status.connected")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.connected")
-        return "game.status.connected"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_info_damage(params)
-    params = params or {}
-    self:_trackUsage("inventory.info.damage")
-    params.damage = math.floor(tonumber(params.damage) or 0)
-    local value = self._translator:FormatByKey("inventory.info.damage", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.info.damage")
-        return "inventory.info.damage"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_menu_about()
-    self:_trackUsage("game.menu.about")
-    local value = self._translator:FormatByKey("game.menu.about")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.about")
-        return "game.menu.about"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_tooltips_buyItem()
-    self:_trackUsage("ui.tooltips.buyItem")
-    local value = self._translator:FormatByKey("ui.tooltips.buyItem")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.tooltips.buyItem")
-        return "ui.tooltips.buyItem"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_experience()
-    self:_trackUsage("ui.labels.experience")
-    local value = self._translator:FormatByKey("ui.labels.experience")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.experience")
-        return "ui.labels.experience"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_online()
-    self:_trackUsage("social.friends.online")
-    local value = self._translator:FormatByKey("social.friends.online")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.online")
-        return "social.friends.online"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_menu_settings()
-    self:_trackUsage("game.menu.settings")
-    local value = self._translator:FormatByKey("game.menu.settings")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.settings")
-        return "game.menu.settings"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_actions_checkout()
-    self:_trackUsage("shop.actions.checkout")
-    local value = self._translator:FormatByKey("shop.actions.checkout")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.checkout")
-        return "shop.actions.checkout"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_fov()
-    self:_trackUsage("settings.options.fov")
-    local value = self._translator:FormatByKey("settings.options.fov")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.fov")
-        return "settings.options.fov"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_messages_insufficientRobux()
-    self:_trackUsage("shop.messages.insufficientRobux")
-    local value = self._translator:FormatByKey("shop.messages.insufficientRobux")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.insufficientRobux")
-        return "shop.messages.insufficientRobux"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_notifications_questComplete(params)
-    params = params or {}
-    self:_trackUsage("game.notifications.questComplete")
-    local value = self._translator:FormatByKey("game.notifications.questComplete", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.notifications.questComplete")
-        return "game.notifications.questComplete"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_online()
-    self:_trackUsage("game.status.online")
-    local value = self._translator:FormatByKey("game.status.online")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.online")
-        return "game.status.online"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_actions_preview()
-    self:_trackUsage("shop.actions.preview")
-    local value = self._translator:FormatByKey("shop.actions.preview")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.preview")
-        return "shop.actions.preview"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_categories_gameplay()
-    self:_trackUsage("settings.categories.gameplay")
-    local value = self._translator:FormatByKey("settings.categories.gameplay")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.categories.gameplay")
-        return "settings.categories.gameplay"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_notifications_levelUp(params)
-    params = params or {}
-    self:_trackUsage("game.notifications.levelUp")
-    local value = self._translator:FormatByKey("game.notifications.levelUp", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.notifications.levelUp")
-        return "game.notifications.levelUp"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_itemCount(params)
-    params = params or {}
-    self:_trackUsage("ui.messages.itemCount")
-    local value = self._translator:FormatByKey("ui.messages.itemCount", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.itemCount")
-        return "ui.messages.itemCount"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_connecting()
-    self:_trackUsage("game.status.connecting")
-    local value = self._translator:FormatByKey("game.status.connecting")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.connecting")
-        return "game.status.connecting"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_use()
-    self:_trackUsage("inventory.actions.use")
-    local value = self._translator:FormatByKey("inventory.actions.use")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.use")
-        return "inventory.actions.use"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_notifications_achievementUnlocked(params)
-    params = params or {}
-    self:_trackUsage("game.notifications.achievementUnlocked")
-    local value = self._translator:FormatByKey("game.notifications.achievementUnlocked", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.notifications.achievementUnlocked")
-        return "game.notifications.achievementUnlocked"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_tabs_consumables()
-    self:_trackUsage("inventory.tabs.consumables")
-    local value = self._translator:FormatByKey("inventory.tabs.consumables")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.consumables")
-        return "inventory.tabs.consumables"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_equipment()
-    self:_trackUsage("shop.categories.equipment")
-    local value = self._translator:FormatByKey("shop.categories.equipment")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.equipment")
-        return "shop.categories.equipment"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_weapons()
-    self:_trackUsage("shop.categories.weapons")
-    local value = self._translator:FormatByKey("shop.categories.weapons")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.weapons")
-        return "shop.categories.weapons"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_chat_report()
-    self:_trackUsage("social.chat.report")
-    local value = self._translator:FormatByKey("social.chat.report")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.report")
-        return "social.chat.report"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_displayName()
-    self:_trackUsage("ui.labels.displayName")
-    local value = self._translator:FormatByKey("ui.labels.displayName")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.displayName")
-        return "ui.labels.displayName"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_apply()
-    self:_trackUsage("ui.buttons.apply")
-    local value = self._translator:FormatByKey("ui.buttons.apply")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.apply")
-        return "ui.buttons.apply"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_score(params)
-    params = params or {}
-    self:_trackUsage("ui.messages.score")
-    params.score = math.floor(tonumber(params.score) or 0)
-    local value = self._translator:FormatByKey("ui.messages.score", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.score")
-        return "ui.messages.score"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_vsync()
-    self:_trackUsage("settings.options.vsync")
-    local value = self._translator:FormatByKey("settings.options.vsync")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.vsync")
-        return "settings.options.vsync"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_consumables()
-    self:_trackUsage("shop.categories.consumables")
-    local value = self._translator:FormatByKey("shop.categories.consumables")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.consumables")
-        return "shop.categories.consumables"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_brightness()
-    self:_trackUsage("settings.options.brightness")
-    local value = self._translator:FormatByKey("settings.options.brightness")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.brightness")
-        return "settings.options.brightness"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_unblock()
-    self:_trackUsage("social.friends.unblock")
-    local value = self._translator:FormatByKey("social.friends.unblock")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.unblock")
-        return "social.friends.unblock"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_sfxVolume()
-    self:_trackUsage("settings.options.sfxVolume")
-    local value = self._translator:FormatByKey("settings.options.sfxVolume")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.sfxVolume")
-        return "settings.options.sfxVolume"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_party_promote()
-    self:_trackUsage("social.party.promote")
-    local value = self._translator:FormatByKey("social.party.promote")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.party.promote")
-        return "social.party.promote"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_stamina()
-    self:_trackUsage("ui.labels.stamina")
-    local value = self._translator:FormatByKey("ui.labels.stamina")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.stamina")
-        return "ui.labels.stamina"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_materials()
-    self:_trackUsage("shop.categories.materials")
-    local value = self._translator:FormatByKey("shop.categories.materials")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.materials")
-        return "shop.categories.materials"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_messages_cartEmpty()
-    self:_trackUsage("shop.messages.cartEmpty")
-    local value = self._translator:FormatByKey("shop.messages.cartEmpty")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.cartEmpty")
-        return "shop.messages.cartEmpty"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_cancel()
-    self:_trackUsage("ui.buttons.cancel")
-    local value = self._translator:FormatByKey("ui.buttons.cancel")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.cancel")
-        return "ui.buttons.cancel"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_player()
-    self:_trackUsage("ui.labels.player")
-    local value = self._translator:FormatByKey("ui.labels.player")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.player")
-        return "ui.labels.player"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_notifications_tradeRequest(params)
-    params = params or {}
-    self:_trackUsage("game.notifications.tradeRequest")
-    local value = self._translator:FormatByKey("game.notifications.tradeRequest", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.notifications.tradeRequest")
-        return "game.notifications.tradeRequest"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_enchant()
-    self:_trackUsage("inventory.actions.enchant")
-    local value = self._translator:FormatByKey("inventory.actions.enchant")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.enchant")
-        return "inventory.actions.enchant"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_party_create()
-    self:_trackUsage("social.party.create")
-    local value = self._translator:FormatByKey("social.party.create")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.party.create")
-        return "social.party.create"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_menu_credits()
-    self:_trackUsage("game.menu.credits")
-    local value = self._translator:FormatByKey("game.menu.credits")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.credits")
-        return "game.menu.credits"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_robux()
-    self:_trackUsage("ui.labels.robux")
-    local value = self._translator:FormatByKey("ui.labels.robux")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.robux")
-        return "ui.labels.robux"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_invite()
-    self:_trackUsage("social.friends.invite")
-    local value = self._translator:FormatByKey("social.friends.invite")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.invite")
-        return "social.friends.invite"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_welcome()
-    self:_trackUsage("ui.labels.welcome")
-    local value = self._translator:FormatByKey("ui.labels.welcome")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.welcome")
-        return "ui.labels.welcome"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_tooltips_upgradeItem()
-    self:_trackUsage("ui.tooltips.upgradeItem")
-    local value = self._translator:FormatByKey("ui.tooltips.upgradeItem")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.tooltips.upgradeItem")
-        return "ui.tooltips.upgradeItem"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_tabs_materials()
-    self:_trackUsage("inventory.tabs.materials")
-    local value = self._translator:FormatByKey("inventory.tabs.materials")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.materials")
-        return "inventory.tabs.materials"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_volume()
-    self:_trackUsage("settings.options.volume")
-    local value = self._translator:FormatByKey("settings.options.volume")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.volume")
-        return "settings.options.volume"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_musicVolume()
-    self:_trackUsage("settings.options.musicVolume")
-    local value = self._translator:FormatByKey("settings.options.musicVolume")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.musicVolume")
-        return "settings.options.musicVolume"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_gamepasses()
-    self:_trackUsage("shop.categories.gamepasses")
-    local value = self._translator:FormatByKey("shop.categories.gamepasses")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.gamepasses")
-        return "shop.categories.gamepasses"  -- Return key as fallback
-    end
-    return value
+function Translations:ui_labels_coins()
+    return self._translator:FormatByKey("ui.labels.coins")
 end
 
 function Translations:game_modes_raid()
-    self:_trackUsage("game.modes.raid")
-    local value = self._translator:FormatByKey("game.modes.raid")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.raid")
-        return "game.modes.raid"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("game.modes.raid")
 end
 
-function Translations:inventory_tabs_pets()
-    self:_trackUsage("inventory.tabs.pets")
-    local value = self._translator:FormatByKey("inventory.tabs.pets")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.pets")
-        return "inventory.tabs.pets"  -- Return key as fallback
-    end
-    return value
+function Translations:shop_messages_itemAdded()
+    return self._translator:FormatByKey("shop.messages.itemAdded")
 end
 
-function Translations:shop_categories_emotes()
-    self:_trackUsage("shop.categories.emotes")
-    local value = self._translator:FormatByKey("shop.categories.emotes")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.emotes")
-        return "shop.categories.emotes"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_accessories()
-    self:_trackUsage("shop.categories.accessories")
-    local value = self._translator:FormatByKey("shop.categories.accessories")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.accessories")
-        return "shop.categories.accessories"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_busy()
-    self:_trackUsage("game.status.busy")
-    local value = self._translator:FormatByKey("game.status.busy")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.busy")
-        return "game.status.busy"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_party_join()
-    self:_trackUsage("social.party.join")
-    local value = self._translator:FormatByKey("social.party.join")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.party.join")
-        return "social.party.join"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_submit()
-    self:_trackUsage("ui.buttons.submit")
-    local value = self._translator:FormatByKey("ui.buttons.submit")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.submit")
-        return "ui.buttons.submit"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_gems()
-    self:_trackUsage("ui.labels.gems")
-    local value = self._translator:FormatByKey("ui.labels.gems")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.gems")
-        return "ui.labels.gems"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_offline()
-    self:_trackUsage("game.status.offline")
-    local value = self._translator:FormatByKey("game.status.offline")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.offline")
-        return "game.status.offline"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_warning()
-    self:_trackUsage("ui.messages.warning")
-    local value = self._translator:FormatByKey("ui.messages.warning")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.warning")
-        return "ui.messages.warning"  -- Return key as fallback
-    end
-    return value
+function Translations:shop_actions_addToCart()
+    return self._translator:FormatByKey("shop.actions.addToCart")
 end
 
 function Translations:game_menu_leaderboard()
-    self:_trackUsage("game.menu.leaderboard")
-    local value = self._translator:FormatByKey("game.menu.leaderboard")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.leaderboard")
-        return "game.menu.leaderboard"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("game.menu.leaderboard")
 end
 
-function Translations:social_chat_whisper()
-    self:_trackUsage("social.chat.whisper")
-    local value = self._translator:FormatByKey("social.chat.whisper")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.whisper")
-        return "social.chat.whisper"  -- Return key as fallback
-    end
-    return value
+function Translations:game_status_away()
+    return self._translator:FormatByKey("game.status.away")
 end
 
-function Translations:shop_actions_removeFromCart()
-    self:_trackUsage("shop.actions.removeFromCart")
-    local value = self._translator:FormatByKey("shop.actions.removeFromCart")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.removeFromCart")
-        return "shop.actions.removeFromCart"  -- Return key as fallback
-    end
-    return value
+function Translations:shop_categories_vehicles()
+    return self._translator:FormatByKey("shop.categories.vehicles")
+end
+
+function Translations:settings_options_fov()
+    return self._translator:FormatByKey("settings.options.fov")
+end
+
+function Translations:social_friends_add()
+    return self._translator:FormatByKey("social.friends.add")
+end
+
+function Translations:ui_buttons_delete()
+    return self._translator:FormatByKey("ui.buttons.delete")
+end
+
+function Translations:settings_categories_gameplay()
+    return self._translator:FormatByKey("settings.categories.gameplay")
+end
+
+function Translations:inventory_actions_repair()
+    return self._translator:FormatByKey("inventory.actions.repair")
+end
+
+function Translations:ui_labels_experience()
+    return self._translator:FormatByKey("ui.labels.experience")
 end
 
 function Translations:game_notifications_partyInvite(params)
     params = params or {}
-    self:_trackUsage("game.notifications.partyInvite")
-    local value = self._translator:FormatByKey("game.notifications.partyInvite", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.notifications.partyInvite")
-        return "game.notifications.partyInvite"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("game.notifications.partyInvite", params)
 end
 
-function Translations:shop_actions_compare()
-    self:_trackUsage("shop.actions.compare")
-    local value = self._translator:FormatByKey("shop.actions.compare")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.compare")
-        return "shop.actions.compare"  -- Return key as fallback
-    end
-    return value
+function Translations:game_modes_arena()
+    return self._translator:FormatByKey("game.modes.arena")
 end
 
-function Translations:shop_actions_purchase()
-    self:_trackUsage("shop.actions.purchase")
-    local value = self._translator:FormatByKey("shop.actions.purchase")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.purchase")
-        return "shop.actions.purchase"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_gift()
-    self:_trackUsage("inventory.actions.gift")
-    local value = self._translator:FormatByKey("inventory.actions.gift")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.gift")
-        return "inventory.actions.gift"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_add()
-    self:_trackUsage("social.friends.add")
-    local value = self._translator:FormatByKey("social.friends.add")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.add")
-        return "social.friends.add"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_labels_mana()
-    self:_trackUsage("ui.labels.mana")
-    local value = self._translator:FormatByKey("ui.labels.mana")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.mana")
-        return "ui.labels.mana"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_options_quality()
-    self:_trackUsage("settings.options.quality")
-    local value = self._translator:FormatByKey("settings.options.quality")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.quality")
-        return "settings.options.quality"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_chat_unmute()
-    self:_trackUsage("social.chat.unmute")
-    local value = self._translator:FormatByKey("social.chat.unmute")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.unmute")
-        return "social.chat.unmute"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_equip()
-    self:_trackUsage("inventory.actions.equip")
-    local value = self._translator:FormatByKey("inventory.actions.equip")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.equip")
-        return "inventory.actions.equip"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_searching()
-    self:_trackUsage("game.status.searching")
-    local value = self._translator:FormatByKey("game.status.searching")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.searching")
-        return "game.status.searching"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_survival()
-    self:_trackUsage("game.modes.survival")
-    local value = self._translator:FormatByKey("game.modes.survival")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.survival")
-        return "game.modes.survival"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_notifications_friendRequest(params)
-    params = params or {}
-    self:_trackUsage("game.notifications.friendRequest")
-    local value = self._translator:FormatByKey("game.notifications.friendRequest", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.notifications.friendRequest")
-        return "game.notifications.friendRequest"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_party_leave()
-    self:_trackUsage("social.party.leave")
-    local value = self._translator:FormatByKey("social.party.leave")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.party.leave")
-        return "social.party.leave"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_load()
-    self:_trackUsage("ui.buttons.load")
-    local value = self._translator:FormatByKey("ui.buttons.load")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.load")
-        return "ui.buttons.load"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_multiplayer()
-    self:_trackUsage("game.modes.multiplayer")
-    local value = self._translator:FormatByKey("game.modes.multiplayer")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.multiplayer")
-        return "game.modes.multiplayer"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_actions_viewCart()
-    self:_trackUsage("shop.actions.viewCart")
-    local value = self._translator:FormatByKey("shop.actions.viewCart")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.viewCart")
-        return "shop.actions.viewCart"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_tabs_weapons()
-    self:_trackUsage("inventory.tabs.weapons")
-    local value = self._translator:FormatByKey("inventory.tabs.weapons")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.weapons")
-        return "inventory.tabs.weapons"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_info_quantity(params)
-    params = params or {}
-    self:_trackUsage("inventory.info.quantity")
-    params.quantity = math.floor(tonumber(params.quantity) or 0)
-    local value = self._translator:FormatByKey("inventory.info.quantity", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.info.quantity")
-        return "inventory.info.quantity"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_messages_insufficientFunds()
-    self:_trackUsage("shop.messages.insufficientFunds")
-    local value = self._translator:FormatByKey("shop.messages.insufficientFunds")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.insufficientFunds")
-        return "shop.messages.insufficientFunds"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_error()
-    self:_trackUsage("ui.messages.error")
-    local value = self._translator:FormatByKey("ui.messages.error")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.error")
-        return "ui.messages.error"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_delete()
-    self:_trackUsage("ui.buttons.delete")
-    local value = self._translator:FormatByKey("ui.buttons.delete")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.delete")
-        return "ui.buttons.delete"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_inGame()
-    self:_trackUsage("game.status.inGame")
-    local value = self._translator:FormatByKey("game.status.inGame")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.inGame")
-        return "game.status.inGame"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:shop_categories_bundles()
-    self:_trackUsage("shop.categories.bundles")
-    local value = self._translator:FormatByKey("shop.categories.bundles")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.bundles")
-        return "shop.categories.bundles"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_modes_versus()
-    self:_trackUsage("game.modes.versus")
-    local value = self._translator:FormatByKey("game.modes.versus")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.versus")
-        return "game.modes.versus"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_menu_quit()
-    self:_trackUsage("game.menu.quit")
-    local value = self._translator:FormatByKey("game.menu.quit")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.quit")
-        return "game.menu.quit"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:settings_categories_audio()
-    self:_trackUsage("settings.categories.audio")
-    local value = self._translator:FormatByKey("settings.categories.audio")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.categories.audio")
-        return "settings.categories.audio"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:social_friends_offline()
-    self:_trackUsage("social.friends.offline")
-    local value = self._translator:FormatByKey("social.friends.offline")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.friends.offline")
-        return "social.friends.offline"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_playerJoined(params)
-    params = params or {}
-    self:_trackUsage("ui.messages.playerJoined")
-    local value = self._translator:FormatByKey("ui.messages.playerJoined", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.playerJoined")
-        return "ui.messages.playerJoined"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_price(params)
-    params = params or {}
-    self:_trackUsage("ui.messages.price")
-    params.price = string.format("%.2f", tonumber(params.price) or 0)
-    local value = self._translator:FormatByKey("ui.messages.price", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.price")
-        return "ui.messages.price"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:inventory_actions_upgrade()
-    self:_trackUsage("inventory.actions.upgrade")
-    local value = self._translator:FormatByKey("inventory.actions.upgrade")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.upgrade")
-        return "inventory.actions.upgrade"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_buttons_next()
-    self:_trackUsage("ui.buttons.next")
-    local value = self._translator:FormatByKey("ui.buttons.next")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.buttons.next")
-        return "ui.buttons.next"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:ui_messages_greeting(params)
-    params = params or {}
-    self:_trackUsage("ui.messages.greeting")
-    local value = self._translator:FormatByKey("ui.messages.greeting", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.messages.greeting")
-        return "ui.messages.greeting"  -- Return key as fallback
-    end
-    return value
-end
-
-function Translations:game_status_away()
-    self:_trackUsage("game.status.away")
-    local value = self._translator:FormatByKey("game.status.away")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.status.away")
-        return "game.status.away"  -- Return key as fallback
-    end
-    return value
+function Translations:game_modes_singleplayer()
+    return self._translator:FormatByKey("game.modes.singleplayer")
 end
 
 function Translations:shop_messages_requiresGamepass(params)
     params = params or {}
-    self:_trackUsage("shop.messages.requiresGamepass")
-    local value = self._translator:FormatByKey("shop.messages.requiresGamepass", params)
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.requiresGamepass")
-        return "shop.messages.requiresGamepass"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("shop.messages.requiresGamepass", params)
 end
 
-function Translations:inventory_actions_repair()
-    self:_trackUsage("inventory.actions.repair")
-    local value = self._translator:FormatByKey("inventory.actions.repair")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.actions.repair")
-        return "inventory.actions.repair"  -- Return key as fallback
-    end
-    return value
+function Translations:ui_buttons_reset()
+    return self._translator:FormatByKey("ui.buttons.reset")
 end
 
-function Translations:settings_options_language()
-    self:_trackUsage("settings.options.language")
-    local value = self._translator:FormatByKey("settings.options.language")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.language")
-        return "settings.options.language"  -- Return key as fallback
-    end
-    return value
+function Translations:ui_messages_saving()
+    return self._translator:FormatByKey("ui.messages.saving")
 end
 
-function Translations:social_chat_send()
-    self:_trackUsage("social.chat.send")
-    local value = self._translator:FormatByKey("social.chat.send")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.send")
-        return "social.chat.send"  -- Return key as fallback
-    end
-    return value
+function Translations:game_status_connecting()
+    return self._translator:FormatByKey("game.status.connecting")
 end
 
-function Translations:game_modes_campaign()
-    self:_trackUsage("game.modes.campaign")
-    local value = self._translator:FormatByKey("game.modes.campaign")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.campaign")
-        return "game.modes.campaign"  -- Return key as fallback
-    end
-    return value
+function Translations:ui_labels_mana()
+    return self._translator:FormatByKey("ui.labels.mana")
 end
 
-function Translations:inventory_tabs_armor()
-    self:_trackUsage("inventory.tabs.armor")
-    local value = self._translator:FormatByKey("inventory.tabs.armor")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.armor")
-        return "inventory.tabs.armor"  -- Return key as fallback
-    end
-    return value
+function Translations:ui_buttons_back()
+    return self._translator:FormatByKey("ui.buttons.back")
 end
 
-function Translations:ui_tooltips_unequipItem()
-    self:_trackUsage("ui.tooltips.unequipItem")
-    local value = self._translator:FormatByKey("ui.tooltips.unequipItem")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.tooltips.unequipItem")
-        return "ui.tooltips.unequipItem"  -- Return key as fallback
-    end
-    return value
+function Translations:shop_categories_accessories()
+    return self._translator:FormatByKey("shop.categories.accessories")
 end
 
-function Translations:shop_categories_armor()
-    self:_trackUsage("shop.categories.armor")
-    local value = self._translator:FormatByKey("shop.categories.armor")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.armor")
-        return "shop.categories.armor"  -- Return key as fallback
-    end
-    return value
+function Translations:inventory_tabs_materials()
+    return self._translator:FormatByKey("inventory.tabs.materials")
 end
 
-function Translations:game_modes_singleplayer()
-    self:_trackUsage("game.modes.singleplayer")
-    local value = self._translator:FormatByKey("game.modes.singleplayer")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.modes.singleplayer")
-        return "game.modes.singleplayer"  -- Return key as fallback
-    end
-    return value
+function Translations:ui_buttons_load()
+    return self._translator:FormatByKey("ui.buttons.load")
 end
 
-function Translations:game_menu_play()
-    self:_trackUsage("game.menu.play")
-    local value = self._translator:FormatByKey("game.menu.play")
-    if value == "" or value == "{}" then
-        self:_trackMissing("game.menu.play")
-        return "game.menu.play"  -- Return key as fallback
-    end
-    return value
+function Translations:settings_options_sfxVolume()
+    return self._translator:FormatByKey("settings.options.sfxVolume")
 end
 
-function Translations:settings_options_fullscreen()
-    self:_trackUsage("settings.options.fullscreen")
-    local value = self._translator:FormatByKey("settings.options.fullscreen")
-    if value == "" or value == "{}" then
-        self:_trackMissing("settings.options.fullscreen")
-        return "settings.options.fullscreen"  -- Return key as fallback
-    end
-    return value
+function Translations:inventory_actions_upgrade()
+    return self._translator:FormatByKey("inventory.actions.upgrade")
 end
 
-function Translations:shop_actions_clearCart()
-    self:_trackUsage("shop.actions.clearCart")
-    local value = self._translator:FormatByKey("shop.actions.clearCart")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.actions.clearCart")
-        return "shop.actions.clearCart"  -- Return key as fallback
-    end
-    return value
+function Translations:shop_actions_preview()
+    return self._translator:FormatByKey("shop.actions.preview")
+end
+
+function Translations:ui_messages_itemCount(params)
+    params = params or {}
+    return self._translator:FormatByKey("ui.messages.itemCount", params)
+end
+
+function Translations:ui_buttons_sell()
+    return self._translator:FormatByKey("ui.buttons.sell")
+end
+
+function Translations:social_chat_teamChat()
+    return self._translator:FormatByKey("social.chat.teamChat")
+end
+
+function Translations:inventory_tabs_pets()
+    return self._translator:FormatByKey("inventory.tabs.pets")
+end
+
+function Translations:ui_buttons_next()
+    return self._translator:FormatByKey("ui.buttons.next")
+end
+
+function Translations:shop_categories_potions()
+    return self._translator:FormatByKey("shop.categories.potions")
 end
 
 function Translations:ui_tooltips_equipItem()
-    self:_trackUsage("ui.tooltips.equipItem")
-    local value = self._translator:FormatByKey("ui.tooltips.equipItem")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.tooltips.equipItem")
-        return "ui.tooltips.equipItem"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("ui.tooltips.equipItem")
 end
 
-function Translations:shop_categories_featured()
-    self:_trackUsage("shop.categories.featured")
-    local value = self._translator:FormatByKey("shop.categories.featured")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.categories.featured")
-        return "shop.categories.featured"  -- Return key as fallback
-    end
-    return value
+function Translations:game_status_inGame()
+    return self._translator:FormatByKey("game.status.inGame")
 end
 
-function Translations:shop_messages_itemRemoved()
-    self:_trackUsage("shop.messages.itemRemoved")
-    local value = self._translator:FormatByKey("shop.messages.itemRemoved")
-    if value == "" or value == "{}" then
-        self:_trackMissing("shop.messages.itemRemoved")
-        return "shop.messages.itemRemoved"  -- Return key as fallback
-    end
-    return value
+function Translations:inventory_tabs_all()
+    return self._translator:FormatByKey("inventory.tabs.all")
 end
 
-function Translations:ui_labels_coins()
-    self:_trackUsage("ui.labels.coins")
-    local value = self._translator:FormatByKey("ui.labels.coins")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.labels.coins")
-        return "ui.labels.coins"  -- Return key as fallback
-    end
-    return value
+function Translations:settings_options_fullscreen()
+    return self._translator:FormatByKey("settings.options.fullscreen")
+end
+
+function Translations:ui_labels_player()
+    return self._translator:FormatByKey("ui.labels.player")
+end
+
+function Translations:settings_options_shadows()
+    return self._translator:FormatByKey("settings.options.shadows")
+end
+
+function Translations:game_modes_versus()
+    return self._translator:FormatByKey("game.modes.versus")
+end
+
+function Translations:settings_options_quality()
+    return self._translator:FormatByKey("settings.options.quality")
+end
+
+function Translations:settings_categories_graphics()
+    return self._translator:FormatByKey("settings.categories.graphics")
+end
+
+function Translations:game_modes_practice()
+    return self._translator:FormatByKey("game.modes.practice")
+end
+
+function Translations:settings_options_vsync()
+    return self._translator:FormatByKey("settings.options.vsync")
+end
+
+function Translations:shop_actions_removeFromCart()
+    return self._translator:FormatByKey("shop.actions.removeFromCart")
+end
+
+function Translations:social_chat_send()
+    return self._translator:FormatByKey("social.chat.send")
+end
+
+function Translations:game_notifications_friendRequest(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.friendRequest", params)
+end
+
+function Translations:shop_categories_gamepasses()
+    return self._translator:FormatByKey("shop.categories.gamepasses")
+end
+
+function Translations:ui_buttons_save()
+    return self._translator:FormatByKey("ui.buttons.save")
 end
 
 function Translations:inventory_tabs_vehicles()
-    self:_trackUsage("inventory.tabs.vehicles")
-    local value = self._translator:FormatByKey("inventory.tabs.vehicles")
-    if value == "" or value == "{}" then
-        self:_trackMissing("inventory.tabs.vehicles")
-        return "inventory.tabs.vehicles"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("inventory.tabs.vehicles")
+end
+
+function Translations:shop_messages_purchaseSuccess()
+    return self._translator:FormatByKey("shop.messages.purchaseSuccess")
+end
+
+function Translations:inventory_tabs_armor()
+    return self._translator:FormatByKey("inventory.tabs.armor")
+end
+
+function Translations:shop_actions_checkout()
+    return self._translator:FormatByKey("shop.actions.checkout")
+end
+
+function Translations:shop_messages_cartEmpty()
+    return self._translator:FormatByKey("shop.messages.cartEmpty")
+end
+
+function Translations:shop_messages_insufficientFunds()
+    return self._translator:FormatByKey("shop.messages.insufficientFunds")
+end
+
+function Translations:social_friends_unblock()
+    return self._translator:FormatByKey("social.friends.unblock")
+end
+
+function Translations:ui_messages_loading()
+    return self._translator:FormatByKey("ui.messages.loading")
+end
+
+function Translations:game_notifications_levelUp(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.levelUp", params)
+end
+
+function Translations:game_modes_coop()
+    return self._translator:FormatByKey("game.modes.coop")
+end
+
+function Translations:game_notifications_achievementUnlocked(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.achievementUnlocked", params)
+end
+
+function Translations:game_notifications_questComplete(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.questComplete", params)
+end
+
+function Translations:game_menu_quit()
+    return self._translator:FormatByKey("game.menu.quit")
+end
+
+function Translations:game_status_disconnected()
+    return self._translator:FormatByKey("game.status.disconnected")
+end
+
+function Translations:game_status_busy()
+    return self._translator:FormatByKey("game.status.busy")
+end
+
+function Translations:settings_options_volume()
+    return self._translator:FormatByKey("settings.options.volume")
+end
+
+function Translations:shop_categories_bundles()
+    return self._translator:FormatByKey("shop.categories.bundles")
+end
+
+function Translations:shop_categories_featured()
+    return self._translator:FormatByKey("shop.categories.featured")
+end
+
+function Translations:ui_labels_robux()
+    return self._translator:FormatByKey("ui.labels.robux")
+end
+
+function Translations:ui_messages_playerLeft(params)
+    params = params or {}
+    return self._translator:FormatByKey("ui.messages.playerLeft", params)
+end
+
+function Translations:shop_categories_consumables()
+    return self._translator:FormatByKey("shop.categories.consumables")
+end
+
+function Translations:inventory_actions_trade()
+    return self._translator:FormatByKey("inventory.actions.trade")
+end
+
+function Translations:inventory_info_rarity(params)
+    params = params or {}
+    return self._translator:FormatByKey("inventory.info.rarity", params)
+end
+
+function Translations:settings_options_language()
+    return self._translator:FormatByKey("settings.options.language")
+end
+
+function Translations:game_status_online()
+    return self._translator:FormatByKey("game.status.online")
+end
+
+function Translations:inventory_tabs_weapons()
+    return self._translator:FormatByKey("inventory.tabs.weapons")
+end
+
+function Translations:settings_options_invertY()
+    return self._translator:FormatByKey("settings.options.invertY")
+end
+
+function Translations:game_modes_campaign()
+    return self._translator:FormatByKey("game.modes.campaign")
+end
+
+function Translations:settings_categories_general()
+    return self._translator:FormatByKey("settings.categories.general")
+end
+
+function Translations:game_notifications_tradeRequest(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.tradeRequest", params)
+end
+
+function Translations:inventory_actions_destroy()
+    return self._translator:FormatByKey("inventory.actions.destroy")
+end
+
+function Translations:ui_labels_health()
+    return self._translator:FormatByKey("ui.labels.health")
+end
+
+function Translations:game_status_connected()
+    return self._translator:FormatByKey("game.status.connected")
+end
+
+function Translations:inventory_actions_enchant()
+    return self._translator:FormatByKey("inventory.actions.enchant")
+end
+
+function Translations:inventory_actions_gift()
+    return self._translator:FormatByKey("inventory.actions.gift")
+end
+
+function Translations:settings_categories_audio()
+    return self._translator:FormatByKey("settings.categories.audio")
+end
+
+function Translations:social_friends_block()
+    return self._translator:FormatByKey("social.friends.block")
 end
 
 function Translations:ui_tooltips_sellItem()
-    self:_trackUsage("ui.tooltips.sellItem")
-    local value = self._translator:FormatByKey("ui.tooltips.sellItem")
-    if value == "" or value == "{}" then
-        self:_trackMissing("ui.tooltips.sellItem")
-        return "ui.tooltips.sellItem"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("ui.tooltips.sellItem")
 end
 
-function Translations:social_party_invite()
-    self:_trackUsage("social.party.invite")
-    local value = self._translator:FormatByKey("social.party.invite")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.party.invite")
-        return "social.party.invite"  -- Return key as fallback
-    end
-    return value
+function Translations:game_modes_multiplayer()
+    return self._translator:FormatByKey("game.modes.multiplayer")
+end
+
+function Translations:game_menu_help()
+    return self._translator:FormatByKey("game.menu.help")
+end
+
+function Translations:inventory_tabs_quest()
+    return self._translator:FormatByKey("inventory.tabs.quest")
+end
+
+function Translations:social_party_join()
+    return self._translator:FormatByKey("social.party.join")
+end
+
+function Translations:inventory_info_weight(params)
+    params = params or {}
+    params.weight = string.format("%.1f", tonumber(params.weight) or 0)
+    return self._translator:FormatByKey("inventory.info.weight", params)
+end
+
+function Translations:shop_categories_weapons()
+    return self._translator:FormatByKey("shop.categories.weapons")
+end
+
+function Translations:inventory_actions_equip()
+    return self._translator:FormatByKey("inventory.actions.equip")
+end
+
+function Translations:social_friends_remove()
+    return self._translator:FormatByKey("social.friends.remove")
+end
+
+function Translations:game_menu_play()
+    return self._translator:FormatByKey("game.menu.play")
+end
+
+function Translations:settings_options_particles()
+    return self._translator:FormatByKey("settings.options.particles")
+end
+
+function Translations:ui_messages_error()
+    return self._translator:FormatByKey("ui.messages.error")
+end
+
+function Translations:social_party_kick()
+    return self._translator:FormatByKey("social.party.kick")
+end
+
+function Translations:ui_tooltips_unequipItem()
+    return self._translator:FormatByKey("ui.tooltips.unequipItem")
+end
+
+function Translations:inventory_tabs_consumables()
+    return self._translator:FormatByKey("inventory.tabs.consumables")
+end
+
+function Translations:shop_messages_purchaseFailed()
+    return self._translator:FormatByKey("shop.messages.purchaseFailed")
+end
+
+function Translations:game_menu_settings()
+    return self._translator:FormatByKey("game.menu.settings")
 end
 
 function Translations:social_chat_mute()
-    self:_trackUsage("social.chat.mute")
-    local value = self._translator:FormatByKey("social.chat.mute")
-    if value == "" or value == "{}" then
-        self:_trackMissing("social.chat.mute")
-        return "social.chat.mute"  -- Return key as fallback
-    end
-    return value
+    return self._translator:FormatByKey("social.chat.mute")
+end
+
+function Translations:ui_buttons_confirm()
+    return self._translator:FormatByKey("ui.buttons.confirm")
+end
+
+function Translations:game_menu_profile()
+    return self._translator:FormatByKey("game.menu.profile")
+end
+
+function Translations:inventory_info_durability(params)
+    params = params or {}
+    return self._translator:FormatByKey("inventory.info.durability", params)
+end
+
+function Translations:shop_categories_equipment()
+    return self._translator:FormatByKey("shop.categories.equipment")
+end
+
+function Translations:social_friends_requests()
+    return self._translator:FormatByKey("social.friends.requests")
+end
+
+function Translations:ui_labels_stamina()
+    return self._translator:FormatByKey("ui.labels.stamina")
+end
+
+function Translations:ui_messages_price(params)
+    params = params or {}
+    params.price = string.format("%.2f", tonumber(params.price) or 0)
+    return self._translator:FormatByKey("ui.messages.price", params)
+end
+
+function Translations:ui_tooltips_upgradeItem()
+    return self._translator:FormatByKey("ui.tooltips.upgradeItem")
+end
+
+function Translations:shop_actions_clearCart()
+    return self._translator:FormatByKey("shop.actions.clearCart")
+end
+
+function Translations:social_chat_whisper()
+    return self._translator:FormatByKey("social.chat.whisper")
+end
+
+function Translations:game_status_searching()
+    return self._translator:FormatByKey("game.status.searching")
+end
+
+function Translations:social_chat_report()
+    return self._translator:FormatByKey("social.chat.report")
+end
+
+function Translations:game_menu_about()
+    return self._translator:FormatByKey("game.menu.about")
+end
+
+function Translations:inventory_actions_drop()
+    return self._translator:FormatByKey("inventory.actions.drop")
+end
+
+function Translations:ui_messages_success()
+    return self._translator:FormatByKey("ui.messages.success")
+end
+
+function Translations:ui_messages_warning()
+    return self._translator:FormatByKey("ui.messages.warning")
+end
+
+function Translations:ui_buttons_edit()
+    return self._translator:FormatByKey("ui.buttons.edit")
+end
+
+function Translations:game_status_offline()
+    return self._translator:FormatByKey("game.status.offline")
+end
+
+function Translations:inventory_info_quantity(params)
+    params = params or {}
+    params.quantity = math.floor(tonumber(params.quantity) or 0)
+    return self._translator:FormatByKey("inventory.info.quantity", params)
+end
+
+function Translations:game_status_inLobby()
+    return self._translator:FormatByKey("game.status.inLobby")
+end
+
+function Translations:game_menu_credits()
+    return self._translator:FormatByKey("game.menu.credits")
+end
+
+function Translations:settings_categories_accessibility()
+    return self._translator:FormatByKey("settings.categories.accessibility")
+end
+
+function Translations:ui_buttons_create()
+    return self._translator:FormatByKey("ui.buttons.create")
+end
+
+function Translations:social_chat_globalChat()
+    return self._translator:FormatByKey("social.chat.globalChat")
+end
+
+function Translations:ui_labels_displayName()
+    return self._translator:FormatByKey("ui.labels.displayName")
+end
+
+function Translations:game_modes_survival()
+    return self._translator:FormatByKey("game.modes.survival")
+end
+
+function Translations:inventory_info_damage(params)
+    params = params or {}
+    params.damage = math.floor(tonumber(params.damage) or 0)
+    return self._translator:FormatByKey("inventory.info.damage", params)
+end
+
+function Translations:inventory_info_defense(params)
+    params = params or {}
+    params.defense = math.floor(tonumber(params.defense) or 0)
+    return self._translator:FormatByKey("inventory.info.defense", params)
+end
+
+function Translations:shop_categories_armor()
+    return self._translator:FormatByKey("shop.categories.armor")
+end
+
+function Translations:settings_options_brightness()
+    return self._translator:FormatByKey("settings.options.brightness")
+end
+
+function Translations:settings_options_musicVolume()
+    return self._translator:FormatByKey("settings.options.musicVolume")
+end
+
+function Translations:ui_labels_gems()
+    return self._translator:FormatByKey("ui.labels.gems")
+end
+
+function Translations:ui_messages_score(params)
+    params = params or {}
+    params.score = math.floor(tonumber(params.score) or 0)
+    return self._translator:FormatByKey("ui.messages.score", params)
+end
+
+function Translations:game_menu_friends()
+    return self._translator:FormatByKey("game.menu.friends")
+end
+
+function Translations:shop_messages_insufficientRobux()
+    return self._translator:FormatByKey("shop.messages.insufficientRobux")
+end
+
+function Translations:social_friends_invite()
+    return self._translator:FormatByKey("social.friends.invite")
+end
+
+function Translations:game_modes_tutorial()
+    return self._translator:FormatByKey("game.modes.tutorial")
+end
+
+function Translations:social_friends_offline()
+    return self._translator:FormatByKey("social.friends.offline")
+end
+
+function Translations:ui_buttons_close()
+    return self._translator:FormatByKey("ui.buttons.close")
+end
+
+function Translations:social_party_create()
+    return self._translator:FormatByKey("social.party.create")
+end
+
+function Translations:shop_messages_itemRemoved()
+    return self._translator:FormatByKey("shop.messages.itemRemoved")
+end
+
+function Translations:shop_categories_emotes()
+    return self._translator:FormatByKey("shop.categories.emotes")
+end
+
+function Translations:ui_buttons_submit()
+    return self._translator:FormatByKey("ui.buttons.submit")
+end
+
+function Translations:ui_messages_playerJoined(params)
+    params = params or {}
+    return self._translator:FormatByKey("ui.messages.playerJoined", params)
+end
+
+function Translations:inventory_actions_use()
+    return self._translator:FormatByKey("inventory.actions.use")
+end
+
+function Translations:shop_categories_materials()
+    return self._translator:FormatByKey("shop.categories.materials")
+end
+
+function Translations:social_party_invite()
+    return self._translator:FormatByKey("social.party.invite")
+end
+
+function Translations:inventory_actions_unequip()
+    return self._translator:FormatByKey("inventory.actions.unequip")
+end
+
+function Translations:ui_buttons_cancel()
+    return self._translator:FormatByKey("ui.buttons.cancel")
+end
+
+function Translations:ui_buttons_buy()
+    return self._translator:FormatByKey("ui.buttons.buy")
+end
+
+function Translations:ui_labels_level()
+    return self._translator:FormatByKey("ui.labels.level")
+end
+
+function Translations:ui_buttons_apply()
+    return self._translator:FormatByKey("ui.buttons.apply")
+end
+
+function Translations:shop_actions_compare()
+    return self._translator:FormatByKey("shop.actions.compare")
+end
+
+function Translations:social_friends_online()
+    return self._translator:FormatByKey("social.friends.online")
+end
+
+function Translations:ui_labels_welcome()
+    return self._translator:FormatByKey("ui.labels.welcome")
+end
+
+function Translations:shop_actions_purchase()
+    return self._translator:FormatByKey("shop.actions.purchase")
+end
+
+function Translations:settings_options_mouseSensitivity()
+    return self._translator:FormatByKey("settings.options.mouseSensitivity")
+end
+
+function Translations:settings_categories_controls()
+    return self._translator:FormatByKey("settings.categories.controls")
+end
+
+function Translations:social_chat_unmute()
+    return self._translator:FormatByKey("social.chat.unmute")
+end
+
+function Translations:ui_messages_greeting(params)
+    params = params or {}
+    return self._translator:FormatByKey("ui.messages.greeting", params)
+end
+
+function Translations:ui_tooltips_buyItem()
+    return self._translator:FormatByKey("ui.tooltips.buyItem")
+end
+
+function Translations:shop_actions_viewCart()
+    return self._translator:FormatByKey("shop.actions.viewCart")
+end
+
+function Translations:shop_categories_pets()
+    return self._translator:FormatByKey("shop.categories.pets")
+end
+
+function Translations:social_party_leave()
+    return self._translator:FormatByKey("social.party.leave")
 end
 
 function Translations:ui_messages_items(count, params)
@@ -2059,184 +977,80 @@ Translations.ui.labels = {}
 Translations.ui.messages = {}
 Translations.ui.tooltips = {}
 
-function Translations.game.menu.friends(self)
-    return self:game_menu_friends()
-end
-
-function Translations.inventory.info.rarity(self, params)
-    return self:inventory_info_rarity(params)
-end
-
-function Translations.game.modes.tutorial(self)
-    return self:game_modes_tutorial()
-end
-
-function Translations.shop.messages.itemAdded(self)
-    return self:shop_messages_itemAdded()
-end
-
-function Translations.shop.categories.vehicles(self)
-    return self:shop_categories_vehicles()
-end
-
-function Translations.ui.buttons.save(self)
-    return self:ui_buttons_save()
-end
-
-function Translations.inventory.actions.destroy(self)
-    return self:inventory_actions_destroy()
-end
-
-function Translations.game.modes.arena(self)
-    return self:game_modes_arena()
-end
-
-function Translations.settings.options.particles(self)
-    return self:settings_options_particles()
-end
-
-function Translations.settings.categories.accessibility(self)
-    return self:settings_categories_accessibility()
-end
-
-function Translations.social.party.kick(self)
-    return self:social_party_kick()
-end
-
-function Translations.shop.messages.purchaseSuccess(self)
-    return self:shop_messages_purchaseSuccess()
-end
-
-function Translations.ui.messages.playerLeft(self, params)
-    return self:ui_messages_playerLeft(params)
-end
-
-function Translations.inventory.tabs.quest(self)
-    return self:inventory_tabs_quest()
-end
-
-function Translations.ui.buttons.sell(self)
-    return self:ui_buttons_sell()
-end
-
-function Translations.ui.messages.success(self)
-    return self:ui_messages_success()
-end
-
-function Translations.ui.labels.level(self)
-    return self:ui_labels_level()
-end
-
-function Translations.settings.categories.controls(self)
-    return self:settings_categories_controls()
-end
-
-function Translations.ui.buttons.back(self)
-    return self:ui_buttons_back()
-end
-
-function Translations.social.friends.remove(self)
-    return self:social_friends_remove()
-end
-
-function Translations.game.modes.coop(self)
-    return self:game_modes_coop()
+function Translations.social.party.promote(self)
+    return self:social_party_promote()
 end
 
 function Translations.game.menu.achievements(self)
     return self:game_menu_achievements()
 end
 
-function Translations.inventory.info.defense(self, params)
-    return self:inventory_info_defense(params)
+function Translations.ui.labels.coins(self)
+    return self:ui_labels_coins()
 end
 
-function Translations.inventory.actions.unequip(self)
-    return self:inventory_actions_unequip()
+function Translations.game.modes.raid(self)
+    return self:game_modes_raid()
 end
 
-function Translations.game.modes.practice(self)
-    return self:game_modes_practice()
+function Translations.shop.messages.itemAdded(self)
+    return self:shop_messages_itemAdded()
 end
 
-function Translations.shop.categories.potions(self)
-    return self:shop_categories_potions()
+function Translations.shop.actions.addToCart(self)
+    return self:shop_actions_addToCart()
 end
 
-function Translations.inventory.info.durability(self, params)
-    return self:inventory_info_durability(params)
+function Translations.game.menu.leaderboard(self)
+    return self:game_menu_leaderboard()
 end
 
-function Translations.settings.options.shadows(self)
-    return self:settings_options_shadows()
+function Translations.game.status.away(self)
+    return self:game_status_away()
 end
 
-function Translations.game.status.disconnected(self)
-    return self:game_status_disconnected()
+function Translations.shop.categories.vehicles(self)
+    return self:shop_categories_vehicles()
 end
 
-function Translations.shop.messages.purchaseFailed(self)
-    return self:shop_messages_purchaseFailed()
+function Translations.settings.options.fov(self)
+    return self:settings_options_fov()
 end
 
-function Translations.settings.categories.graphics(self)
-    return self:settings_categories_graphics()
+function Translations.social.friends.add(self)
+    return self:social_friends_add()
 end
 
-function Translations.social.friends.requests(self)
-    return self:social_friends_requests()
+function Translations.ui.buttons.delete(self)
+    return self:ui_buttons_delete()
 end
 
-function Translations.inventory.actions.trade(self)
-    return self:inventory_actions_trade()
+function Translations.settings.categories.gameplay(self)
+    return self:settings_categories_gameplay()
 end
 
-function Translations.ui.buttons.buy(self)
-    return self:ui_buttons_buy()
+function Translations.inventory.actions.repair(self)
+    return self:inventory_actions_repair()
 end
 
-function Translations.ui.buttons.create(self)
-    return self:ui_buttons_create()
+function Translations.ui.labels.experience(self)
+    return self:ui_labels_experience()
 end
 
-function Translations.ui.buttons.confirm(self)
-    return self:ui_buttons_confirm()
+function Translations.game.notifications.partyInvite(self, params)
+    return self:game_notifications_partyInvite(params)
 end
 
-function Translations.settings.categories.general(self)
-    return self:settings_categories_general()
+function Translations.game.modes.arena(self)
+    return self:game_modes_arena()
 end
 
-function Translations.ui.messages.loading(self)
-    return self:ui_messages_loading()
+function Translations.game.modes.singleplayer(self)
+    return self:game_modes_singleplayer()
 end
 
-function Translations.game.menu.help(self)
-    return self:game_menu_help()
-end
-
-function Translations.ui.buttons.edit(self)
-    return self:ui_buttons_edit()
-end
-
-function Translations.settings.options.mouseSensitivity(self)
-    return self:settings_options_mouseSensitivity()
-end
-
-function Translations.inventory.tabs.all(self)
-    return self:inventory_tabs_all()
-end
-
-function Translations.social.friends.block(self)
-    return self:social_friends_block()
-end
-
-function Translations.settings.options.invertY(self)
-    return self:settings_options_invertY()
-end
-
-function Translations.ui.labels.health(self)
-    return self:ui_labels_health()
+function Translations.shop.messages.requiresGamepass(self, params)
+    return self:shop_messages_requiresGamepass(params)
 end
 
 function Translations.ui.buttons.reset(self)
@@ -2247,500 +1061,604 @@ function Translations.ui.messages.saving(self)
     return self:ui_messages_saving()
 end
 
-function Translations.inventory.info.weight(self, params)
-    return self:inventory_info_weight(params)
-end
-
-function Translations.social.chat.globalChat(self)
-    return self:social_chat_globalChat()
-end
-
-function Translations.game.status.inLobby(self)
-    return self:game_status_inLobby()
-end
-
-function Translations.game.menu.profile(self)
-    return self:game_menu_profile()
-end
-
-function Translations.shop.actions.addToCart(self)
-    return self:shop_actions_addToCart()
-end
-
-function Translations.shop.categories.pets(self)
-    return self:shop_categories_pets()
-end
-
-function Translations.ui.buttons.close(self)
-    return self:ui_buttons_close()
-end
-
-function Translations.social.chat.teamChat(self)
-    return self:social_chat_teamChat()
-end
-
-function Translations.inventory.actions.drop(self)
-    return self:inventory_actions_drop()
-end
-
-function Translations.game.status.connected(self)
-    return self:game_status_connected()
-end
-
-function Translations.inventory.info.damage(self, params)
-    return self:inventory_info_damage(params)
-end
-
-function Translations.game.menu.about(self)
-    return self:game_menu_about()
-end
-
-function Translations.ui.tooltips.buyItem(self)
-    return self:ui_tooltips_buyItem()
-end
-
-function Translations.ui.labels.experience(self)
-    return self:ui_labels_experience()
-end
-
-function Translations.social.friends.online(self)
-    return self:social_friends_online()
-end
-
-function Translations.game.menu.settings(self)
-    return self:game_menu_settings()
-end
-
-function Translations.shop.actions.checkout(self)
-    return self:shop_actions_checkout()
-end
-
-function Translations.settings.options.fov(self)
-    return self:settings_options_fov()
-end
-
-function Translations.shop.messages.insufficientRobux(self)
-    return self:shop_messages_insufficientRobux()
-end
-
-function Translations.game.notifications.questComplete(self, params)
-    return self:game_notifications_questComplete(params)
-end
-
-function Translations.game.status.online(self)
-    return self:game_status_online()
-end
-
-function Translations.shop.actions.preview(self)
-    return self:shop_actions_preview()
-end
-
-function Translations.settings.categories.gameplay(self)
-    return self:settings_categories_gameplay()
-end
-
-function Translations.game.notifications.levelUp(self, params)
-    return self:game_notifications_levelUp(params)
-end
-
-function Translations.ui.messages.itemCount(self, params)
-    return self:ui_messages_itemCount(params)
-end
-
 function Translations.game.status.connecting(self)
     return self:game_status_connecting()
-end
-
-function Translations.inventory.actions.use(self)
-    return self:inventory_actions_use()
-end
-
-function Translations.game.notifications.achievementUnlocked(self, params)
-    return self:game_notifications_achievementUnlocked(params)
-end
-
-function Translations.inventory.tabs.consumables(self)
-    return self:inventory_tabs_consumables()
-end
-
-function Translations.shop.categories.equipment(self)
-    return self:shop_categories_equipment()
-end
-
-function Translations.shop.categories.weapons(self)
-    return self:shop_categories_weapons()
-end
-
-function Translations.social.chat.report(self)
-    return self:social_chat_report()
-end
-
-function Translations.ui.labels.displayName(self)
-    return self:ui_labels_displayName()
-end
-
-function Translations.ui.buttons.apply(self)
-    return self:ui_buttons_apply()
-end
-
-function Translations.ui.messages.score(self, params)
-    return self:ui_messages_score(params)
-end
-
-function Translations.settings.options.vsync(self)
-    return self:settings_options_vsync()
-end
-
-function Translations.shop.categories.consumables(self)
-    return self:shop_categories_consumables()
-end
-
-function Translations.settings.options.brightness(self)
-    return self:settings_options_brightness()
-end
-
-function Translations.social.friends.unblock(self)
-    return self:social_friends_unblock()
-end
-
-function Translations.settings.options.sfxVolume(self)
-    return self:settings_options_sfxVolume()
-end
-
-function Translations.social.party.promote(self)
-    return self:social_party_promote()
-end
-
-function Translations.ui.labels.stamina(self)
-    return self:ui_labels_stamina()
-end
-
-function Translations.shop.categories.materials(self)
-    return self:shop_categories_materials()
-end
-
-function Translations.shop.messages.cartEmpty(self)
-    return self:shop_messages_cartEmpty()
-end
-
-function Translations.ui.buttons.cancel(self)
-    return self:ui_buttons_cancel()
-end
-
-function Translations.ui.labels.player(self)
-    return self:ui_labels_player()
-end
-
-function Translations.game.notifications.tradeRequest(self, params)
-    return self:game_notifications_tradeRequest(params)
-end
-
-function Translations.inventory.actions.enchant(self)
-    return self:inventory_actions_enchant()
-end
-
-function Translations.social.party.create(self)
-    return self:social_party_create()
-end
-
-function Translations.game.menu.credits(self)
-    return self:game_menu_credits()
-end
-
-function Translations.ui.labels.robux(self)
-    return self:ui_labels_robux()
-end
-
-function Translations.social.friends.invite(self)
-    return self:social_friends_invite()
-end
-
-function Translations.ui.labels.welcome(self)
-    return self:ui_labels_welcome()
-end
-
-function Translations.ui.tooltips.upgradeItem(self)
-    return self:ui_tooltips_upgradeItem()
-end
-
-function Translations.inventory.tabs.materials(self)
-    return self:inventory_tabs_materials()
-end
-
-function Translations.settings.options.volume(self)
-    return self:settings_options_volume()
-end
-
-function Translations.settings.options.musicVolume(self)
-    return self:settings_options_musicVolume()
-end
-
-function Translations.shop.categories.gamepasses(self)
-    return self:shop_categories_gamepasses()
-end
-
-function Translations.game.modes.raid(self)
-    return self:game_modes_raid()
-end
-
-function Translations.inventory.tabs.pets(self)
-    return self:inventory_tabs_pets()
-end
-
-function Translations.shop.categories.emotes(self)
-    return self:shop_categories_emotes()
-end
-
-function Translations.shop.categories.accessories(self)
-    return self:shop_categories_accessories()
-end
-
-function Translations.game.status.busy(self)
-    return self:game_status_busy()
-end
-
-function Translations.social.party.join(self)
-    return self:social_party_join()
-end
-
-function Translations.ui.buttons.submit(self)
-    return self:ui_buttons_submit()
-end
-
-function Translations.ui.labels.gems(self)
-    return self:ui_labels_gems()
-end
-
-function Translations.game.status.offline(self)
-    return self:game_status_offline()
-end
-
-function Translations.ui.messages.warning(self)
-    return self:ui_messages_warning()
-end
-
-function Translations.game.menu.leaderboard(self)
-    return self:game_menu_leaderboard()
-end
-
-function Translations.social.chat.whisper(self)
-    return self:social_chat_whisper()
-end
-
-function Translations.shop.actions.removeFromCart(self)
-    return self:shop_actions_removeFromCart()
-end
-
-function Translations.game.notifications.partyInvite(self, params)
-    return self:game_notifications_partyInvite(params)
-end
-
-function Translations.shop.actions.compare(self)
-    return self:shop_actions_compare()
-end
-
-function Translations.shop.actions.purchase(self)
-    return self:shop_actions_purchase()
-end
-
-function Translations.inventory.actions.gift(self)
-    return self:inventory_actions_gift()
-end
-
-function Translations.social.friends.add(self)
-    return self:social_friends_add()
 end
 
 function Translations.ui.labels.mana(self)
     return self:ui_labels_mana()
 end
 
-function Translations.settings.options.quality(self)
-    return self:settings_options_quality()
+function Translations.ui.buttons.back(self)
+    return self:ui_buttons_back()
 end
 
-function Translations.social.chat.unmute(self)
-    return self:social_chat_unmute()
+function Translations.shop.categories.accessories(self)
+    return self:shop_categories_accessories()
 end
 
-function Translations.inventory.actions.equip(self)
-    return self:inventory_actions_equip()
-end
-
-function Translations.game.status.searching(self)
-    return self:game_status_searching()
-end
-
-function Translations.game.modes.survival(self)
-    return self:game_modes_survival()
-end
-
-function Translations.game.notifications.friendRequest(self, params)
-    return self:game_notifications_friendRequest(params)
-end
-
-function Translations.social.party.leave(self)
-    return self:social_party_leave()
+function Translations.inventory.tabs.materials(self)
+    return self:inventory_tabs_materials()
 end
 
 function Translations.ui.buttons.load(self)
     return self:ui_buttons_load()
 end
 
-function Translations.game.modes.multiplayer(self)
-    return self:game_modes_multiplayer()
-end
-
-function Translations.shop.actions.viewCart(self)
-    return self:shop_actions_viewCart()
-end
-
-function Translations.inventory.tabs.weapons(self)
-    return self:inventory_tabs_weapons()
-end
-
-function Translations.inventory.info.quantity(self, params)
-    return self:inventory_info_quantity(params)
-end
-
-function Translations.shop.messages.insufficientFunds(self)
-    return self:shop_messages_insufficientFunds()
-end
-
-function Translations.ui.messages.error(self)
-    return self:ui_messages_error()
-end
-
-function Translations.ui.buttons.delete(self)
-    return self:ui_buttons_delete()
-end
-
-function Translations.game.status.inGame(self)
-    return self:game_status_inGame()
-end
-
-function Translations.shop.categories.bundles(self)
-    return self:shop_categories_bundles()
-end
-
-function Translations.game.modes.versus(self)
-    return self:game_modes_versus()
-end
-
-function Translations.game.menu.quit(self)
-    return self:game_menu_quit()
-end
-
-function Translations.settings.categories.audio(self)
-    return self:settings_categories_audio()
-end
-
-function Translations.social.friends.offline(self)
-    return self:social_friends_offline()
-end
-
-function Translations.ui.messages.playerJoined(self, params)
-    return self:ui_messages_playerJoined(params)
-end
-
-function Translations.ui.messages.price(self, params)
-    return self:ui_messages_price(params)
+function Translations.settings.options.sfxVolume(self)
+    return self:settings_options_sfxVolume()
 end
 
 function Translations.inventory.actions.upgrade(self)
     return self:inventory_actions_upgrade()
 end
 
+function Translations.shop.actions.preview(self)
+    return self:shop_actions_preview()
+end
+
+function Translations.ui.messages.itemCount(self, params)
+    return self:ui_messages_itemCount(params)
+end
+
+function Translations.ui.buttons.sell(self)
+    return self:ui_buttons_sell()
+end
+
+function Translations.social.chat.teamChat(self)
+    return self:social_chat_teamChat()
+end
+
+function Translations.inventory.tabs.pets(self)
+    return self:inventory_tabs_pets()
+end
+
 function Translations.ui.buttons.next(self)
     return self:ui_buttons_next()
 end
 
-function Translations.ui.messages.greeting(self, params)
-    return self:ui_messages_greeting(params)
-end
-
-function Translations.game.status.away(self)
-    return self:game_status_away()
-end
-
-function Translations.shop.messages.requiresGamepass(self, params)
-    return self:shop_messages_requiresGamepass(params)
-end
-
-function Translations.inventory.actions.repair(self)
-    return self:inventory_actions_repair()
-end
-
-function Translations.settings.options.language(self)
-    return self:settings_options_language()
-end
-
-function Translations.social.chat.send(self)
-    return self:social_chat_send()
-end
-
-function Translations.game.modes.campaign(self)
-    return self:game_modes_campaign()
-end
-
-function Translations.inventory.tabs.armor(self)
-    return self:inventory_tabs_armor()
-end
-
-function Translations.ui.tooltips.unequipItem(self)
-    return self:ui_tooltips_unequipItem()
-end
-
-function Translations.shop.categories.armor(self)
-    return self:shop_categories_armor()
-end
-
-function Translations.game.modes.singleplayer(self)
-    return self:game_modes_singleplayer()
-end
-
-function Translations.game.menu.play(self)
-    return self:game_menu_play()
-end
-
-function Translations.settings.options.fullscreen(self)
-    return self:settings_options_fullscreen()
-end
-
-function Translations.shop.actions.clearCart(self)
-    return self:shop_actions_clearCart()
+function Translations.shop.categories.potions(self)
+    return self:shop_categories_potions()
 end
 
 function Translations.ui.tooltips.equipItem(self)
     return self:ui_tooltips_equipItem()
 end
 
-function Translations.shop.categories.featured(self)
-    return self:shop_categories_featured()
+function Translations.game.status.inGame(self)
+    return self:game_status_inGame()
 end
 
-function Translations.shop.messages.itemRemoved(self)
-    return self:shop_messages_itemRemoved()
+function Translations.inventory.tabs.all(self)
+    return self:inventory_tabs_all()
 end
 
-function Translations.ui.labels.coins(self)
-    return self:ui_labels_coins()
+function Translations.settings.options.fullscreen(self)
+    return self:settings_options_fullscreen()
+end
+
+function Translations.ui.labels.player(self)
+    return self:ui_labels_player()
+end
+
+function Translations.settings.options.shadows(self)
+    return self:settings_options_shadows()
+end
+
+function Translations.game.modes.versus(self)
+    return self:game_modes_versus()
+end
+
+function Translations.settings.options.quality(self)
+    return self:settings_options_quality()
+end
+
+function Translations.settings.categories.graphics(self)
+    return self:settings_categories_graphics()
+end
+
+function Translations.game.modes.practice(self)
+    return self:game_modes_practice()
+end
+
+function Translations.settings.options.vsync(self)
+    return self:settings_options_vsync()
+end
+
+function Translations.shop.actions.removeFromCart(self)
+    return self:shop_actions_removeFromCart()
+end
+
+function Translations.social.chat.send(self)
+    return self:social_chat_send()
+end
+
+function Translations.game.notifications.friendRequest(self, params)
+    return self:game_notifications_friendRequest(params)
+end
+
+function Translations.shop.categories.gamepasses(self)
+    return self:shop_categories_gamepasses()
+end
+
+function Translations.ui.buttons.save(self)
+    return self:ui_buttons_save()
 end
 
 function Translations.inventory.tabs.vehicles(self)
     return self:inventory_tabs_vehicles()
 end
 
+function Translations.shop.messages.purchaseSuccess(self)
+    return self:shop_messages_purchaseSuccess()
+end
+
+function Translations.inventory.tabs.armor(self)
+    return self:inventory_tabs_armor()
+end
+
+function Translations.shop.actions.checkout(self)
+    return self:shop_actions_checkout()
+end
+
+function Translations.shop.messages.cartEmpty(self)
+    return self:shop_messages_cartEmpty()
+end
+
+function Translations.shop.messages.insufficientFunds(self)
+    return self:shop_messages_insufficientFunds()
+end
+
+function Translations.social.friends.unblock(self)
+    return self:social_friends_unblock()
+end
+
+function Translations.ui.messages.loading(self)
+    return self:ui_messages_loading()
+end
+
+function Translations.game.notifications.levelUp(self, params)
+    return self:game_notifications_levelUp(params)
+end
+
+function Translations.game.modes.coop(self)
+    return self:game_modes_coop()
+end
+
+function Translations.game.notifications.achievementUnlocked(self, params)
+    return self:game_notifications_achievementUnlocked(params)
+end
+
+function Translations.game.notifications.questComplete(self, params)
+    return self:game_notifications_questComplete(params)
+end
+
+function Translations.game.menu.quit(self)
+    return self:game_menu_quit()
+end
+
+function Translations.game.status.disconnected(self)
+    return self:game_status_disconnected()
+end
+
+function Translations.game.status.busy(self)
+    return self:game_status_busy()
+end
+
+function Translations.settings.options.volume(self)
+    return self:settings_options_volume()
+end
+
+function Translations.shop.categories.bundles(self)
+    return self:shop_categories_bundles()
+end
+
+function Translations.shop.categories.featured(self)
+    return self:shop_categories_featured()
+end
+
+function Translations.ui.labels.robux(self)
+    return self:ui_labels_robux()
+end
+
+function Translations.ui.messages.playerLeft(self, params)
+    return self:ui_messages_playerLeft(params)
+end
+
+function Translations.shop.categories.consumables(self)
+    return self:shop_categories_consumables()
+end
+
+function Translations.inventory.actions.trade(self)
+    return self:inventory_actions_trade()
+end
+
+function Translations.inventory.info.rarity(self, params)
+    return self:inventory_info_rarity(params)
+end
+
+function Translations.settings.options.language(self)
+    return self:settings_options_language()
+end
+
+function Translations.game.status.online(self)
+    return self:game_status_online()
+end
+
+function Translations.inventory.tabs.weapons(self)
+    return self:inventory_tabs_weapons()
+end
+
+function Translations.settings.options.invertY(self)
+    return self:settings_options_invertY()
+end
+
+function Translations.game.modes.campaign(self)
+    return self:game_modes_campaign()
+end
+
+function Translations.settings.categories.general(self)
+    return self:settings_categories_general()
+end
+
+function Translations.game.notifications.tradeRequest(self, params)
+    return self:game_notifications_tradeRequest(params)
+end
+
+function Translations.inventory.actions.destroy(self)
+    return self:inventory_actions_destroy()
+end
+
+function Translations.ui.labels.health(self)
+    return self:ui_labels_health()
+end
+
+function Translations.game.status.connected(self)
+    return self:game_status_connected()
+end
+
+function Translations.inventory.actions.enchant(self)
+    return self:inventory_actions_enchant()
+end
+
+function Translations.inventory.actions.gift(self)
+    return self:inventory_actions_gift()
+end
+
+function Translations.settings.categories.audio(self)
+    return self:settings_categories_audio()
+end
+
+function Translations.social.friends.block(self)
+    return self:social_friends_block()
+end
+
 function Translations.ui.tooltips.sellItem(self)
     return self:ui_tooltips_sellItem()
+end
+
+function Translations.game.modes.multiplayer(self)
+    return self:game_modes_multiplayer()
+end
+
+function Translations.game.menu.help(self)
+    return self:game_menu_help()
+end
+
+function Translations.inventory.tabs.quest(self)
+    return self:inventory_tabs_quest()
+end
+
+function Translations.social.party.join(self)
+    return self:social_party_join()
+end
+
+function Translations.inventory.info.weight(self, params)
+    return self:inventory_info_weight(params)
+end
+
+function Translations.shop.categories.weapons(self)
+    return self:shop_categories_weapons()
+end
+
+function Translations.inventory.actions.equip(self)
+    return self:inventory_actions_equip()
+end
+
+function Translations.social.friends.remove(self)
+    return self:social_friends_remove()
+end
+
+function Translations.game.menu.play(self)
+    return self:game_menu_play()
+end
+
+function Translations.settings.options.particles(self)
+    return self:settings_options_particles()
+end
+
+function Translations.ui.messages.error(self)
+    return self:ui_messages_error()
+end
+
+function Translations.social.party.kick(self)
+    return self:social_party_kick()
+end
+
+function Translations.ui.tooltips.unequipItem(self)
+    return self:ui_tooltips_unequipItem()
+end
+
+function Translations.inventory.tabs.consumables(self)
+    return self:inventory_tabs_consumables()
+end
+
+function Translations.shop.messages.purchaseFailed(self)
+    return self:shop_messages_purchaseFailed()
+end
+
+function Translations.game.menu.settings(self)
+    return self:game_menu_settings()
+end
+
+function Translations.social.chat.mute(self)
+    return self:social_chat_mute()
+end
+
+function Translations.ui.buttons.confirm(self)
+    return self:ui_buttons_confirm()
+end
+
+function Translations.game.menu.profile(self)
+    return self:game_menu_profile()
+end
+
+function Translations.inventory.info.durability(self, params)
+    return self:inventory_info_durability(params)
+end
+
+function Translations.shop.categories.equipment(self)
+    return self:shop_categories_equipment()
+end
+
+function Translations.social.friends.requests(self)
+    return self:social_friends_requests()
+end
+
+function Translations.ui.labels.stamina(self)
+    return self:ui_labels_stamina()
+end
+
+function Translations.ui.messages.price(self, params)
+    return self:ui_messages_price(params)
+end
+
+function Translations.ui.tooltips.upgradeItem(self)
+    return self:ui_tooltips_upgradeItem()
+end
+
+function Translations.shop.actions.clearCart(self)
+    return self:shop_actions_clearCart()
+end
+
+function Translations.social.chat.whisper(self)
+    return self:social_chat_whisper()
+end
+
+function Translations.game.status.searching(self)
+    return self:game_status_searching()
+end
+
+function Translations.social.chat.report(self)
+    return self:social_chat_report()
+end
+
+function Translations.game.menu.about(self)
+    return self:game_menu_about()
+end
+
+function Translations.inventory.actions.drop(self)
+    return self:inventory_actions_drop()
+end
+
+function Translations.ui.messages.success(self)
+    return self:ui_messages_success()
+end
+
+function Translations.ui.messages.warning(self)
+    return self:ui_messages_warning()
+end
+
+function Translations.ui.buttons.edit(self)
+    return self:ui_buttons_edit()
+end
+
+function Translations.game.status.offline(self)
+    return self:game_status_offline()
+end
+
+function Translations.inventory.info.quantity(self, params)
+    return self:inventory_info_quantity(params)
+end
+
+function Translations.game.status.inLobby(self)
+    return self:game_status_inLobby()
+end
+
+function Translations.game.menu.credits(self)
+    return self:game_menu_credits()
+end
+
+function Translations.settings.categories.accessibility(self)
+    return self:settings_categories_accessibility()
+end
+
+function Translations.ui.buttons.create(self)
+    return self:ui_buttons_create()
+end
+
+function Translations.social.chat.globalChat(self)
+    return self:social_chat_globalChat()
+end
+
+function Translations.ui.labels.displayName(self)
+    return self:ui_labels_displayName()
+end
+
+function Translations.game.modes.survival(self)
+    return self:game_modes_survival()
+end
+
+function Translations.inventory.info.damage(self, params)
+    return self:inventory_info_damage(params)
+end
+
+function Translations.inventory.info.defense(self, params)
+    return self:inventory_info_defense(params)
+end
+
+function Translations.shop.categories.armor(self)
+    return self:shop_categories_armor()
+end
+
+function Translations.settings.options.brightness(self)
+    return self:settings_options_brightness()
+end
+
+function Translations.settings.options.musicVolume(self)
+    return self:settings_options_musicVolume()
+end
+
+function Translations.ui.labels.gems(self)
+    return self:ui_labels_gems()
+end
+
+function Translations.ui.messages.score(self, params)
+    return self:ui_messages_score(params)
+end
+
+function Translations.game.menu.friends(self)
+    return self:game_menu_friends()
+end
+
+function Translations.shop.messages.insufficientRobux(self)
+    return self:shop_messages_insufficientRobux()
+end
+
+function Translations.social.friends.invite(self)
+    return self:social_friends_invite()
+end
+
+function Translations.game.modes.tutorial(self)
+    return self:game_modes_tutorial()
+end
+
+function Translations.social.friends.offline(self)
+    return self:social_friends_offline()
+end
+
+function Translations.ui.buttons.close(self)
+    return self:ui_buttons_close()
+end
+
+function Translations.social.party.create(self)
+    return self:social_party_create()
+end
+
+function Translations.shop.messages.itemRemoved(self)
+    return self:shop_messages_itemRemoved()
+end
+
+function Translations.shop.categories.emotes(self)
+    return self:shop_categories_emotes()
+end
+
+function Translations.ui.buttons.submit(self)
+    return self:ui_buttons_submit()
+end
+
+function Translations.ui.messages.playerJoined(self, params)
+    return self:ui_messages_playerJoined(params)
+end
+
+function Translations.inventory.actions.use(self)
+    return self:inventory_actions_use()
+end
+
+function Translations.shop.categories.materials(self)
+    return self:shop_categories_materials()
 end
 
 function Translations.social.party.invite(self)
     return self:social_party_invite()
 end
 
-function Translations.social.chat.mute(self)
-    return self:social_chat_mute()
+function Translations.inventory.actions.unequip(self)
+    return self:inventory_actions_unequip()
+end
+
+function Translations.ui.buttons.cancel(self)
+    return self:ui_buttons_cancel()
+end
+
+function Translations.ui.buttons.buy(self)
+    return self:ui_buttons_buy()
+end
+
+function Translations.ui.labels.level(self)
+    return self:ui_labels_level()
+end
+
+function Translations.ui.buttons.apply(self)
+    return self:ui_buttons_apply()
+end
+
+function Translations.shop.actions.compare(self)
+    return self:shop_actions_compare()
+end
+
+function Translations.social.friends.online(self)
+    return self:social_friends_online()
+end
+
+function Translations.ui.labels.welcome(self)
+    return self:ui_labels_welcome()
+end
+
+function Translations.shop.actions.purchase(self)
+    return self:shop_actions_purchase()
+end
+
+function Translations.settings.options.mouseSensitivity(self)
+    return self:settings_options_mouseSensitivity()
+end
+
+function Translations.settings.categories.controls(self)
+    return self:settings_categories_controls()
+end
+
+function Translations.social.chat.unmute(self)
+    return self:social_chat_unmute()
+end
+
+function Translations.ui.messages.greeting(self, params)
+    return self:ui_messages_greeting(params)
+end
+
+function Translations.ui.tooltips.buyItem(self)
+    return self:ui_tooltips_buyItem()
+end
+
+function Translations.shop.actions.viewCart(self)
+    return self:shop_actions_viewCart()
+end
+
+function Translations.shop.categories.pets(self)
+    return self:shop_categories_pets()
+end
+
+function Translations.social.party.leave(self)
+    return self:social_party_leave()
 end
 
 function Translations.ui.messages.items(self, count, params)
