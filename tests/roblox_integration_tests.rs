@@ -1,4 +1,3 @@
-use mockito;
 use roblox_slang::roblox::client::RobloxCloudClient;
 
 #[tokio::test]
@@ -417,7 +416,7 @@ async fn test_correct_endpoint_paths() {
 
     // Test all endpoints
     let _ = client.get_table_entries("test-id", None).await;
-    let _ = client.update_table_entries("test-id", &vec![], None).await;
+    let _ = client.update_table_entries("test-id", &[], None).await;
     let _ = client.get_table_metadata("test-id").await;
 
     // Verify correct paths were called
