@@ -69,4 +69,3 @@ pub use auth::AuthConfig;
 pub use client::RobloxCloudClient;
 pub use merge::MergeStrategy;
 pub use sync::SyncOrchestrator;
-pub use types::{DownloadStats, SyncStats, UploadStats};

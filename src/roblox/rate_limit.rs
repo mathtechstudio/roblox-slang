@@ -9,6 +9,7 @@ use tokio::time::sleep;
 ///
 /// Handles 429 (rate limit) and 5xx (server error) responses with automatic retry.
 /// Implements exponential backoff: 1s, 2s, 4s, 8s, etc.
+#[allow(dead_code)]
 pub struct RateLimiter {
     /// Maximum number of retry attempts
     max_retries: u32,
@@ -16,6 +17,7 @@ pub struct RateLimiter {
     base_delay: u64,
 }
 
+#[allow(dead_code)]
 impl RateLimiter {
     /// Create a new rate limiter
     ///

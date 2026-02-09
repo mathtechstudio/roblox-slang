@@ -155,7 +155,7 @@ mod tests {
                 table_id: None,
                 game_id: None,
                 api_key,
-                default_merge_strategy: None,
+                strategy: None,
             }),
         }
     }

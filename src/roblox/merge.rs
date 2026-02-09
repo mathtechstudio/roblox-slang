@@ -187,7 +187,7 @@ impl MergeEngine {
 
     /// Apply Merge strategy: merge local and cloud, prefer cloud for conflicts
     fn apply_merge(diff: &Diff) -> MergeResult {
-        let mut to_upload = diff.added_local.clone();
+        let to_upload = diff.added_local.clone();
         let mut to_download = diff.added_cloud.clone();
 
         // For conflicts, prefer cloud (download cloud values)

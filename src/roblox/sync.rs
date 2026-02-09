@@ -101,9 +101,15 @@ impl SyncOrchestrator {
             // Convert to LocalizationEntry format
             let entries = self.translations_to_entries(&translations);
 
-            // Upload to cloud
+            // Upload to cloud (pass game_id from config if available)
+            let game_id = self
+                .config
+                .cloud
+                .as_ref()
+                .and_then(|c| c.game_id.as_deref());
+
             self.client
-                .update_table_entries(table_id, &entries)
+                .update_table_entries(table_id, &entries, game_id)
                 .await
                 .context("Failed to upload translations")?;
         }
@@ -150,7 +156,7 @@ impl SyncOrchestrator {
     /// # let orchestrator = SyncOrchestrator::new(client, config);
     /// let stats = orchestrator.download("table_id", false).await?;
     /// println!("Downloaded {} entries", stats.entries_downloaded);
-    /// println!("Created {} locales, updated {} locales", 
+    /// println!("Created {} locales, updated {} locales",
     ///          stats.locales_created, stats.locales_updated);
     /// # Ok(())
     /// # }
@@ -159,9 +165,15 @@ impl SyncOrchestrator {
         let start = Instant::now();
 
         // Download from cloud
+        let game_id = self
+            .config
+            .cloud
+            .as_ref()
+            .and_then(|c| c.game_id.as_deref());
+
         let entries = self
             .client
-            .get_table_entries(table_id)
+            .get_table_entries(table_id, game_id)
             .await
             .context("Failed to download translations")?;
 
@@ -185,8 +197,8 @@ impl SyncOrchestrator {
         if !dry_run {
             // Write translation files for each locale
             for (locale, locale_translations) in &by_locale {
-                let file_path = Path::new(&self.config.input_directory)
-                    .join(format!("{}.json", locale));
+                let file_path =
+                    Path::new(&self.config.input_directory).join(format!("{}.json", locale));
 
                 let existed = file_path.exists();
 
@@ -201,8 +213,8 @@ impl SyncOrchestrator {
         } else {
             // In dry-run, count what would be created/updated
             for locale in by_locale.keys() {
-                let file_path = Path::new(&self.config.input_directory)
-                    .join(format!("{}.json", locale));
+                let file_path =
+                    Path::new(&self.config.input_directory).join(format!("{}.json", locale));
 
                 if file_path.exists() {
                     locales_updated += 1;
@@ -261,7 +273,7 @@ impl SyncOrchestrator {
     /// # let config = Config::default();
     /// # let orchestrator = SyncOrchestrator::new(client, config);
     /// let stats = orchestrator.sync("table_id", MergeStrategy::Merge, false).await?;
-    /// println!("Added: {}, Updated: {}, Conflicts: {}", 
+    /// println!("Added: {}, Updated: {}, Conflicts: {}",
     ///          stats.entries_added, stats.entries_updated, stats.conflicts_skipped);
     /// # Ok(())
     /// # }
@@ -279,9 +291,15 @@ impl SyncOrchestrator {
         let local_map = self.translations_to_map(&local_translations);
 
         // Get cloud translations
+        let game_id = self
+            .config
+            .cloud
+            .as_ref()
+            .and_then(|c| c.game_id.as_deref());
+
         let cloud_entries = self
             .client
-            .get_table_entries(table_id)
+            .get_table_entries(table_id, game_id)
             .await
             .context("Failed to download translations")?;
         let cloud_translations = self.entries_to_translations(&cloud_entries);
@@ -312,8 +330,15 @@ impl SyncOrchestrator {
                     .collect();
 
                 let entries = self.translations_to_entries(&upload_translations);
+
+                let game_id = self
+                    .config
+                    .cloud
+                    .as_ref()
+                    .and_then(|c| c.game_id.as_deref());
+
                 self.client
-                    .update_table_entries(table_id, &entries)
+                    .update_table_entries(table_id, &entries, game_id)
                     .await
                     .context("Failed to upload translations")?;
 
@@ -343,8 +368,8 @@ impl SyncOrchestrator {
                 }
 
                 for (locale, locale_translations) in &by_locale {
-                    let file_path = Path::new(&self.config.input_directory)
-                        .join(format!("{}.json", locale));
+                    let file_path =
+                        Path::new(&self.config.input_directory).join(format!("{}.json", locale));
 
                     self.write_translation_file(&file_path, locale_translations)?;
                 }
@@ -380,8 +405,8 @@ impl SyncOrchestrator {
         let mut all_translations = Vec::new();
 
         for locale in &self.config.supported_locales {
-            let file_path = Path::new(&self.config.input_directory)
-                .join(format!("{}.json", locale));
+            let file_path =
+                Path::new(&self.config.input_directory).join(format!("{}.json", locale));
 
             if !file_path.exists() {
                 continue;
@@ -425,10 +450,10 @@ impl SyncOrchestrator {
                         context: translations[0].context.clone(),
                         source,
                     },
-                    metadata: EntryMetadata {
+                    metadata: Some(EntryMetadata {
                         example: None,
                         entry_type: Some("manual".to_string()),
-                    },
+                    }),
                     translations: translations
                         .iter()
                         .map(|t| ApiTranslation {
@@ -446,6 +471,16 @@ impl SyncOrchestrator {
         let mut translations = Vec::new();
 
         for entry in entries {
+            // Add source text as base locale translation
+            // Roblox Cloud doesn't return base locale translations when they match source text
+            translations.push(Translation {
+                key: entry.identifier.key.clone(),
+                locale: self.config.base_locale.clone(),
+                value: entry.identifier.source.clone(),
+                context: entry.identifier.context.clone(),
+            });
+
+            // Add all other translations from API response
             for api_translation in &entry.translations {
                 translations.push(Translation {
                     key: entry.identifier.key.clone(),
@@ -479,8 +514,8 @@ impl SyncOrchestrator {
         let nested = unflatten_translations(translations);
 
         // Write to file
-        let json = serde_json::to_string_pretty(&nested)
-            .context("Failed to serialize translations")?;
+        let json =
+            serde_json::to_string_pretty(&nested).context("Failed to serialize translations")?;
 
         fs::write(path, json).context(format!("Failed to write {}", path.display()))?;
 
@@ -565,6 +600,223 @@ mod tests {
         assert_eq!(
             map.get(&("ui.button".to_string(), "id".to_string())),
             Some(&"Beli".to_string())
+        );
+    }
+
+    #[test]
+    fn test_translations_to_entries() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                locale: "en".to_string(),
+                value: "Buy".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                locale: "es".to_string(),
+                value: "Comprar".to_string(),
+                context: None,
+            },
+        ];
+
+        let entries = orchestrator.translations_to_entries(&translations);
+
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].identifier.key, "ui.button");
+        assert_eq!(entries[0].identifier.source, "Buy");
+        assert_eq!(entries[0].translations.len(), 2);
+    }
+
+    #[test]
+    fn test_translations_to_entries_with_context() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                locale: "en".to_string(),
+                value: "Buy".to_string(),
+                context: Some("shop".to_string()),
+            },
+        ];
+
+        let entries = orchestrator.translations_to_entries(&translations);
+
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].identifier.context, Some("shop".to_string()));
+    }
+
+    #[test]
+    fn test_entries_to_translations() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        use crate::roblox::types::{Identifier, Translation as ApiTranslation};
+
+        let entries = vec![LocalizationEntry {
+            identifier: Identifier {
+                key: "ui.button".to_string(),
+                context: None,
+                source: "Buy".to_string(),
+            },
+            metadata: None,
+            translations: vec![ApiTranslation {
+                locale: "es".to_string(),
+                translation_text: "Comprar".to_string(),
+            }],
+        }];
+
+        let translations = orchestrator.entries_to_translations(&entries);
+
+        // Should have 2 translations: base locale (from source) + es
+        assert_eq!(translations.len(), 2);
+
+        // First translation should be base locale from source
+        assert_eq!(translations[0].key, "ui.button");
+        assert_eq!(translations[0].locale, "en");
+        assert_eq!(translations[0].value, "Buy");
+
+        // Second translation should be from API response
+        assert_eq!(translations[1].key, "ui.button");
+        assert_eq!(translations[1].locale, "es");
+        assert_eq!(translations[1].value, "Comprar");
+    }
+
+    #[test]
+    fn test_entries_to_translations_multiple_locales() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        use crate::roblox::types::{Identifier, Translation as ApiTranslation};
+
+        let entries = vec![LocalizationEntry {
+            identifier: Identifier {
+                key: "greeting".to_string(),
+                context: None,
+                source: "Hello".to_string(),
+            },
+            metadata: None,
+            translations: vec![
+                ApiTranslation {
+                    locale: "es".to_string(),
+                    translation_text: "Hola".to_string(),
+                },
+                ApiTranslation {
+                    locale: "id".to_string(),
+                    translation_text: "Halo".to_string(),
+                },
+            ],
+        }];
+
+        let translations = orchestrator.entries_to_translations(&entries);
+
+        // Should have 3 translations: en (source) + es + id
+        assert_eq!(translations.len(), 3);
+
+        // Check base locale
+        let en_translation = translations.iter().find(|t| t.locale == "en").unwrap();
+        assert_eq!(en_translation.value, "Hello");
+
+        // Check Spanish
+        let es_translation = translations.iter().find(|t| t.locale == "es").unwrap();
+        assert_eq!(es_translation.value, "Hola");
+
+        // Check Indonesian
+        let id_translation = translations.iter().find(|t| t.locale == "id").unwrap();
+        assert_eq!(id_translation.value, "Halo");
+    }
+
+    #[test]
+    fn test_entries_to_translations_with_context() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        use crate::roblox::types::{Identifier, Translation as ApiTranslation};
+
+        let entries = vec![LocalizationEntry {
+            identifier: Identifier {
+                key: "ui.button".to_string(),
+                context: Some("shop".to_string()),
+                source: "Buy".to_string(),
+            },
+            metadata: None,
+            translations: vec![ApiTranslation {
+                locale: "es".to_string(),
+                translation_text: "Comprar".to_string(),
+            }],
+        }];
+
+        let translations = orchestrator.entries_to_translations(&entries);
+
+        // All translations should have the same context
+        for translation in &translations {
+            assert_eq!(translation.context, Some("shop".to_string()));
+        }
+    }
+
+    #[test]
+    fn test_translations_to_map_empty() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        let translations = vec![];
+        let map = orchestrator.translations_to_map(&translations);
+
+        assert_eq!(map.len(), 0);
+    }
+
+    #[test]
+    fn test_translations_to_map_multiple_keys() {
+        let client = RobloxCloudClient::new("test_key".to_string()).unwrap();
+        let config = Config::default();
+        let orchestrator = SyncOrchestrator::new(client, config);
+
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                locale: "en".to_string(),
+                value: "Buy".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.title".to_string(),
+                locale: "en".to_string(),
+                value: "Shop".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                locale: "es".to_string(),
+                value: "Comprar".to_string(),
+                context: None,
+            },
+        ];
+
+        let map = orchestrator.translations_to_map(&translations);
+
+        assert_eq!(map.len(), 3);
+        assert_eq!(
+            map.get(&("ui.button".to_string(), "en".to_string())),
+            Some(&"Buy".to_string())
+        );
+        assert_eq!(
+            map.get(&("ui.title".to_string(), "en".to_string())),
+            Some(&"Shop".to_string())
+        );
+        assert_eq!(
+            map.get(&("ui.button".to_string(), "es".to_string())),
+            Some(&"Comprar".to_string())
         );
     }
 }
