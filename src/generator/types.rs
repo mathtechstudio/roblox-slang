@@ -70,6 +70,9 @@ pub fn generate_type_definitions(
         }
     }
 
+    // Sort for deterministic output
+    regular_translations.sort_by(|a, b| a.key.cmp(&b.key));
+
     // Add flat methods for regular translations
     for translation in &regular_translations {
         let method_name = translation.key.replace(".", "_");
@@ -89,7 +92,10 @@ pub fn generate_type_definitions(
     }
 
     // Add flat methods for plural translations
-    for base_key in &plural_base_keys {
+    let mut plural_keys_sorted: Vec<_> = plural_base_keys.iter().collect();
+    plural_keys_sorted.sort();
+
+    for base_key in &plural_keys_sorted {
         let method_name = base_key.replace(".", "_");
         code.push_str(&format!(
             "    {}: (self: TranslationsInstance, count: number, params: {{}}?) -> string,\n",
