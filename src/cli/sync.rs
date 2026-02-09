@@ -21,7 +21,7 @@ pub async fn sync(table_id: Option<String>, strategy: Option<String>, dry_run: b
             config
                 .cloud
                 .as_ref()
-                .and_then(|c| c.default_merge_strategy.clone())
+                .and_then(|c| c.strategy.clone())
         })
         .unwrap_or_else(|| "merge".to_string());
 

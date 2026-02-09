@@ -66,6 +66,7 @@ pub mod config;
 pub mod generator;
 pub mod migrator;
 pub mod parser;
+pub mod roblox;
 pub mod utils;
 pub mod validator;
 

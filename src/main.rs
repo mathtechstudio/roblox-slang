@@ -119,57 +119,91 @@ enum Commands {
         transform: Option<String>,
     },
 
-    /// Upload local translations to Roblox Cloud
+    /// Upload local translations to Roblox Cloud Localization Table
     ///
-    /// Pushes local translation files to Roblox Cloud Localization Table.
-    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config.
+    /// Reads local translation files, validates them, and uploads to Roblox Cloud.
+    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config file.
+    ///
+    /// Examples:
+    ///   roblox-slang upload --table-id abc123
+    ///   roblox-slang upload --dry-run
+    ///   roblox-slang upload --skip-validation
     Upload {
-        /// Roblox Cloud Localization Table ID
-        #[arg(long, value_name = "TABLE_ID", help = "Localization table ID")]
+        /// Roblox Cloud Localization Table ID (or set in config: cloud.table_id)
+        #[arg(
+            long,
+            value_name = "TABLE_ID",
+            help = "Localization table ID (or use config: cloud.table_id)"
+        )]
         table_id: Option<String>,
 
-        /// Dry-run mode (preview changes without uploading)
-        #[arg(long, help = "Preview changes without uploading")]
+        /// Preview changes without uploading to cloud
+        #[arg(long, help = "Preview changes without uploading (shows statistics)")]
         dry_run: bool,
 
-        /// Skip pre-upload validation
-        #[arg(long, help = "Skip validation before upload")]
+        /// Skip pre-upload validation checks
+        #[arg(
+            long,
+            help = "Skip validation before upload (not recommended)"
+        )]
         skip_validation: bool,
     },
 
-    /// Download translations from Roblox Cloud
+    /// Download translations from Roblox Cloud Localization Table
     ///
-    /// Pulls translations from Roblox Cloud Localization Table to local files.
-    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config.
+    /// Fetches translations from Roblox Cloud and writes them to local JSON files.
+    /// Creates one file per locale in the input directory.
+    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config file.
+    ///
+    /// Examples:
+    ///   roblox-slang download --table-id abc123
+    ///   roblox-slang download --dry-run
     Download {
-        /// Roblox Cloud Localization Table ID
-        #[arg(long, value_name = "TABLE_ID", help = "Localization table ID")]
+        /// Roblox Cloud Localization Table ID (or set in config: cloud.table_id)
+        #[arg(
+            long,
+            value_name = "TABLE_ID",
+            help = "Localization table ID (or use config: cloud.table_id)"
+        )]
         table_id: Option<String>,
 
-        /// Dry-run mode (preview changes without writing files)
-        #[arg(long, help = "Preview changes without writing files")]
+        /// Preview changes without writing files to disk
+        #[arg(
+            long,
+            help = "Preview changes without writing files (shows statistics)"
+        )]
         dry_run: bool,
     },
 
-    /// Synchronize translations between local and cloud
+    /// Synchronize translations bidirectionally between local and cloud
     ///
-    /// Bidirectional sync with configurable merge strategy.
-    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config.
+    /// Compares local and cloud translations, then applies the specified merge strategy.
+    /// Strategies: overwrite (local→cloud), merge (union, cloud wins), skip-conflicts (safe only).
+    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config file.
+    ///
+    /// Examples:
+    ///   roblox-slang sync --strategy merge
+    ///   roblox-slang sync --table-id abc123 --strategy overwrite
+    ///   roblox-slang sync --dry-run
     Sync {
-        /// Roblox Cloud Localization Table ID
-        #[arg(long, value_name = "TABLE_ID", help = "Localization table ID")]
+        /// Roblox Cloud Localization Table ID (or set in config: cloud.table_id)
+        #[arg(
+            long,
+            value_name = "TABLE_ID",
+            help = "Localization table ID (or use config: cloud.table_id)"
+        )]
         table_id: Option<String>,
 
-        /// Merge strategy (overwrite, merge, skip-conflicts)
+        /// Merge strategy: overwrite (local→cloud), merge (union), skip-conflicts (safe only)
         #[arg(
             long,
             value_name = "STRATEGY",
-            help = "Merge strategy (overwrite, merge, skip-conflicts)"
+            help = "overwrite | merge | skip-conflicts (or use config: cloud.strategy)"
         )]
         strategy: Option<String>,
 
-        /// Dry-run mode (preview changes without syncing)
-        #[arg(long, help = "Preview changes without syncing")]
+        /// Preview changes without syncing (shows what would change)
+        #[arg(long, help = "Preview changes without syncing (shows statistics)")]
         dry_run: bool,
     },
 }
