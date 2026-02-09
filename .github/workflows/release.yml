@@ -67,7 +67,7 @@ jobs:
         run: |
           CHANGELOG_CONTENT=$(cat ${{ steps.changelog.outputs.changelog_file }})
           
-          # Create release with changelog
+          # Create draft release with changelog
           gh release create ${{ steps.version.outputs.tag }} \
             --draft \
             --verify-tag \

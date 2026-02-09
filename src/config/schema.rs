@@ -1,3 +1,4 @@
+use crate::roblox::types::CloudConfig;
 use crate::utils::locales;
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
@@ -30,6 +31,10 @@ pub struct Config {
     /// Analytics configuration
     #[serde(default)]
     pub analytics: Option<AnalyticsConfig>,
+
+    /// Cloud sync configuration
+    #[serde(default)]
+    pub cloud: Option<CloudConfig>,
 }
 
 /// Override configuration

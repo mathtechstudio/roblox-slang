@@ -10,6 +10,7 @@ impl Default for Config {
             namespace: None,
             overrides: None,
             analytics: None,
+            cloud: None,
         }
     }
 }

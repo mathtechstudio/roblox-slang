@@ -138,3 +138,15 @@ mod tests {
         assert_eq!(unflattened, original);
     }
 }
+
+/// Unflatten translations to nested JSON structure
+/// Used for writing translation files
+pub fn unflatten_translations(translations: &[crate::parser::Translation]) -> serde_json::Value {
+    let mut flat = HashMap::new();
+
+    for translation in translations {
+        flat.insert(translation.key.clone(), translation.value.clone());
+    }
+
+    unflatten_to_json(&flat)
+}

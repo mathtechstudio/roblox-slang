@@ -3,6 +3,7 @@ mod config;
 mod generator;
 mod migrator;
 mod parser;
+mod roblox;
 mod utils;
 mod validator;
 
@@ -14,7 +15,7 @@ use utils::validation;
 #[derive(Parser)]
 #[command(name = "roblox-slang")]
 #[command(version)]
-#[command(about = "Type-safe internationalization for Roblox")]
+#[command(about = "Type-safe internationalization for Roblox experiences")]
 #[command(
     long_about = "Roblox Slang is a CLI tool that generates type-safe Luau code from translation files.\n\
                         Write translations in JSON/YAML, generate type-safe code with autocomplete support.\n\n\
@@ -117,6 +118,91 @@ enum Commands {
         )]
         transform: Option<String>,
     },
+
+    /// Upload local translations to Roblox Cloud Localization Table
+    ///
+    /// Reads local translation files, validates them, and uploads to Roblox Cloud.
+    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config file.
+    ///
+    /// Examples:
+    ///   roblox-slang upload --table-id abc123
+    ///   roblox-slang upload --dry-run
+    ///   roblox-slang upload --skip-validation
+    Upload {
+        /// Roblox Cloud Localization Table ID (or set in config: cloud.table_id)
+        #[arg(
+            long,
+            value_name = "TABLE_ID",
+            help = "Localization table ID (or use config: cloud.table_id)"
+        )]
+        table_id: Option<String>,
+
+        /// Preview changes without uploading to cloud
+        #[arg(long, help = "Preview changes without uploading (shows statistics)")]
+        dry_run: bool,
+
+        /// Skip pre-upload validation checks
+        #[arg(long, help = "Skip validation before upload (not recommended)")]
+        skip_validation: bool,
+    },
+
+    /// Download translations from Roblox Cloud Localization Table
+    ///
+    /// Fetches translations from Roblox Cloud and writes them to local JSON files.
+    /// Creates one file per locale in the input directory.
+    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config file.
+    ///
+    /// Examples:
+    ///   roblox-slang download --table-id abc123
+    ///   roblox-slang download --dry-run
+    Download {
+        /// Roblox Cloud Localization Table ID (or set in config: cloud.table_id)
+        #[arg(
+            long,
+            value_name = "TABLE_ID",
+            help = "Localization table ID (or use config: cloud.table_id)"
+        )]
+        table_id: Option<String>,
+
+        /// Preview changes without writing files to disk
+        #[arg(
+            long,
+            help = "Preview changes without writing files (shows statistics)"
+        )]
+        dry_run: bool,
+    },
+
+    /// Synchronize translations bidirectionally between local and cloud
+    ///
+    /// Compares local and cloud translations, then applies the specified merge strategy.
+    /// Strategies: overwrite (local→cloud), merge (union, cloud wins), skip-conflicts (safe only).
+    /// Requires API key via ROBLOX_CLOUD_API_KEY environment variable or config file.
+    ///
+    /// Examples:
+    ///   roblox-slang sync --strategy merge
+    ///   roblox-slang sync --table-id abc123 --strategy overwrite
+    ///   roblox-slang sync --dry-run
+    Sync {
+        /// Roblox Cloud Localization Table ID (or set in config: cloud.table_id)
+        #[arg(
+            long,
+            value_name = "TABLE_ID",
+            help = "Localization table ID (or use config: cloud.table_id)"
+        )]
+        table_id: Option<String>,
+
+        /// Merge strategy: overwrite (local→cloud), merge (union), skip-conflicts (safe only)
+        #[arg(
+            long,
+            value_name = "STRATEGY",
+            help = "overwrite | merge | skip-conflicts (or use config: cloud.strategy)"
+        )]
+        strategy: Option<String>,
+
+        /// Preview changes without syncing (shows what would change)
+        #[arg(long, help = "Preview changes without syncing (shows statistics)")]
+        dry_run: bool,
+    },
 }
 
 fn main() -> Result<()> {
@@ -124,6 +210,9 @@ fn main() -> Result<()> {
     env_logger::init();
 
     let cli = Cli::parse();
+
+    // Use tokio runtime for async commands
+    let runtime = tokio::runtime::Runtime::new()?;
 
     match cli.command {
         Commands::Init { with_overrides } => {
@@ -199,6 +288,23 @@ fn main() -> Result<()> {
             let transform_str = transform.as_deref();
 
             cli::migrate(&from, input_path, output_path, transform_str)?;
+        }
+        Commands::Upload {
+            table_id,
+            dry_run,
+            skip_validation,
+        } => {
+            runtime.block_on(cli::upload(table_id, dry_run, skip_validation))?;
+        }
+        Commands::Download { table_id, dry_run } => {
+            runtime.block_on(cli::download(table_id, dry_run))?;
+        }
+        Commands::Sync {
+            table_id,
+            strategy,
+            dry_run,
+        } => {
+            runtime.block_on(cli::sync(table_id, strategy, dry_run))?;
         }
     }
 

@@ -19,6 +19,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing yet
 
+## [1.1.0] - 2025-02-09
+
+### Added
+
+- Cloud sync feature for bidirectional synchronization with Roblox Cloud Localization Tables
+- `upload` command to push local translations to Roblox Cloud
+- `download` command to pull translations from Roblox Cloud
+- `sync` command with merge strategies (merge/overwrite/skip-conflicts)
+- Authentication via environment variable (`ROBLOX_CLOUD_API_KEY`) or config file
+- Rate limiting (600 req/min) with exponential backoff
+- Retry-After header support for 429 responses
+- Table ID discovery from game ID
+- Base locale handling from cloud source text
+- Cloud configuration section in init template with inline documentation
+- Comprehensive unit tests for cloud sync (10 new tests)
+
+### Changed
+
+- Config field renamed: `default_merge_strategy` → `strategy`
+
 ## [1.0.0] - 2025-02-08
 
 ### Added
