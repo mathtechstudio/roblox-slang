@@ -189,581 +189,52 @@ end
 
 -- Internal methods (flat keys)
 
-function Translations:social_party_promote()
-    return self._translator:FormatByKey("social.party.promote")
-end
-
-function Translations:game_menu_achievements()
-    return self._translator:FormatByKey("game.menu.achievements")
-end
-
-function Translations:ui_labels_coins()
-    return self._translator:FormatByKey("ui.labels.coins")
-end
-
-function Translations:game_modes_raid()
-    return self._translator:FormatByKey("game.modes.raid")
-end
-
-function Translations:shop_messages_itemAdded()
-    return self._translator:FormatByKey("shop.messages.itemAdded")
-end
-
-function Translations:shop_actions_addToCart()
-    return self._translator:FormatByKey("shop.actions.addToCart")
-end
-
-function Translations:game_menu_leaderboard()
-    return self._translator:FormatByKey("game.menu.leaderboard")
-end
-
-function Translations:game_status_away()
-    return self._translator:FormatByKey("game.status.away")
-end
-
-function Translations:shop_categories_vehicles()
-    return self._translator:FormatByKey("shop.categories.vehicles")
-end
-
-function Translations:settings_options_fov()
-    return self._translator:FormatByKey("settings.options.fov")
-end
-
-function Translations:social_friends_add()
-    return self._translator:FormatByKey("social.friends.add")
-end
-
-function Translations:ui_buttons_delete()
-    return self._translator:FormatByKey("ui.buttons.delete")
-end
-
-function Translations:settings_categories_gameplay()
-    return self._translator:FormatByKey("settings.categories.gameplay")
-end
-
-function Translations:inventory_actions_repair()
-    return self._translator:FormatByKey("inventory.actions.repair")
-end
-
-function Translations:ui_labels_experience()
-    return self._translator:FormatByKey("ui.labels.experience")
-end
-
-function Translations:game_notifications_partyInvite(params)
-    params = params or {}
-    return self._translator:FormatByKey("game.notifications.partyInvite", params)
-end
-
-function Translations:game_modes_arena()
-    return self._translator:FormatByKey("game.modes.arena")
-end
-
-function Translations:game_modes_singleplayer()
-    return self._translator:FormatByKey("game.modes.singleplayer")
-end
-
-function Translations:shop_messages_requiresGamepass(params)
-    params = params or {}
-    return self._translator:FormatByKey("shop.messages.requiresGamepass", params)
-end
-
-function Translations:ui_buttons_reset()
-    return self._translator:FormatByKey("ui.buttons.reset")
-end
-
-function Translations:ui_messages_saving()
-    return self._translator:FormatByKey("ui.messages.saving")
-end
-
-function Translations:game_status_connecting()
-    return self._translator:FormatByKey("game.status.connecting")
-end
-
-function Translations:ui_labels_mana()
-    return self._translator:FormatByKey("ui.labels.mana")
-end
-
-function Translations:ui_buttons_back()
-    return self._translator:FormatByKey("ui.buttons.back")
-end
-
-function Translations:shop_categories_accessories()
-    return self._translator:FormatByKey("shop.categories.accessories")
-end
-
-function Translations:inventory_tabs_materials()
-    return self._translator:FormatByKey("inventory.tabs.materials")
-end
-
-function Translations:ui_buttons_load()
-    return self._translator:FormatByKey("ui.buttons.load")
-end
-
-function Translations:settings_options_sfxVolume()
-    return self._translator:FormatByKey("settings.options.sfxVolume")
-end
-
-function Translations:inventory_actions_upgrade()
-    return self._translator:FormatByKey("inventory.actions.upgrade")
-end
-
-function Translations:shop_actions_preview()
-    return self._translator:FormatByKey("shop.actions.preview")
-end
-
-function Translations:ui_messages_itemCount(params)
-    params = params or {}
-    return self._translator:FormatByKey("ui.messages.itemCount", params)
-end
-
-function Translations:ui_buttons_sell()
-    return self._translator:FormatByKey("ui.buttons.sell")
-end
-
-function Translations:social_chat_teamChat()
-    return self._translator:FormatByKey("social.chat.teamChat")
-end
-
-function Translations:inventory_tabs_pets()
-    return self._translator:FormatByKey("inventory.tabs.pets")
+function Translations:inventory_tabs_armor()
+    return self._translator:FormatByKey("inventory.tabs.armor")
 end
 
 function Translations:ui_buttons_next()
     return self._translator:FormatByKey("ui.buttons.next")
 end
 
-function Translations:shop_categories_potions()
-    return self._translator:FormatByKey("shop.categories.potions")
-end
-
-function Translations:ui_tooltips_equipItem()
-    return self._translator:FormatByKey("ui.tooltips.equipItem")
-end
-
-function Translations:game_status_inGame()
-    return self._translator:FormatByKey("game.status.inGame")
-end
-
-function Translations:inventory_tabs_all()
-    return self._translator:FormatByKey("inventory.tabs.all")
-end
-
-function Translations:settings_options_fullscreen()
-    return self._translator:FormatByKey("settings.options.fullscreen")
-end
-
-function Translations:ui_labels_player()
-    return self._translator:FormatByKey("ui.labels.player")
-end
-
-function Translations:settings_options_shadows()
-    return self._translator:FormatByKey("settings.options.shadows")
-end
-
-function Translations:game_modes_versus()
-    return self._translator:FormatByKey("game.modes.versus")
-end
-
-function Translations:settings_options_quality()
-    return self._translator:FormatByKey("settings.options.quality")
-end
-
-function Translations:settings_categories_graphics()
-    return self._translator:FormatByKey("settings.categories.graphics")
-end
-
-function Translations:game_modes_practice()
-    return self._translator:FormatByKey("game.modes.practice")
-end
-
-function Translations:settings_options_vsync()
-    return self._translator:FormatByKey("settings.options.vsync")
-end
-
-function Translations:shop_actions_removeFromCart()
-    return self._translator:FormatByKey("shop.actions.removeFromCart")
-end
-
-function Translations:social_chat_send()
-    return self._translator:FormatByKey("social.chat.send")
-end
-
-function Translations:game_notifications_friendRequest(params)
-    params = params or {}
-    return self._translator:FormatByKey("game.notifications.friendRequest", params)
-end
-
-function Translations:shop_categories_gamepasses()
-    return self._translator:FormatByKey("shop.categories.gamepasses")
-end
-
-function Translations:ui_buttons_save()
-    return self._translator:FormatByKey("ui.buttons.save")
-end
-
-function Translations:inventory_tabs_vehicles()
-    return self._translator:FormatByKey("inventory.tabs.vehicles")
-end
-
-function Translations:shop_messages_purchaseSuccess()
-    return self._translator:FormatByKey("shop.messages.purchaseSuccess")
-end
-
-function Translations:inventory_tabs_armor()
-    return self._translator:FormatByKey("inventory.tabs.armor")
-end
-
-function Translations:shop_actions_checkout()
-    return self._translator:FormatByKey("shop.actions.checkout")
-end
-
-function Translations:shop_messages_cartEmpty()
-    return self._translator:FormatByKey("shop.messages.cartEmpty")
-end
-
-function Translations:shop_messages_insufficientFunds()
-    return self._translator:FormatByKey("shop.messages.insufficientFunds")
-end
-
-function Translations:social_friends_unblock()
-    return self._translator:FormatByKey("social.friends.unblock")
-end
-
-function Translations:ui_messages_loading()
-    return self._translator:FormatByKey("ui.messages.loading")
-end
-
-function Translations:game_notifications_levelUp(params)
-    params = params or {}
-    return self._translator:FormatByKey("game.notifications.levelUp", params)
-end
-
-function Translations:game_modes_coop()
-    return self._translator:FormatByKey("game.modes.coop")
-end
-
-function Translations:game_notifications_achievementUnlocked(params)
-    params = params or {}
-    return self._translator:FormatByKey("game.notifications.achievementUnlocked", params)
-end
-
-function Translations:game_notifications_questComplete(params)
-    params = params or {}
-    return self._translator:FormatByKey("game.notifications.questComplete", params)
-end
-
-function Translations:game_menu_quit()
-    return self._translator:FormatByKey("game.menu.quit")
-end
-
-function Translations:game_status_disconnected()
-    return self._translator:FormatByKey("game.status.disconnected")
-end
-
-function Translations:game_status_busy()
-    return self._translator:FormatByKey("game.status.busy")
-end
-
-function Translations:settings_options_volume()
-    return self._translator:FormatByKey("settings.options.volume")
-end
-
-function Translations:shop_categories_bundles()
-    return self._translator:FormatByKey("shop.categories.bundles")
-end
-
-function Translations:shop_categories_featured()
-    return self._translator:FormatByKey("shop.categories.featured")
-end
-
-function Translations:ui_labels_robux()
-    return self._translator:FormatByKey("ui.labels.robux")
-end
-
-function Translations:ui_messages_playerLeft(params)
-    params = params or {}
-    return self._translator:FormatByKey("ui.messages.playerLeft", params)
-end
-
-function Translations:shop_categories_consumables()
-    return self._translator:FormatByKey("shop.categories.consumables")
-end
-
-function Translations:inventory_actions_trade()
-    return self._translator:FormatByKey("inventory.actions.trade")
-end
-
-function Translations:inventory_info_rarity(params)
-    params = params or {}
-    return self._translator:FormatByKey("inventory.info.rarity", params)
-end
-
-function Translations:settings_options_language()
-    return self._translator:FormatByKey("settings.options.language")
-end
-
-function Translations:game_status_online()
-    return self._translator:FormatByKey("game.status.online")
-end
-
-function Translations:inventory_tabs_weapons()
-    return self._translator:FormatByKey("inventory.tabs.weapons")
-end
-
-function Translations:settings_options_invertY()
-    return self._translator:FormatByKey("settings.options.invertY")
-end
-
-function Translations:game_modes_campaign()
-    return self._translator:FormatByKey("game.modes.campaign")
-end
-
-function Translations:settings_categories_general()
-    return self._translator:FormatByKey("settings.categories.general")
-end
-
-function Translations:game_notifications_tradeRequest(params)
-    params = params or {}
-    return self._translator:FormatByKey("game.notifications.tradeRequest", params)
-end
-
-function Translations:inventory_actions_destroy()
-    return self._translator:FormatByKey("inventory.actions.destroy")
-end
-
-function Translations:ui_labels_health()
-    return self._translator:FormatByKey("ui.labels.health")
-end
-
-function Translations:game_status_connected()
-    return self._translator:FormatByKey("game.status.connected")
-end
-
-function Translations:inventory_actions_enchant()
-    return self._translator:FormatByKey("inventory.actions.enchant")
-end
-
-function Translations:inventory_actions_gift()
-    return self._translator:FormatByKey("inventory.actions.gift")
-end
-
-function Translations:settings_categories_audio()
-    return self._translator:FormatByKey("settings.categories.audio")
-end
-
-function Translations:social_friends_block()
-    return self._translator:FormatByKey("social.friends.block")
-end
-
-function Translations:ui_tooltips_sellItem()
-    return self._translator:FormatByKey("ui.tooltips.sellItem")
-end
-
-function Translations:game_modes_multiplayer()
-    return self._translator:FormatByKey("game.modes.multiplayer")
-end
-
-function Translations:game_menu_help()
-    return self._translator:FormatByKey("game.menu.help")
-end
-
-function Translations:inventory_tabs_quest()
-    return self._translator:FormatByKey("inventory.tabs.quest")
-end
-
-function Translations:social_party_join()
-    return self._translator:FormatByKey("social.party.join")
-end
-
-function Translations:inventory_info_weight(params)
-    params = params or {}
-    params.weight = string.format("%.1f", tonumber(params.weight) or 0)
-    return self._translator:FormatByKey("inventory.info.weight", params)
-end
-
-function Translations:shop_categories_weapons()
-    return self._translator:FormatByKey("shop.categories.weapons")
-end
-
-function Translations:inventory_actions_equip()
-    return self._translator:FormatByKey("inventory.actions.equip")
-end
-
-function Translations:social_friends_remove()
-    return self._translator:FormatByKey("social.friends.remove")
-end
-
-function Translations:game_menu_play()
-    return self._translator:FormatByKey("game.menu.play")
-end
-
-function Translations:settings_options_particles()
-    return self._translator:FormatByKey("settings.options.particles")
-end
-
-function Translations:ui_messages_error()
-    return self._translator:FormatByKey("ui.messages.error")
-end
-
-function Translations:social_party_kick()
-    return self._translator:FormatByKey("social.party.kick")
-end
-
-function Translations:ui_tooltips_unequipItem()
-    return self._translator:FormatByKey("ui.tooltips.unequipItem")
-end
-
-function Translations:inventory_tabs_consumables()
-    return self._translator:FormatByKey("inventory.tabs.consumables")
-end
-
-function Translations:shop_messages_purchaseFailed()
-    return self._translator:FormatByKey("shop.messages.purchaseFailed")
-end
-
-function Translations:game_menu_settings()
-    return self._translator:FormatByKey("game.menu.settings")
-end
-
-function Translations:social_chat_mute()
-    return self._translator:FormatByKey("social.chat.mute")
-end
-
-function Translations:ui_buttons_confirm()
-    return self._translator:FormatByKey("ui.buttons.confirm")
-end
-
-function Translations:game_menu_profile()
-    return self._translator:FormatByKey("game.menu.profile")
-end
-
-function Translations:inventory_info_durability(params)
-    params = params or {}
-    return self._translator:FormatByKey("inventory.info.durability", params)
-end
-
-function Translations:shop_categories_equipment()
-    return self._translator:FormatByKey("shop.categories.equipment")
-end
-
-function Translations:social_friends_requests()
-    return self._translator:FormatByKey("social.friends.requests")
-end
-
-function Translations:ui_labels_stamina()
-    return self._translator:FormatByKey("ui.labels.stamina")
-end
-
-function Translations:ui_messages_price(params)
-    params = params or {}
-    params.price = string.format("%.2f", tonumber(params.price) or 0)
-    return self._translator:FormatByKey("ui.messages.price", params)
-end
-
-function Translations:ui_tooltips_upgradeItem()
-    return self._translator:FormatByKey("ui.tooltips.upgradeItem")
+function Translations:ui_buttons_create()
+    return self._translator:FormatByKey("ui.buttons.create")
 end
 
 function Translations:shop_actions_clearCart()
     return self._translator:FormatByKey("shop.actions.clearCart")
 end
 
-function Translations:social_chat_whisper()
-    return self._translator:FormatByKey("social.chat.whisper")
-end
-
-function Translations:game_status_searching()
-    return self._translator:FormatByKey("game.status.searching")
-end
-
-function Translations:social_chat_report()
-    return self._translator:FormatByKey("social.chat.report")
-end
-
-function Translations:game_menu_about()
-    return self._translator:FormatByKey("game.menu.about")
-end
-
-function Translations:inventory_actions_drop()
-    return self._translator:FormatByKey("inventory.actions.drop")
-end
-
-function Translations:ui_messages_success()
-    return self._translator:FormatByKey("ui.messages.success")
-end
-
-function Translations:ui_messages_warning()
-    return self._translator:FormatByKey("ui.messages.warning")
-end
-
-function Translations:ui_buttons_edit()
-    return self._translator:FormatByKey("ui.buttons.edit")
-end
-
-function Translations:game_status_offline()
-    return self._translator:FormatByKey("game.status.offline")
-end
-
-function Translations:inventory_info_quantity(params)
-    params = params or {}
-    params.quantity = math.floor(tonumber(params.quantity) or 0)
-    return self._translator:FormatByKey("inventory.info.quantity", params)
-end
-
-function Translations:game_status_inLobby()
-    return self._translator:FormatByKey("game.status.inLobby")
-end
-
-function Translations:game_menu_credits()
-    return self._translator:FormatByKey("game.menu.credits")
-end
-
 function Translations:settings_categories_accessibility()
     return self._translator:FormatByKey("settings.categories.accessibility")
 end
 
-function Translations:ui_buttons_create()
-    return self._translator:FormatByKey("ui.buttons.create")
+function Translations:ui_messages_error()
+    return self._translator:FormatByKey("ui.messages.error")
 end
 
-function Translations:social_chat_globalChat()
-    return self._translator:FormatByKey("social.chat.globalChat")
+function Translations:shop_categories_pets()
+    return self._translator:FormatByKey("shop.categories.pets")
 end
 
-function Translations:ui_labels_displayName()
-    return self._translator:FormatByKey("ui.labels.displayName")
+function Translations:ui_labels_player()
+    return self._translator:FormatByKey("ui.labels.player")
 end
 
-function Translations:game_modes_survival()
-    return self._translator:FormatByKey("game.modes.survival")
+function Translations:shop_categories_featured()
+    return self._translator:FormatByKey("shop.categories.featured")
 end
 
-function Translations:inventory_info_damage(params)
-    params = params or {}
-    params.damage = math.floor(tonumber(params.damage) or 0)
-    return self._translator:FormatByKey("inventory.info.damage", params)
+function Translations:ui_buttons_save()
+    return self._translator:FormatByKey("ui.buttons.save")
 end
 
-function Translations:inventory_info_defense(params)
-    params = params or {}
-    params.defense = math.floor(tonumber(params.defense) or 0)
-    return self._translator:FormatByKey("inventory.info.defense", params)
+function Translations:shop_categories_vehicles()
+    return self._translator:FormatByKey("shop.categories.vehicles")
 end
 
-function Translations:shop_categories_armor()
-    return self._translator:FormatByKey("shop.categories.armor")
-end
-
-function Translations:settings_options_brightness()
-    return self._translator:FormatByKey("settings.options.brightness")
-end
-
-function Translations:settings_options_musicVolume()
-    return self._translator:FormatByKey("settings.options.musicVolume")
-end
-
-function Translations:ui_labels_gems()
-    return self._translator:FormatByKey("ui.labels.gems")
+function Translations:game_menu_friends()
+    return self._translator:FormatByKey("game.menu.friends")
 end
 
 function Translations:ui_messages_score(params)
@@ -772,44 +243,195 @@ function Translations:ui_messages_score(params)
     return self._translator:FormatByKey("ui.messages.score", params)
 end
 
-function Translations:game_menu_friends()
-    return self._translator:FormatByKey("game.menu.friends")
+function Translations:settings_options_sfxVolume()
+    return self._translator:FormatByKey("settings.options.sfxVolume")
 end
 
-function Translations:shop_messages_insufficientRobux()
-    return self._translator:FormatByKey("shop.messages.insufficientRobux")
+function Translations:game_notifications_friendRequest(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.friendRequest", params)
 end
 
-function Translations:social_friends_invite()
-    return self._translator:FormatByKey("social.friends.invite")
+function Translations:settings_options_invertY()
+    return self._translator:FormatByKey("settings.options.invertY")
+end
+
+function Translations:ui_labels_mana()
+    return self._translator:FormatByKey("ui.labels.mana")
+end
+
+function Translations:ui_buttons_cancel()
+    return self._translator:FormatByKey("ui.buttons.cancel")
+end
+
+function Translations:inventory_actions_unequip()
+    return self._translator:FormatByKey("inventory.actions.unequip")
+end
+
+function Translations:settings_options_shadows()
+    return self._translator:FormatByKey("settings.options.shadows")
+end
+
+function Translations:inventory_actions_destroy()
+    return self._translator:FormatByKey("inventory.actions.destroy")
+end
+
+function Translations:shop_categories_consumables()
+    return self._translator:FormatByKey("shop.categories.consumables")
+end
+
+function Translations:inventory_actions_equip()
+    return self._translator:FormatByKey("inventory.actions.equip")
+end
+
+function Translations:inventory_tabs_materials()
+    return self._translator:FormatByKey("inventory.tabs.materials")
+end
+
+function Translations:game_menu_settings()
+    return self._translator:FormatByKey("game.menu.settings")
+end
+
+function Translations:social_party_invite()
+    return self._translator:FormatByKey("social.party.invite")
+end
+
+function Translations:inventory_info_damage(params)
+    params = params or {}
+    params.damage = math.floor(tonumber(params.damage) or 0)
+    return self._translator:FormatByKey("inventory.info.damage", params)
+end
+
+function Translations:inventory_actions_repair()
+    return self._translator:FormatByKey("inventory.actions.repair")
 end
 
 function Translations:game_modes_tutorial()
     return self._translator:FormatByKey("game.modes.tutorial")
 end
 
-function Translations:social_friends_offline()
-    return self._translator:FormatByKey("social.friends.offline")
+function Translations:game_menu_quit()
+    return self._translator:FormatByKey("game.menu.quit")
 end
 
-function Translations:ui_buttons_close()
-    return self._translator:FormatByKey("ui.buttons.close")
+function Translations:shop_categories_bundles()
+    return self._translator:FormatByKey("shop.categories.bundles")
 end
 
-function Translations:social_party_create()
-    return self._translator:FormatByKey("social.party.create")
+function Translations:shop_messages_purchaseFailed()
+    return self._translator:FormatByKey("shop.messages.purchaseFailed")
 end
 
-function Translations:shop_messages_itemRemoved()
-    return self._translator:FormatByKey("shop.messages.itemRemoved")
+function Translations:ui_buttons_edit()
+    return self._translator:FormatByKey("ui.buttons.edit")
 end
 
-function Translations:shop_categories_emotes()
-    return self._translator:FormatByKey("shop.categories.emotes")
+function Translations:ui_buttons_reset()
+    return self._translator:FormatByKey("ui.buttons.reset")
+end
+
+function Translations:ui_messages_success()
+    return self._translator:FormatByKey("ui.messages.success")
+end
+
+function Translations:ui_tooltips_equipItem()
+    return self._translator:FormatByKey("ui.tooltips.equipItem")
+end
+
+function Translations:game_modes_survival()
+    return self._translator:FormatByKey("game.modes.survival")
+end
+
+function Translations:inventory_actions_gift()
+    return self._translator:FormatByKey("inventory.actions.gift")
+end
+
+function Translations:social_friends_requests()
+    return self._translator:FormatByKey("social.friends.requests")
+end
+
+function Translations:game_modes_campaign()
+    return self._translator:FormatByKey("game.modes.campaign")
+end
+
+function Translations:game_menu_profile()
+    return self._translator:FormatByKey("game.menu.profile")
+end
+
+function Translations:inventory_actions_use()
+    return self._translator:FormatByKey("inventory.actions.use")
+end
+
+function Translations:social_chat_send()
+    return self._translator:FormatByKey("social.chat.send")
+end
+
+function Translations:ui_buttons_confirm()
+    return self._translator:FormatByKey("ui.buttons.confirm")
+end
+
+function Translations:game_notifications_achievementUnlocked(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.achievementUnlocked", params)
 end
 
 function Translations:ui_buttons_submit()
     return self._translator:FormatByKey("ui.buttons.submit")
+end
+
+function Translations:ui_messages_playerLeft(params)
+    params = params or {}
+    return self._translator:FormatByKey("ui.messages.playerLeft", params)
+end
+
+function Translations:game_menu_achievements()
+    return self._translator:FormatByKey("game.menu.achievements")
+end
+
+function Translations:ui_buttons_load()
+    return self._translator:FormatByKey("ui.buttons.load")
+end
+
+function Translations:social_chat_globalChat()
+    return self._translator:FormatByKey("social.chat.globalChat")
+end
+
+function Translations:ui_labels_robux()
+    return self._translator:FormatByKey("ui.labels.robux")
+end
+
+function Translations:ui_buttons_back()
+    return self._translator:FormatByKey("ui.buttons.back")
+end
+
+function Translations:game_notifications_partyInvite(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.partyInvite", params)
+end
+
+function Translations:shop_messages_requiresGamepass(params)
+    params = params or {}
+    return self._translator:FormatByKey("shop.messages.requiresGamepass", params)
+end
+
+function Translations:shop_messages_insufficientRobux()
+    return self._translator:FormatByKey("shop.messages.insufficientRobux")
+end
+
+function Translations:social_party_kick()
+    return self._translator:FormatByKey("social.party.kick")
+end
+
+function Translations:game_status_online()
+    return self._translator:FormatByKey("game.status.online")
+end
+
+function Translations:game_menu_about()
+    return self._translator:FormatByKey("game.menu.about")
+end
+
+function Translations:game_status_inGame()
+    return self._translator:FormatByKey("game.status.inGame")
 end
 
 function Translations:ui_messages_playerJoined(params)
@@ -817,64 +439,387 @@ function Translations:ui_messages_playerJoined(params)
     return self._translator:FormatByKey("ui.messages.playerJoined", params)
 end
 
-function Translations:inventory_actions_use()
-    return self._translator:FormatByKey("inventory.actions.use")
+function Translations:game_modes_multiplayer()
+    return self._translator:FormatByKey("game.modes.multiplayer")
 end
 
-function Translations:shop_categories_materials()
-    return self._translator:FormatByKey("shop.categories.materials")
+function Translations:game_notifications_levelUp(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.levelUp", params)
 end
 
-function Translations:social_party_invite()
-    return self._translator:FormatByKey("social.party.invite")
+function Translations:social_party_create()
+    return self._translator:FormatByKey("social.party.create")
 end
 
-function Translations:inventory_actions_unequip()
-    return self._translator:FormatByKey("inventory.actions.unequip")
+function Translations:social_friends_unblock()
+    return self._translator:FormatByKey("social.friends.unblock")
 end
 
-function Translations:ui_buttons_cancel()
-    return self._translator:FormatByKey("ui.buttons.cancel")
+function Translations:ui_messages_price(params)
+    params = params or {}
+    params.price = string.format("%.2f", tonumber(params.price) or 0)
+    return self._translator:FormatByKey("ui.messages.price", params)
 end
 
-function Translations:ui_buttons_buy()
-    return self._translator:FormatByKey("ui.buttons.buy")
+function Translations:ui_labels_stamina()
+    return self._translator:FormatByKey("ui.labels.stamina")
 end
 
-function Translations:ui_labels_level()
-    return self._translator:FormatByKey("ui.labels.level")
+function Translations:game_notifications_tradeRequest(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.tradeRequest", params)
 end
 
-function Translations:ui_buttons_apply()
-    return self._translator:FormatByKey("ui.buttons.apply")
+function Translations:ui_tooltips_unequipItem()
+    return self._translator:FormatByKey("ui.tooltips.unequipItem")
 end
 
-function Translations:shop_actions_compare()
-    return self._translator:FormatByKey("shop.actions.compare")
+function Translations:settings_options_language()
+    return self._translator:FormatByKey("settings.options.language")
 end
 
-function Translations:social_friends_online()
-    return self._translator:FormatByKey("social.friends.online")
+function Translations:settings_options_fullscreen()
+    return self._translator:FormatByKey("settings.options.fullscreen")
 end
 
-function Translations:ui_labels_welcome()
-    return self._translator:FormatByKey("ui.labels.welcome")
+function Translations:settings_categories_graphics()
+    return self._translator:FormatByKey("settings.categories.graphics")
 end
 
-function Translations:shop_actions_purchase()
-    return self._translator:FormatByKey("shop.actions.purchase")
+function Translations:game_menu_leaderboard()
+    return self._translator:FormatByKey("game.menu.leaderboard")
+end
+
+function Translations:shop_actions_preview()
+    return self._translator:FormatByKey("shop.actions.preview")
+end
+
+function Translations:shop_categories_equipment()
+    return self._translator:FormatByKey("shop.categories.equipment")
+end
+
+function Translations:shop_categories_armor()
+    return self._translator:FormatByKey("shop.categories.armor")
 end
 
 function Translations:settings_options_mouseSensitivity()
     return self._translator:FormatByKey("settings.options.mouseSensitivity")
 end
 
-function Translations:settings_categories_controls()
-    return self._translator:FormatByKey("settings.categories.controls")
+function Translations:ui_labels_gems()
+    return self._translator:FormatByKey("ui.labels.gems")
+end
+
+function Translations:ui_labels_level()
+    return self._translator:FormatByKey("ui.labels.level")
+end
+
+function Translations:ui_tooltips_sellItem()
+    return self._translator:FormatByKey("ui.tooltips.sellItem")
+end
+
+function Translations:shop_categories_weapons()
+    return self._translator:FormatByKey("shop.categories.weapons")
+end
+
+function Translations:shop_categories_accessories()
+    return self._translator:FormatByKey("shop.categories.accessories")
+end
+
+function Translations:shop_actions_checkout()
+    return self._translator:FormatByKey("shop.actions.checkout")
+end
+
+function Translations:social_chat_report()
+    return self._translator:FormatByKey("social.chat.report")
+end
+
+function Translations:game_status_away()
+    return self._translator:FormatByKey("game.status.away")
+end
+
+function Translations:game_status_offline()
+    return self._translator:FormatByKey("game.status.offline")
+end
+
+function Translations:game_status_inLobby()
+    return self._translator:FormatByKey("game.status.inLobby")
+end
+
+function Translations:inventory_info_durability(params)
+    params = params or {}
+    return self._translator:FormatByKey("inventory.info.durability", params)
+end
+
+function Translations:social_party_promote()
+    return self._translator:FormatByKey("social.party.promote")
+end
+
+function Translations:ui_buttons_close()
+    return self._translator:FormatByKey("ui.buttons.close")
+end
+
+function Translations:settings_options_fov()
+    return self._translator:FormatByKey("settings.options.fov")
+end
+
+function Translations:ui_labels_welcome()
+    return self._translator:FormatByKey("ui.labels.welcome")
+end
+
+function Translations:shop_categories_materials()
+    return self._translator:FormatByKey("shop.categories.materials")
+end
+
+function Translations:game_status_connected()
+    return self._translator:FormatByKey("game.status.connected")
+end
+
+function Translations:social_friends_remove()
+    return self._translator:FormatByKey("social.friends.remove")
+end
+
+function Translations:inventory_info_quantity(params)
+    params = params or {}
+    params.quantity = math.floor(tonumber(params.quantity) or 0)
+    return self._translator:FormatByKey("inventory.info.quantity", params)
+end
+
+function Translations:inventory_actions_enchant()
+    return self._translator:FormatByKey("inventory.actions.enchant")
 end
 
 function Translations:social_chat_unmute()
     return self._translator:FormatByKey("social.chat.unmute")
+end
+
+function Translations:game_modes_practice()
+    return self._translator:FormatByKey("game.modes.practice")
+end
+
+function Translations:game_status_busy()
+    return self._translator:FormatByKey("game.status.busy")
+end
+
+function Translations:game_menu_play()
+    return self._translator:FormatByKey("game.menu.play")
+end
+
+function Translations:inventory_tabs_pets()
+    return self._translator:FormatByKey("inventory.tabs.pets")
+end
+
+function Translations:game_status_disconnected()
+    return self._translator:FormatByKey("game.status.disconnected")
+end
+
+function Translations:shop_categories_gamepasses()
+    return self._translator:FormatByKey("shop.categories.gamepasses")
+end
+
+function Translations:shop_actions_purchase()
+    return self._translator:FormatByKey("shop.actions.purchase")
+end
+
+function Translations:game_modes_raid()
+    return self._translator:FormatByKey("game.modes.raid")
+end
+
+function Translations:inventory_tabs_all()
+    return self._translator:FormatByKey("inventory.tabs.all")
+end
+
+function Translations:shop_actions_addToCart()
+    return self._translator:FormatByKey("shop.actions.addToCart")
+end
+
+function Translations:ui_buttons_delete()
+    return self._translator:FormatByKey("ui.buttons.delete")
+end
+
+function Translations:social_friends_block()
+    return self._translator:FormatByKey("social.friends.block")
+end
+
+function Translations:game_modes_coop()
+    return self._translator:FormatByKey("game.modes.coop")
+end
+
+function Translations:inventory_info_rarity(params)
+    params = params or {}
+    return self._translator:FormatByKey("inventory.info.rarity", params)
+end
+
+function Translations:ui_labels_health()
+    return self._translator:FormatByKey("ui.labels.health")
+end
+
+function Translations:game_status_searching()
+    return self._translator:FormatByKey("game.status.searching")
+end
+
+function Translations:settings_options_musicVolume()
+    return self._translator:FormatByKey("settings.options.musicVolume")
+end
+
+function Translations:inventory_actions_trade()
+    return self._translator:FormatByKey("inventory.actions.trade")
+end
+
+function Translations:settings_categories_controls()
+    return self._translator:FormatByKey("settings.categories.controls")
+end
+
+function Translations:social_chat_mute()
+    return self._translator:FormatByKey("social.chat.mute")
+end
+
+function Translations:settings_options_vsync()
+    return self._translator:FormatByKey("settings.options.vsync")
+end
+
+function Translations:shop_actions_viewCart()
+    return self._translator:FormatByKey("shop.actions.viewCart")
+end
+
+function Translations:shop_categories_potions()
+    return self._translator:FormatByKey("shop.categories.potions")
+end
+
+function Translations:inventory_tabs_vehicles()
+    return self._translator:FormatByKey("inventory.tabs.vehicles")
+end
+
+function Translations:inventory_info_weight(params)
+    params = params or {}
+    params.weight = string.format("%.1f", tonumber(params.weight) or 0)
+    return self._translator:FormatByKey("inventory.info.weight", params)
+end
+
+function Translations:settings_options_volume()
+    return self._translator:FormatByKey("settings.options.volume")
+end
+
+function Translations:inventory_actions_upgrade()
+    return self._translator:FormatByKey("inventory.actions.upgrade")
+end
+
+function Translations:shop_messages_cartEmpty()
+    return self._translator:FormatByKey("shop.messages.cartEmpty")
+end
+
+function Translations:settings_options_brightness()
+    return self._translator:FormatByKey("settings.options.brightness")
+end
+
+function Translations:social_chat_whisper()
+    return self._translator:FormatByKey("social.chat.whisper")
+end
+
+function Translations:social_chat_teamChat()
+    return self._translator:FormatByKey("social.chat.teamChat")
+end
+
+function Translations:game_notifications_questComplete(params)
+    params = params or {}
+    return self._translator:FormatByKey("game.notifications.questComplete", params)
+end
+
+function Translations:social_friends_add()
+    return self._translator:FormatByKey("social.friends.add")
+end
+
+function Translations:ui_labels_experience()
+    return self._translator:FormatByKey("ui.labels.experience")
+end
+
+function Translations:settings_options_quality()
+    return self._translator:FormatByKey("settings.options.quality")
+end
+
+function Translations:settings_categories_gameplay()
+    return self._translator:FormatByKey("settings.categories.gameplay")
+end
+
+function Translations:social_friends_online()
+    return self._translator:FormatByKey("social.friends.online")
+end
+
+function Translations:game_modes_singleplayer()
+    return self._translator:FormatByKey("game.modes.singleplayer")
+end
+
+function Translations:ui_messages_loading()
+    return self._translator:FormatByKey("ui.messages.loading")
+end
+
+function Translations:ui_buttons_apply()
+    return self._translator:FormatByKey("ui.buttons.apply")
+end
+
+function Translations:settings_categories_general()
+    return self._translator:FormatByKey("settings.categories.general")
+end
+
+function Translations:settings_categories_audio()
+    return self._translator:FormatByKey("settings.categories.audio")
+end
+
+function Translations:social_friends_offline()
+    return self._translator:FormatByKey("social.friends.offline")
+end
+
+function Translations:ui_messages_saving()
+    return self._translator:FormatByKey("ui.messages.saving")
+end
+
+function Translations:shop_actions_compare()
+    return self._translator:FormatByKey("shop.actions.compare")
+end
+
+function Translations:social_party_leave()
+    return self._translator:FormatByKey("social.party.leave")
+end
+
+function Translations:ui_buttons_sell()
+    return self._translator:FormatByKey("ui.buttons.sell")
+end
+
+function Translations:game_menu_credits()
+    return self._translator:FormatByKey("game.menu.credits")
+end
+
+function Translations:game_menu_help()
+    return self._translator:FormatByKey("game.menu.help")
+end
+
+function Translations:inventory_actions_drop()
+    return self._translator:FormatByKey("inventory.actions.drop")
+end
+
+function Translations:ui_tooltips_buyItem()
+    return self._translator:FormatByKey("ui.tooltips.buyItem")
+end
+
+function Translations:shop_messages_purchaseSuccess()
+    return self._translator:FormatByKey("shop.messages.purchaseSuccess")
+end
+
+function Translations:social_party_join()
+    return self._translator:FormatByKey("social.party.join")
+end
+
+function Translations:shop_categories_emotes()
+    return self._translator:FormatByKey("shop.categories.emotes")
+end
+
+function Translations:ui_messages_warning()
+    return self._translator:FormatByKey("ui.messages.warning")
+end
+
+function Translations:shop_actions_removeFromCart()
+    return self._translator:FormatByKey("shop.actions.removeFromCart")
 end
 
 function Translations:ui_messages_greeting(params)
@@ -882,20 +827,75 @@ function Translations:ui_messages_greeting(params)
     return self._translator:FormatByKey("ui.messages.greeting", params)
 end
 
-function Translations:ui_tooltips_buyItem()
-    return self._translator:FormatByKey("ui.tooltips.buyItem")
+function Translations:shop_messages_itemAdded()
+    return self._translator:FormatByKey("shop.messages.itemAdded")
 end
 
-function Translations:shop_actions_viewCart()
-    return self._translator:FormatByKey("shop.actions.viewCart")
+function Translations:game_modes_versus()
+    return self._translator:FormatByKey("game.modes.versus")
 end
 
-function Translations:shop_categories_pets()
-    return self._translator:FormatByKey("shop.categories.pets")
+function Translations:ui_buttons_buy()
+    return self._translator:FormatByKey("ui.buttons.buy")
 end
 
-function Translations:social_party_leave()
-    return self._translator:FormatByKey("social.party.leave")
+function Translations:inventory_tabs_consumables()
+    return self._translator:FormatByKey("inventory.tabs.consumables")
+end
+
+function Translations:social_friends_invite()
+    return self._translator:FormatByKey("social.friends.invite")
+end
+
+function Translations:ui_tooltips_upgradeItem()
+    return self._translator:FormatByKey("ui.tooltips.upgradeItem")
+end
+
+function Translations:ui_labels_displayName()
+    return self._translator:FormatByKey("ui.labels.displayName")
+end
+
+function Translations:game_status_connecting()
+    return self._translator:FormatByKey("game.status.connecting")
+end
+
+function Translations:game_modes_arena()
+    return self._translator:FormatByKey("game.modes.arena")
+end
+
+function Translations:inventory_tabs_weapons()
+    return self._translator:FormatByKey("inventory.tabs.weapons")
+end
+
+function Translations:ui_messages_itemCount(params)
+    params = params or {}
+    return self._translator:FormatByKey("ui.messages.itemCount", params)
+end
+
+function Translations:inventory_tabs_quest()
+    return self._translator:FormatByKey("inventory.tabs.quest")
+end
+
+function Translations:ui_labels_coins()
+    return self._translator:FormatByKey("ui.labels.coins")
+end
+
+function Translations:settings_options_particles()
+    return self._translator:FormatByKey("settings.options.particles")
+end
+
+function Translations:shop_messages_insufficientFunds()
+    return self._translator:FormatByKey("shop.messages.insufficientFunds")
+end
+
+function Translations:shop_messages_itemRemoved()
+    return self._translator:FormatByKey("shop.messages.itemRemoved")
+end
+
+function Translations:inventory_info_defense(params)
+    params = params or {}
+    params.defense = math.floor(tonumber(params.defense) or 0)
+    return self._translator:FormatByKey("inventory.info.defense", params)
 end
 
 function Translations:ui_messages_items(count, params)
@@ -977,688 +977,688 @@ Translations.ui.labels = {}
 Translations.ui.messages = {}
 Translations.ui.tooltips = {}
 
-function Translations.social.party.promote(self)
-    return self:social_party_promote()
-end
-
-function Translations.game.menu.achievements(self)
-    return self:game_menu_achievements()
-end
-
-function Translations.ui.labels.coins(self)
-    return self:ui_labels_coins()
-end
-
-function Translations.game.modes.raid(self)
-    return self:game_modes_raid()
-end
-
-function Translations.shop.messages.itemAdded(self)
-    return self:shop_messages_itemAdded()
-end
-
-function Translations.shop.actions.addToCart(self)
-    return self:shop_actions_addToCart()
-end
-
-function Translations.game.menu.leaderboard(self)
-    return self:game_menu_leaderboard()
-end
-
-function Translations.game.status.away(self)
-    return self:game_status_away()
-end
-
-function Translations.shop.categories.vehicles(self)
-    return self:shop_categories_vehicles()
-end
-
-function Translations.settings.options.fov(self)
-    return self:settings_options_fov()
-end
-
-function Translations.social.friends.add(self)
-    return self:social_friends_add()
-end
-
-function Translations.ui.buttons.delete(self)
-    return self:ui_buttons_delete()
-end
-
-function Translations.settings.categories.gameplay(self)
-    return self:settings_categories_gameplay()
-end
-
-function Translations.inventory.actions.repair(self)
-    return self:inventory_actions_repair()
-end
-
-function Translations.ui.labels.experience(self)
-    return self:ui_labels_experience()
-end
-
-function Translations.game.notifications.partyInvite(self, params)
-    return self:game_notifications_partyInvite(params)
-end
-
-function Translations.game.modes.arena(self)
-    return self:game_modes_arena()
-end
-
-function Translations.game.modes.singleplayer(self)
-    return self:game_modes_singleplayer()
-end
-
-function Translations.shop.messages.requiresGamepass(self, params)
-    return self:shop_messages_requiresGamepass(params)
-end
-
-function Translations.ui.buttons.reset(self)
-    return self:ui_buttons_reset()
-end
-
-function Translations.ui.messages.saving(self)
-    return self:ui_messages_saving()
-end
-
-function Translations.game.status.connecting(self)
-    return self:game_status_connecting()
-end
-
-function Translations.ui.labels.mana(self)
-    return self:ui_labels_mana()
-end
-
-function Translations.ui.buttons.back(self)
-    return self:ui_buttons_back()
-end
-
-function Translations.shop.categories.accessories(self)
-    return self:shop_categories_accessories()
-end
-
-function Translations.inventory.tabs.materials(self)
-    return self:inventory_tabs_materials()
-end
-
-function Translations.ui.buttons.load(self)
-    return self:ui_buttons_load()
-end
-
-function Translations.settings.options.sfxVolume(self)
-    return self:settings_options_sfxVolume()
-end
-
-function Translations.inventory.actions.upgrade(self)
-    return self:inventory_actions_upgrade()
-end
-
-function Translations.shop.actions.preview(self)
-    return self:shop_actions_preview()
-end
-
-function Translations.ui.messages.itemCount(self, params)
-    return self:ui_messages_itemCount(params)
-end
-
-function Translations.ui.buttons.sell(self)
-    return self:ui_buttons_sell()
-end
-
-function Translations.social.chat.teamChat(self)
-    return self:social_chat_teamChat()
-end
-
-function Translations.inventory.tabs.pets(self)
-    return self:inventory_tabs_pets()
+function Translations.inventory.tabs.armor(self)
+    return self:inventory_tabs_armor()
 end
 
 function Translations.ui.buttons.next(self)
     return self:ui_buttons_next()
 end
 
-function Translations.shop.categories.potions(self)
-    return self:shop_categories_potions()
-end
-
-function Translations.ui.tooltips.equipItem(self)
-    return self:ui_tooltips_equipItem()
-end
-
-function Translations.game.status.inGame(self)
-    return self:game_status_inGame()
-end
-
-function Translations.inventory.tabs.all(self)
-    return self:inventory_tabs_all()
-end
-
-function Translations.settings.options.fullscreen(self)
-    return self:settings_options_fullscreen()
-end
-
-function Translations.ui.labels.player(self)
-    return self:ui_labels_player()
-end
-
-function Translations.settings.options.shadows(self)
-    return self:settings_options_shadows()
-end
-
-function Translations.game.modes.versus(self)
-    return self:game_modes_versus()
-end
-
-function Translations.settings.options.quality(self)
-    return self:settings_options_quality()
-end
-
-function Translations.settings.categories.graphics(self)
-    return self:settings_categories_graphics()
-end
-
-function Translations.game.modes.practice(self)
-    return self:game_modes_practice()
-end
-
-function Translations.settings.options.vsync(self)
-    return self:settings_options_vsync()
-end
-
-function Translations.shop.actions.removeFromCart(self)
-    return self:shop_actions_removeFromCart()
-end
-
-function Translations.social.chat.send(self)
-    return self:social_chat_send()
-end
-
-function Translations.game.notifications.friendRequest(self, params)
-    return self:game_notifications_friendRequest(params)
-end
-
-function Translations.shop.categories.gamepasses(self)
-    return self:shop_categories_gamepasses()
-end
-
-function Translations.ui.buttons.save(self)
-    return self:ui_buttons_save()
-end
-
-function Translations.inventory.tabs.vehicles(self)
-    return self:inventory_tabs_vehicles()
-end
-
-function Translations.shop.messages.purchaseSuccess(self)
-    return self:shop_messages_purchaseSuccess()
-end
-
-function Translations.inventory.tabs.armor(self)
-    return self:inventory_tabs_armor()
-end
-
-function Translations.shop.actions.checkout(self)
-    return self:shop_actions_checkout()
-end
-
-function Translations.shop.messages.cartEmpty(self)
-    return self:shop_messages_cartEmpty()
-end
-
-function Translations.shop.messages.insufficientFunds(self)
-    return self:shop_messages_insufficientFunds()
-end
-
-function Translations.social.friends.unblock(self)
-    return self:social_friends_unblock()
-end
-
-function Translations.ui.messages.loading(self)
-    return self:ui_messages_loading()
-end
-
-function Translations.game.notifications.levelUp(self, params)
-    return self:game_notifications_levelUp(params)
-end
-
-function Translations.game.modes.coop(self)
-    return self:game_modes_coop()
-end
-
-function Translations.game.notifications.achievementUnlocked(self, params)
-    return self:game_notifications_achievementUnlocked(params)
-end
-
-function Translations.game.notifications.questComplete(self, params)
-    return self:game_notifications_questComplete(params)
-end
-
-function Translations.game.menu.quit(self)
-    return self:game_menu_quit()
-end
-
-function Translations.game.status.disconnected(self)
-    return self:game_status_disconnected()
-end
-
-function Translations.game.status.busy(self)
-    return self:game_status_busy()
-end
-
-function Translations.settings.options.volume(self)
-    return self:settings_options_volume()
-end
-
-function Translations.shop.categories.bundles(self)
-    return self:shop_categories_bundles()
-end
-
-function Translations.shop.categories.featured(self)
-    return self:shop_categories_featured()
-end
-
-function Translations.ui.labels.robux(self)
-    return self:ui_labels_robux()
-end
-
-function Translations.ui.messages.playerLeft(self, params)
-    return self:ui_messages_playerLeft(params)
-end
-
-function Translations.shop.categories.consumables(self)
-    return self:shop_categories_consumables()
-end
-
-function Translations.inventory.actions.trade(self)
-    return self:inventory_actions_trade()
-end
-
-function Translations.inventory.info.rarity(self, params)
-    return self:inventory_info_rarity(params)
-end
-
-function Translations.settings.options.language(self)
-    return self:settings_options_language()
-end
-
-function Translations.game.status.online(self)
-    return self:game_status_online()
-end
-
-function Translations.inventory.tabs.weapons(self)
-    return self:inventory_tabs_weapons()
-end
-
-function Translations.settings.options.invertY(self)
-    return self:settings_options_invertY()
-end
-
-function Translations.game.modes.campaign(self)
-    return self:game_modes_campaign()
-end
-
-function Translations.settings.categories.general(self)
-    return self:settings_categories_general()
-end
-
-function Translations.game.notifications.tradeRequest(self, params)
-    return self:game_notifications_tradeRequest(params)
-end
-
-function Translations.inventory.actions.destroy(self)
-    return self:inventory_actions_destroy()
-end
-
-function Translations.ui.labels.health(self)
-    return self:ui_labels_health()
-end
-
-function Translations.game.status.connected(self)
-    return self:game_status_connected()
-end
-
-function Translations.inventory.actions.enchant(self)
-    return self:inventory_actions_enchant()
-end
-
-function Translations.inventory.actions.gift(self)
-    return self:inventory_actions_gift()
-end
-
-function Translations.settings.categories.audio(self)
-    return self:settings_categories_audio()
-end
-
-function Translations.social.friends.block(self)
-    return self:social_friends_block()
-end
-
-function Translations.ui.tooltips.sellItem(self)
-    return self:ui_tooltips_sellItem()
-end
-
-function Translations.game.modes.multiplayer(self)
-    return self:game_modes_multiplayer()
-end
-
-function Translations.game.menu.help(self)
-    return self:game_menu_help()
-end
-
-function Translations.inventory.tabs.quest(self)
-    return self:inventory_tabs_quest()
-end
-
-function Translations.social.party.join(self)
-    return self:social_party_join()
-end
-
-function Translations.inventory.info.weight(self, params)
-    return self:inventory_info_weight(params)
-end
-
-function Translations.shop.categories.weapons(self)
-    return self:shop_categories_weapons()
-end
-
-function Translations.inventory.actions.equip(self)
-    return self:inventory_actions_equip()
-end
-
-function Translations.social.friends.remove(self)
-    return self:social_friends_remove()
-end
-
-function Translations.game.menu.play(self)
-    return self:game_menu_play()
-end
-
-function Translations.settings.options.particles(self)
-    return self:settings_options_particles()
-end
-
-function Translations.ui.messages.error(self)
-    return self:ui_messages_error()
-end
-
-function Translations.social.party.kick(self)
-    return self:social_party_kick()
-end
-
-function Translations.ui.tooltips.unequipItem(self)
-    return self:ui_tooltips_unequipItem()
-end
-
-function Translations.inventory.tabs.consumables(self)
-    return self:inventory_tabs_consumables()
-end
-
-function Translations.shop.messages.purchaseFailed(self)
-    return self:shop_messages_purchaseFailed()
-end
-
-function Translations.game.menu.settings(self)
-    return self:game_menu_settings()
-end
-
-function Translations.social.chat.mute(self)
-    return self:social_chat_mute()
-end
-
-function Translations.ui.buttons.confirm(self)
-    return self:ui_buttons_confirm()
-end
-
-function Translations.game.menu.profile(self)
-    return self:game_menu_profile()
-end
-
-function Translations.inventory.info.durability(self, params)
-    return self:inventory_info_durability(params)
-end
-
-function Translations.shop.categories.equipment(self)
-    return self:shop_categories_equipment()
-end
-
-function Translations.social.friends.requests(self)
-    return self:social_friends_requests()
-end
-
-function Translations.ui.labels.stamina(self)
-    return self:ui_labels_stamina()
-end
-
-function Translations.ui.messages.price(self, params)
-    return self:ui_messages_price(params)
-end
-
-function Translations.ui.tooltips.upgradeItem(self)
-    return self:ui_tooltips_upgradeItem()
+function Translations.ui.buttons.create(self)
+    return self:ui_buttons_create()
 end
 
 function Translations.shop.actions.clearCart(self)
     return self:shop_actions_clearCart()
 end
 
-function Translations.social.chat.whisper(self)
-    return self:social_chat_whisper()
-end
-
-function Translations.game.status.searching(self)
-    return self:game_status_searching()
-end
-
-function Translations.social.chat.report(self)
-    return self:social_chat_report()
-end
-
-function Translations.game.menu.about(self)
-    return self:game_menu_about()
-end
-
-function Translations.inventory.actions.drop(self)
-    return self:inventory_actions_drop()
-end
-
-function Translations.ui.messages.success(self)
-    return self:ui_messages_success()
-end
-
-function Translations.ui.messages.warning(self)
-    return self:ui_messages_warning()
-end
-
-function Translations.ui.buttons.edit(self)
-    return self:ui_buttons_edit()
-end
-
-function Translations.game.status.offline(self)
-    return self:game_status_offline()
-end
-
-function Translations.inventory.info.quantity(self, params)
-    return self:inventory_info_quantity(params)
-end
-
-function Translations.game.status.inLobby(self)
-    return self:game_status_inLobby()
-end
-
-function Translations.game.menu.credits(self)
-    return self:game_menu_credits()
-end
-
 function Translations.settings.categories.accessibility(self)
     return self:settings_categories_accessibility()
 end
 
-function Translations.ui.buttons.create(self)
-    return self:ui_buttons_create()
-end
-
-function Translations.social.chat.globalChat(self)
-    return self:social_chat_globalChat()
-end
-
-function Translations.ui.labels.displayName(self)
-    return self:ui_labels_displayName()
-end
-
-function Translations.game.modes.survival(self)
-    return self:game_modes_survival()
-end
-
-function Translations.inventory.info.damage(self, params)
-    return self:inventory_info_damage(params)
-end
-
-function Translations.inventory.info.defense(self, params)
-    return self:inventory_info_defense(params)
-end
-
-function Translations.shop.categories.armor(self)
-    return self:shop_categories_armor()
-end
-
-function Translations.settings.options.brightness(self)
-    return self:settings_options_brightness()
-end
-
-function Translations.settings.options.musicVolume(self)
-    return self:settings_options_musicVolume()
-end
-
-function Translations.ui.labels.gems(self)
-    return self:ui_labels_gems()
-end
-
-function Translations.ui.messages.score(self, params)
-    return self:ui_messages_score(params)
-end
-
-function Translations.game.menu.friends(self)
-    return self:game_menu_friends()
-end
-
-function Translations.shop.messages.insufficientRobux(self)
-    return self:shop_messages_insufficientRobux()
-end
-
-function Translations.social.friends.invite(self)
-    return self:social_friends_invite()
-end
-
-function Translations.game.modes.tutorial(self)
-    return self:game_modes_tutorial()
-end
-
-function Translations.social.friends.offline(self)
-    return self:social_friends_offline()
-end
-
-function Translations.ui.buttons.close(self)
-    return self:ui_buttons_close()
-end
-
-function Translations.social.party.create(self)
-    return self:social_party_create()
-end
-
-function Translations.shop.messages.itemRemoved(self)
-    return self:shop_messages_itemRemoved()
-end
-
-function Translations.shop.categories.emotes(self)
-    return self:shop_categories_emotes()
-end
-
-function Translations.ui.buttons.submit(self)
-    return self:ui_buttons_submit()
-end
-
-function Translations.ui.messages.playerJoined(self, params)
-    return self:ui_messages_playerJoined(params)
-end
-
-function Translations.inventory.actions.use(self)
-    return self:inventory_actions_use()
-end
-
-function Translations.shop.categories.materials(self)
-    return self:shop_categories_materials()
-end
-
-function Translations.social.party.invite(self)
-    return self:social_party_invite()
-end
-
-function Translations.inventory.actions.unequip(self)
-    return self:inventory_actions_unequip()
-end
-
-function Translations.ui.buttons.cancel(self)
-    return self:ui_buttons_cancel()
-end
-
-function Translations.ui.buttons.buy(self)
-    return self:ui_buttons_buy()
-end
-
-function Translations.ui.labels.level(self)
-    return self:ui_labels_level()
-end
-
-function Translations.ui.buttons.apply(self)
-    return self:ui_buttons_apply()
-end
-
-function Translations.shop.actions.compare(self)
-    return self:shop_actions_compare()
-end
-
-function Translations.social.friends.online(self)
-    return self:social_friends_online()
-end
-
-function Translations.ui.labels.welcome(self)
-    return self:ui_labels_welcome()
-end
-
-function Translations.shop.actions.purchase(self)
-    return self:shop_actions_purchase()
-end
-
-function Translations.settings.options.mouseSensitivity(self)
-    return self:settings_options_mouseSensitivity()
-end
-
-function Translations.settings.categories.controls(self)
-    return self:settings_categories_controls()
-end
-
-function Translations.social.chat.unmute(self)
-    return self:social_chat_unmute()
-end
-
-function Translations.ui.messages.greeting(self, params)
-    return self:ui_messages_greeting(params)
-end
-
-function Translations.ui.tooltips.buyItem(self)
-    return self:ui_tooltips_buyItem()
-end
-
-function Translations.shop.actions.viewCart(self)
-    return self:shop_actions_viewCart()
+function Translations.ui.messages.error(self)
+    return self:ui_messages_error()
 end
 
 function Translations.shop.categories.pets(self)
     return self:shop_categories_pets()
 end
 
+function Translations.ui.labels.player(self)
+    return self:ui_labels_player()
+end
+
+function Translations.shop.categories.featured(self)
+    return self:shop_categories_featured()
+end
+
+function Translations.ui.buttons.save(self)
+    return self:ui_buttons_save()
+end
+
+function Translations.shop.categories.vehicles(self)
+    return self:shop_categories_vehicles()
+end
+
+function Translations.game.menu.friends(self)
+    return self:game_menu_friends()
+end
+
+function Translations.ui.messages.score(self, params)
+    return self:ui_messages_score(params)
+end
+
+function Translations.settings.options.sfxVolume(self)
+    return self:settings_options_sfxVolume()
+end
+
+function Translations.game.notifications.friendRequest(self, params)
+    return self:game_notifications_friendRequest(params)
+end
+
+function Translations.settings.options.invertY(self)
+    return self:settings_options_invertY()
+end
+
+function Translations.ui.labels.mana(self)
+    return self:ui_labels_mana()
+end
+
+function Translations.ui.buttons.cancel(self)
+    return self:ui_buttons_cancel()
+end
+
+function Translations.inventory.actions.unequip(self)
+    return self:inventory_actions_unequip()
+end
+
+function Translations.settings.options.shadows(self)
+    return self:settings_options_shadows()
+end
+
+function Translations.inventory.actions.destroy(self)
+    return self:inventory_actions_destroy()
+end
+
+function Translations.shop.categories.consumables(self)
+    return self:shop_categories_consumables()
+end
+
+function Translations.inventory.actions.equip(self)
+    return self:inventory_actions_equip()
+end
+
+function Translations.inventory.tabs.materials(self)
+    return self:inventory_tabs_materials()
+end
+
+function Translations.game.menu.settings(self)
+    return self:game_menu_settings()
+end
+
+function Translations.social.party.invite(self)
+    return self:social_party_invite()
+end
+
+function Translations.inventory.info.damage(self, params)
+    return self:inventory_info_damage(params)
+end
+
+function Translations.inventory.actions.repair(self)
+    return self:inventory_actions_repair()
+end
+
+function Translations.game.modes.tutorial(self)
+    return self:game_modes_tutorial()
+end
+
+function Translations.game.menu.quit(self)
+    return self:game_menu_quit()
+end
+
+function Translations.shop.categories.bundles(self)
+    return self:shop_categories_bundles()
+end
+
+function Translations.shop.messages.purchaseFailed(self)
+    return self:shop_messages_purchaseFailed()
+end
+
+function Translations.ui.buttons.edit(self)
+    return self:ui_buttons_edit()
+end
+
+function Translations.ui.buttons.reset(self)
+    return self:ui_buttons_reset()
+end
+
+function Translations.ui.messages.success(self)
+    return self:ui_messages_success()
+end
+
+function Translations.ui.tooltips.equipItem(self)
+    return self:ui_tooltips_equipItem()
+end
+
+function Translations.game.modes.survival(self)
+    return self:game_modes_survival()
+end
+
+function Translations.inventory.actions.gift(self)
+    return self:inventory_actions_gift()
+end
+
+function Translations.social.friends.requests(self)
+    return self:social_friends_requests()
+end
+
+function Translations.game.modes.campaign(self)
+    return self:game_modes_campaign()
+end
+
+function Translations.game.menu.profile(self)
+    return self:game_menu_profile()
+end
+
+function Translations.inventory.actions.use(self)
+    return self:inventory_actions_use()
+end
+
+function Translations.social.chat.send(self)
+    return self:social_chat_send()
+end
+
+function Translations.ui.buttons.confirm(self)
+    return self:ui_buttons_confirm()
+end
+
+function Translations.game.notifications.achievementUnlocked(self, params)
+    return self:game_notifications_achievementUnlocked(params)
+end
+
+function Translations.ui.buttons.submit(self)
+    return self:ui_buttons_submit()
+end
+
+function Translations.ui.messages.playerLeft(self, params)
+    return self:ui_messages_playerLeft(params)
+end
+
+function Translations.game.menu.achievements(self)
+    return self:game_menu_achievements()
+end
+
+function Translations.ui.buttons.load(self)
+    return self:ui_buttons_load()
+end
+
+function Translations.social.chat.globalChat(self)
+    return self:social_chat_globalChat()
+end
+
+function Translations.ui.labels.robux(self)
+    return self:ui_labels_robux()
+end
+
+function Translations.ui.buttons.back(self)
+    return self:ui_buttons_back()
+end
+
+function Translations.game.notifications.partyInvite(self, params)
+    return self:game_notifications_partyInvite(params)
+end
+
+function Translations.shop.messages.requiresGamepass(self, params)
+    return self:shop_messages_requiresGamepass(params)
+end
+
+function Translations.shop.messages.insufficientRobux(self)
+    return self:shop_messages_insufficientRobux()
+end
+
+function Translations.social.party.kick(self)
+    return self:social_party_kick()
+end
+
+function Translations.game.status.online(self)
+    return self:game_status_online()
+end
+
+function Translations.game.menu.about(self)
+    return self:game_menu_about()
+end
+
+function Translations.game.status.inGame(self)
+    return self:game_status_inGame()
+end
+
+function Translations.ui.messages.playerJoined(self, params)
+    return self:ui_messages_playerJoined(params)
+end
+
+function Translations.game.modes.multiplayer(self)
+    return self:game_modes_multiplayer()
+end
+
+function Translations.game.notifications.levelUp(self, params)
+    return self:game_notifications_levelUp(params)
+end
+
+function Translations.social.party.create(self)
+    return self:social_party_create()
+end
+
+function Translations.social.friends.unblock(self)
+    return self:social_friends_unblock()
+end
+
+function Translations.ui.messages.price(self, params)
+    return self:ui_messages_price(params)
+end
+
+function Translations.ui.labels.stamina(self)
+    return self:ui_labels_stamina()
+end
+
+function Translations.game.notifications.tradeRequest(self, params)
+    return self:game_notifications_tradeRequest(params)
+end
+
+function Translations.ui.tooltips.unequipItem(self)
+    return self:ui_tooltips_unequipItem()
+end
+
+function Translations.settings.options.language(self)
+    return self:settings_options_language()
+end
+
+function Translations.settings.options.fullscreen(self)
+    return self:settings_options_fullscreen()
+end
+
+function Translations.settings.categories.graphics(self)
+    return self:settings_categories_graphics()
+end
+
+function Translations.game.menu.leaderboard(self)
+    return self:game_menu_leaderboard()
+end
+
+function Translations.shop.actions.preview(self)
+    return self:shop_actions_preview()
+end
+
+function Translations.shop.categories.equipment(self)
+    return self:shop_categories_equipment()
+end
+
+function Translations.shop.categories.armor(self)
+    return self:shop_categories_armor()
+end
+
+function Translations.settings.options.mouseSensitivity(self)
+    return self:settings_options_mouseSensitivity()
+end
+
+function Translations.ui.labels.gems(self)
+    return self:ui_labels_gems()
+end
+
+function Translations.ui.labels.level(self)
+    return self:ui_labels_level()
+end
+
+function Translations.ui.tooltips.sellItem(self)
+    return self:ui_tooltips_sellItem()
+end
+
+function Translations.shop.categories.weapons(self)
+    return self:shop_categories_weapons()
+end
+
+function Translations.shop.categories.accessories(self)
+    return self:shop_categories_accessories()
+end
+
+function Translations.shop.actions.checkout(self)
+    return self:shop_actions_checkout()
+end
+
+function Translations.social.chat.report(self)
+    return self:social_chat_report()
+end
+
+function Translations.game.status.away(self)
+    return self:game_status_away()
+end
+
+function Translations.game.status.offline(self)
+    return self:game_status_offline()
+end
+
+function Translations.game.status.inLobby(self)
+    return self:game_status_inLobby()
+end
+
+function Translations.inventory.info.durability(self, params)
+    return self:inventory_info_durability(params)
+end
+
+function Translations.social.party.promote(self)
+    return self:social_party_promote()
+end
+
+function Translations.ui.buttons.close(self)
+    return self:ui_buttons_close()
+end
+
+function Translations.settings.options.fov(self)
+    return self:settings_options_fov()
+end
+
+function Translations.ui.labels.welcome(self)
+    return self:ui_labels_welcome()
+end
+
+function Translations.shop.categories.materials(self)
+    return self:shop_categories_materials()
+end
+
+function Translations.game.status.connected(self)
+    return self:game_status_connected()
+end
+
+function Translations.social.friends.remove(self)
+    return self:social_friends_remove()
+end
+
+function Translations.inventory.info.quantity(self, params)
+    return self:inventory_info_quantity(params)
+end
+
+function Translations.inventory.actions.enchant(self)
+    return self:inventory_actions_enchant()
+end
+
+function Translations.social.chat.unmute(self)
+    return self:social_chat_unmute()
+end
+
+function Translations.game.modes.practice(self)
+    return self:game_modes_practice()
+end
+
+function Translations.game.status.busy(self)
+    return self:game_status_busy()
+end
+
+function Translations.game.menu.play(self)
+    return self:game_menu_play()
+end
+
+function Translations.inventory.tabs.pets(self)
+    return self:inventory_tabs_pets()
+end
+
+function Translations.game.status.disconnected(self)
+    return self:game_status_disconnected()
+end
+
+function Translations.shop.categories.gamepasses(self)
+    return self:shop_categories_gamepasses()
+end
+
+function Translations.shop.actions.purchase(self)
+    return self:shop_actions_purchase()
+end
+
+function Translations.game.modes.raid(self)
+    return self:game_modes_raid()
+end
+
+function Translations.inventory.tabs.all(self)
+    return self:inventory_tabs_all()
+end
+
+function Translations.shop.actions.addToCart(self)
+    return self:shop_actions_addToCart()
+end
+
+function Translations.ui.buttons.delete(self)
+    return self:ui_buttons_delete()
+end
+
+function Translations.social.friends.block(self)
+    return self:social_friends_block()
+end
+
+function Translations.game.modes.coop(self)
+    return self:game_modes_coop()
+end
+
+function Translations.inventory.info.rarity(self, params)
+    return self:inventory_info_rarity(params)
+end
+
+function Translations.ui.labels.health(self)
+    return self:ui_labels_health()
+end
+
+function Translations.game.status.searching(self)
+    return self:game_status_searching()
+end
+
+function Translations.settings.options.musicVolume(self)
+    return self:settings_options_musicVolume()
+end
+
+function Translations.inventory.actions.trade(self)
+    return self:inventory_actions_trade()
+end
+
+function Translations.settings.categories.controls(self)
+    return self:settings_categories_controls()
+end
+
+function Translations.social.chat.mute(self)
+    return self:social_chat_mute()
+end
+
+function Translations.settings.options.vsync(self)
+    return self:settings_options_vsync()
+end
+
+function Translations.shop.actions.viewCart(self)
+    return self:shop_actions_viewCart()
+end
+
+function Translations.shop.categories.potions(self)
+    return self:shop_categories_potions()
+end
+
+function Translations.inventory.tabs.vehicles(self)
+    return self:inventory_tabs_vehicles()
+end
+
+function Translations.inventory.info.weight(self, params)
+    return self:inventory_info_weight(params)
+end
+
+function Translations.settings.options.volume(self)
+    return self:settings_options_volume()
+end
+
+function Translations.inventory.actions.upgrade(self)
+    return self:inventory_actions_upgrade()
+end
+
+function Translations.shop.messages.cartEmpty(self)
+    return self:shop_messages_cartEmpty()
+end
+
+function Translations.settings.options.brightness(self)
+    return self:settings_options_brightness()
+end
+
+function Translations.social.chat.whisper(self)
+    return self:social_chat_whisper()
+end
+
+function Translations.social.chat.teamChat(self)
+    return self:social_chat_teamChat()
+end
+
+function Translations.game.notifications.questComplete(self, params)
+    return self:game_notifications_questComplete(params)
+end
+
+function Translations.social.friends.add(self)
+    return self:social_friends_add()
+end
+
+function Translations.ui.labels.experience(self)
+    return self:ui_labels_experience()
+end
+
+function Translations.settings.options.quality(self)
+    return self:settings_options_quality()
+end
+
+function Translations.settings.categories.gameplay(self)
+    return self:settings_categories_gameplay()
+end
+
+function Translations.social.friends.online(self)
+    return self:social_friends_online()
+end
+
+function Translations.game.modes.singleplayer(self)
+    return self:game_modes_singleplayer()
+end
+
+function Translations.ui.messages.loading(self)
+    return self:ui_messages_loading()
+end
+
+function Translations.ui.buttons.apply(self)
+    return self:ui_buttons_apply()
+end
+
+function Translations.settings.categories.general(self)
+    return self:settings_categories_general()
+end
+
+function Translations.settings.categories.audio(self)
+    return self:settings_categories_audio()
+end
+
+function Translations.social.friends.offline(self)
+    return self:social_friends_offline()
+end
+
+function Translations.ui.messages.saving(self)
+    return self:ui_messages_saving()
+end
+
+function Translations.shop.actions.compare(self)
+    return self:shop_actions_compare()
+end
+
 function Translations.social.party.leave(self)
     return self:social_party_leave()
+end
+
+function Translations.ui.buttons.sell(self)
+    return self:ui_buttons_sell()
+end
+
+function Translations.game.menu.credits(self)
+    return self:game_menu_credits()
+end
+
+function Translations.game.menu.help(self)
+    return self:game_menu_help()
+end
+
+function Translations.inventory.actions.drop(self)
+    return self:inventory_actions_drop()
+end
+
+function Translations.ui.tooltips.buyItem(self)
+    return self:ui_tooltips_buyItem()
+end
+
+function Translations.shop.messages.purchaseSuccess(self)
+    return self:shop_messages_purchaseSuccess()
+end
+
+function Translations.social.party.join(self)
+    return self:social_party_join()
+end
+
+function Translations.shop.categories.emotes(self)
+    return self:shop_categories_emotes()
+end
+
+function Translations.ui.messages.warning(self)
+    return self:ui_messages_warning()
+end
+
+function Translations.shop.actions.removeFromCart(self)
+    return self:shop_actions_removeFromCart()
+end
+
+function Translations.ui.messages.greeting(self, params)
+    return self:ui_messages_greeting(params)
+end
+
+function Translations.shop.messages.itemAdded(self)
+    return self:shop_messages_itemAdded()
+end
+
+function Translations.game.modes.versus(self)
+    return self:game_modes_versus()
+end
+
+function Translations.ui.buttons.buy(self)
+    return self:ui_buttons_buy()
+end
+
+function Translations.inventory.tabs.consumables(self)
+    return self:inventory_tabs_consumables()
+end
+
+function Translations.social.friends.invite(self)
+    return self:social_friends_invite()
+end
+
+function Translations.ui.tooltips.upgradeItem(self)
+    return self:ui_tooltips_upgradeItem()
+end
+
+function Translations.ui.labels.displayName(self)
+    return self:ui_labels_displayName()
+end
+
+function Translations.game.status.connecting(self)
+    return self:game_status_connecting()
+end
+
+function Translations.game.modes.arena(self)
+    return self:game_modes_arena()
+end
+
+function Translations.inventory.tabs.weapons(self)
+    return self:inventory_tabs_weapons()
+end
+
+function Translations.ui.messages.itemCount(self, params)
+    return self:ui_messages_itemCount(params)
+end
+
+function Translations.inventory.tabs.quest(self)
+    return self:inventory_tabs_quest()
+end
+
+function Translations.ui.labels.coins(self)
+    return self:ui_labels_coins()
+end
+
+function Translations.settings.options.particles(self)
+    return self:settings_options_particles()
+end
+
+function Translations.shop.messages.insufficientFunds(self)
+    return self:shop_messages_insufficientFunds()
+end
+
+function Translations.shop.messages.itemRemoved(self)
+    return self:shop_messages_itemRemoved()
+end
+
+function Translations.inventory.info.defense(self, params)
+    return self:inventory_info_defense(params)
 end
 
 function Translations.ui.messages.items(self, count, params)
