@@ -297,6 +297,9 @@ fn generate_flat_methods(
         }
     }
 
+    // Sort for deterministic output
+    regular_translations.sort_by(|a, b| a.key.cmp(&b.key));
+
     // Generate regular methods
     let analytics_enabled = analytics_config.map(|c| c.enabled).unwrap_or(false);
     let track_usage = analytics_config.map(|c| c.track_usage).unwrap_or(false);
@@ -389,8 +392,12 @@ fn generate_flat_methods(
     }
 
     // Generate plural methods
-    for (base_key, plural_translations) in plural_groups {
-        generate_plural_method(code, &base_key, &plural_translations);
+    let mut plural_keys_sorted: Vec<_> = plural_groups.keys().collect();
+    plural_keys_sorted.sort();
+
+    for base_key in plural_keys_sorted {
+        let plural_translations = &plural_groups[base_key];
+        generate_plural_method(code, base_key, plural_translations);
     }
 }
 
@@ -482,6 +489,9 @@ fn generate_namespace_structure(code: &mut String, translations: &[&Translation]
         }
     }
 
+    // Sort for deterministic output
+    regular_translations.sort_by(|a, b| a.key.cmp(&b.key));
+
     // Build namespace tree (excluding plural keys)
     let mut all_namespaces: HashSet<String> = HashSet::new();
 
@@ -518,7 +528,7 @@ fn generate_namespace_structure(code: &mut String, translations: &[&Translation]
     code.push('\n');
 
     // Generate namespace methods for regular translations
-    for translation in regular_translations {
+    for translation in &regular_translations {
         let parts: Vec<&str> = translation.key.split('.').collect();
         let namespace = parts[0..parts.len() - 1].join(".");
         let method = parts[parts.len() - 1];
@@ -543,7 +553,10 @@ fn generate_namespace_structure(code: &mut String, translations: &[&Translation]
     }
 
     // Generate namespace methods for plural translations
-    for base_key in plural_base_keys {
+    let mut plural_keys_sorted: Vec<_> = plural_base_keys.iter().collect();
+    plural_keys_sorted.sort();
+
+    for base_key in &plural_keys_sorted {
         let parts: Vec<&str> = base_key.split('.').collect();
         let namespace = parts[0..parts.len() - 1].join(".");
         let method = parts[parts.len() - 1];

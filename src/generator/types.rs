@@ -94,7 +94,7 @@ pub fn generate_type_definitions(
     // Add flat methods for plural translations
     let mut plural_keys_sorted: Vec<_> = plural_base_keys.iter().collect();
     plural_keys_sorted.sort();
-    
+
     for base_key in &plural_keys_sorted {
         let method_name = base_key.replace(".", "_");
         code.push_str(&format!(
