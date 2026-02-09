@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2-rc.1] - 2025-02-09
+
+### Fixed
+
+- Duplicate country code mapping for Singapore (SG) in generated locale detection code - now correctly maps to English only instead of conflicting English/Chinese mappings
+- Type definition generation now produces deterministic, alphabetically sorted output to reduce git diff noise (#6)
+- Luau code generation now produces deterministic, alphabetically sorted output to reduce git diff noise (#7)
+
 ## [1.1.1] - 2025-02-09
 
 ### Fixed
