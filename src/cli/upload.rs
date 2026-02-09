@@ -48,16 +48,8 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
                         continue;
                     }
                 }
-            } else if yaml_path.exists() {
-                match parser::parse_yaml_file(&yaml_path, locale) {
-                    Ok(t) => t,
-                    Err(e) => {
-                        parse_errors.push(format!("Failed to parse {} YAML: {}", locale, e));
-                        continue;
-                    }
-                }
-            } else if yml_path.exists() {
-                match parser::parse_yaml_file(&yml_path, locale) {
+            } else if let Some(path) = [&yaml_path, &yml_path].iter().find(|p| p.exists()) {
+                match parser::parse_yaml_file(path, locale) {
                     Ok(t) => t,
                     Err(e) => {
                         parse_errors.push(format!("Failed to parse {} YAML: {}", locale, e));
