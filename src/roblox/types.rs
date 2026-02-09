@@ -6,6 +6,7 @@ use thiserror::Error;
 
 /// Error types for cloud sync operations
 #[derive(Debug, Error)]
+#[allow(clippy::enum_variant_names)]
 pub enum CloudSyncError {
     #[error("Authentication failed: {0}")]
     AuthenticationError(String),

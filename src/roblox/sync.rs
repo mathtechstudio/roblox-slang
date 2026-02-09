@@ -187,7 +187,7 @@ impl SyncOrchestrator {
         for translation in translations {
             by_locale
                 .entry(translation.locale.clone())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(translation);
         }
 
@@ -363,7 +363,7 @@ impl SyncOrchestrator {
                 for translation in download_translations {
                     by_locale
                         .entry(translation.locale.clone())
-                        .or_insert_with(Vec::new)
+                        .or_default()
                         .push(translation);
                 }
 
@@ -430,7 +430,7 @@ impl SyncOrchestrator {
         for translation in translations {
             by_key
                 .entry(translation.key.clone())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(translation);
         }
 
@@ -531,7 +531,7 @@ impl SyncOrchestrator {
         for conflict in conflicts {
             by_locale
                 .entry(conflict.locale.clone())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(conflict);
         }
 

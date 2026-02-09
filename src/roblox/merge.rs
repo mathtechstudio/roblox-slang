@@ -115,7 +115,7 @@ impl MergeEngine {
 
         // Deleted local = entries in cloud but not in local (same as added_cloud for our purposes)
         // We track this separately for clarity
-        for ((key, locale), _) in cloud {
+        for (key, locale) in cloud.keys() {
             if !local.contains_key(&(key.clone(), locale.clone())) {
                 deleted_local.push((key.clone(), locale.clone()));
             }

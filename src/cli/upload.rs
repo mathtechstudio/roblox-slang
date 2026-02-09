@@ -26,7 +26,7 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
                 "\n{} Use --skip-validation to bypass validation",
                 "Hint:".yellow()
             );
-            return Err(e.into());
+            return Err(e);
         }
 
         println!("{} Validation passed", "✓".green());
