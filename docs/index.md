@@ -113,7 +113,6 @@ docs/
 Want to contribute? See:
 
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
-- [AGENTS.md](../AGENTS.md) - Developer guide
 - [GitHub Issues](https://github.com/mathtechstudio/roblox-slang/issues) - Report bugs or request features
 
 ## Support

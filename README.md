@@ -415,24 +415,28 @@ Roblox Slang provides seamless integration with Roblox Cloud Localization Tables
 
 ### Quick Start
 
-1. **Get your API key** from [Roblox Creator Dashboard](https://create.roblox.com/credentials)
+1. **Get your API key** from [Creator Dashboard](https://create.roblox.com/dashboard/creations), go to the [API Keys](https://create.roblox.com/dashboard/credentials) page.
 
 2. **Set environment variable**:
+
    ```bash
    export ROBLOX_CLOUD_API_KEY=your_api_key_here
    ```
 
 3. **Upload translations**:
+
    ```bash
    roblox-slang upload --table-id YOUR_TABLE_ID
    ```
 
 4. **Download translations**:
+
    ```bash
    roblox-slang download --table-id YOUR_TABLE_ID
    ```
 
 5. **Bidirectional sync**:
+
    ```bash
    roblox-slang sync --table-id YOUR_TABLE_ID --strategy merge
    ```
@@ -460,7 +464,7 @@ cloud:
   table_id: YOUR_TABLE_ID
   game_id: YOUR_GAME_ID
   api_key: ${ROBLOX_CLOUD_API_KEY}  # Or set directly (not recommended)
-  default_merge_strategy: merge
+  strategy: merge
 ```
 
 ### Benefits of Cloud Sync

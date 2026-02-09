@@ -1,368 +1,489 @@
-# Roblox Cloud Integration
+# Roblox Cloud Sync Guide
 
-Upload translations to Roblox Cloud Localization to access Roblox's localization features.
+This guide explains how to use Roblox Slang's cloud synchronization features to manage translations with Roblox Cloud Localization Tables.
 
 ## Overview
 
-By uploading your translations to Roblox Cloud, you gain access to Roblox's localization features:
+Roblox Slang provides bidirectional synchronization between your local translation files and Roblox Cloud Localization Tables. This enables:
 
-- **Automatic Text Capture (ATC)** - Roblox automatically captures UI strings from your game
-- **Automatic translation** - Roblox AI translates strings to supported languages  
-- **Translator Portal** - Collaborate with human translators
-- **Analytics** - Track translation coverage and usage
-- **Multi-game sync** - Share translations across multiple games
-
-**Important:** Roblox Slang generates CSV files compatible with Roblox Cloud format. The actual translation features (ATC, automatic translation) are provided by Roblox, not by Roblox Slang.
+- **Upload**: Push local translations to Roblox Cloud
+- **Download**: Pull cloud translations to local files
+- **Sync**: Bidirectional sync with conflict resolution
 
 ## Prerequisites
 
-1. A published Roblox game
-2. Access to [Roblox Creator Dashboard](https://create.roblox.com/)
-3. Localization Table created for your game
+Before using cloud sync features, you need:
 
-## Setup
+1. A Roblox Cloud API key with Localization Table permissions
+2. A Localization Table ID from your Roblox game
 
-### Step 1: Enable Localization in Your Game
+### Getting Your API Key
+
+Roblox Cloud uses API keys to authenticate and authorize API access with granular permissions and security controls.
+
+1. Go to [Creator Dashboard](https://create.roblox.com/dashboard/creations)
+2. Navigate to **API Keys** page
+3. Click **Create API Key**
+4. Configure your key:
+   - **Name**: Give it a descriptive name (e.g., "Slang Localization Sync")
+   - **Access Permissions**:
+     - Select **Localization Tables** from the **Select API System** menu
+     - Select your experience (or disable **Restrict by Experience** for all experiences)
+     - From **Select Operations**, choose the operations you need:
+       - `Read` - For downloading translations
+       - `Write` - For uploading translations
+   - **Security** (optional but recommended):
+     - **IP Restrictions**: Add IP addresses using CIDR notation (e.g., `192.168.0.0/24`)
+       - Note: Do not use IP restrictions if using the key in Roblox places
+     - **Expiration Date**: Set an expiration date for additional security
+
+5. Click **Save & Generate Key**
+6. **Copy the API key immediately** - you won't be able to see it again!
+
+**Security Best Practices** (from Roblox recommendations):
+
+- **Never share API keys** through public channels, forums, or social media
+- **Never store keys in source code** or version control systems
+- **Use secrets management** systems for storing keys securely
+- **Create separate keys** for each application or use case
+- **Use minimum permissions** - only select operations you actually need
+- **Set IP restrictions** when possible (except for Roblox place usage)
+- **Set expiration dates** for short-term use cases
+
+**For Group-Owned Experiences:**
+
+If managing translations for a group-owned experience, Roblox strongly recommends:
+
+1. Create a **dedicated alternate account** for automation
+2. Invite the account to your group with **minimal permissions**
+3. Assign a role with only the permissions needed
+4. Create the API key on this dedicated account
+5. Use this key for group automation only
+
+This prevents compromising your personal account's access to other resources.
+
+### Finding Your Table ID
 
 1. Open your game in Roblox Studio
-2. Go to **Home** → **Game Settings** → **Localization**
-3. Enable **Use Translated Content**
-4. Select supported languages
+2. Go to the Localization Table
+3. The Table ID is in the URL or table properties
 
-### Step 2: Create Localization Table
+## Authentication
 
-1. Go to [Roblox Creator Dashboard](https://create.roblox.com/)
-2. Select your game
-3. Navigate to **Localization** → **Localization Table**
-4. Click **Create Table** (if not exists)
+There are two ways to provide your API key:
 
-### Step 3: Build Translations
-
-Generate CSV file for upload:
+### Option 1: Environment Variable (Recommended)
 
 ```bash
+export ROBLOX_CLOUD_API_KEY="your_api_key_here"
+```
+
+Add this to your `~/.bashrc` or `~/.zshrc` for persistence.
+
+### Option 2: Configuration File
+
+Add to your `slang-roblox.yaml`:
+
+```yaml
+cloud:
+  api_key: "your_api_key_here"  # Not recommended for version control
+  table_id: "your_table_id"
+  strategy: "merge"
+```
+
+**Security Note**:
+
+- Never commit API keys to version control
+- Use environment variables or secrets management systems
+- If using config file, add it to `.gitignore`
+- API keys are equivalent to passwords - treat them securely
+- Keys automatically expire after 60 days of inactivity (Roblox security feature)
+
+## Configuration
+
+Add cloud configuration to `slang-roblox.yaml`:
+
+```yaml
+base_locale: en
+supported_locales:
+  - en
+  - es
+  - pt
+input_directory: translations
+output_directory: output
+
+# Cloud sync configuration
+cloud:
+  table_id: "your_table_id_here"
+  strategy: "merge"  # overwrite, merge, or skip-conflicts
+```
+
+## Commands
+
+### Upload Command
+
+Upload local translations to Roblox Cloud:
+
+```bash
+# Upload with table ID from config
+roblox-slang upload
+
+# Upload with explicit table ID
+roblox-slang upload --table-id your_table_id
+
+# Preview changes without uploading (dry-run)
+roblox-slang upload --dry-run
+
+# Skip validation before upload
+roblox-slang upload --skip-validation
+```
+
+**What it does:**
+
+- Reads all local translation files
+- Validates translations (unless skipped)
+- Converts to Roblox Cloud format
+- Uploads to specified table
+- Shows statistics (entries uploaded, locales processed, duration)
+
+**Example output:**
+
+```bash
+→ Running pre-upload validation...
+✓ Validation passed
+→ Uploading translations to cloud...
+  Table ID: abc123
+  Locales: en, es, pt
+
+✓ Upload complete!
+  Entries uploaded: 150
+  Locales processed: 3
+  Duration: 2.34s
+
+✓ Translations successfully uploaded to Roblox Cloud
+```
+
+### Download Command
+
+Download translations from Roblox Cloud to local files:
+
+```bash
+# Download with table ID from config
+roblox-slang download
+
+# Download with explicit table ID
+roblox-slang download --table-id your_table_id
+
+# Preview changes without writing files (dry-run)
+roblox-slang download --dry-run
+```
+
+**What it does:**
+
+- Downloads translations from Roblox Cloud
+- Converts to nested JSON format
+- Writes one file per locale
+- Shows statistics (entries downloaded, locales created/updated, duration)
+
+**Example output:**
+
+```bash
+→ Downloading translations from cloud...
+  Table ID: abc123
+
+✓ Download complete!
+  Entries downloaded: 150
+  Locales created: 1
+  Locales updated: 2
+  Duration: 1.87s
+
+✓ Translations successfully downloaded from Roblox Cloud
+```
+
+### Sync Command
+
+Bidirectional synchronization with conflict resolution:
+
+```bash
+# Sync with default strategy from config
+roblox-slang sync
+
+# Sync with explicit strategy
+roblox-slang sync --strategy merge
+
+# Preview changes without syncing (dry-run)
+roblox-slang sync --dry-run
+
+# Sync with explicit table ID
+roblox-slang sync --table-id your_table_id --strategy overwrite
+```
+
+**Merge Strategies:**
+
+1. **overwrite**: Replace all cloud translations with local
+   - Use when: Local is source of truth
+   - Effect: Cloud = Local (complete replacement)
+
+2. **merge** (recommended): Merge local and cloud, prefer cloud for conflicts
+   - Use when: Want both local and cloud changes
+   - Effect: Union of both, cloud wins conflicts
+
+3. **skip-conflicts**: Only sync non-conflicting entries
+   - Use when: Want manual conflict resolution
+   - Effect: Syncs safe changes, reports conflicts
+
+**Example output:**
+
+```bash
+→ Synchronizing translations (strategy: merge)...
+  Table ID: abc123
+  Merge strategy: merge
+
+✓ Sync complete!
+  Entries added: 25
+  Entries updated: 10
+  Entries deleted: 0
+  ⚠ Conflicts skipped: 3
+  Duration: 3.12s
+
+ℹ Conflicts saved to: output/conflicts.yaml
+  Review and resolve conflicts manually
+
+✓ Translations successfully synchronized
+```
+
+## Conflict Resolution
+
+When using `skip-conflicts` strategy, conflicts are saved to `output/conflicts.yaml`:
+
+```yaml
+# Translation Conflicts
+# Resolve these conflicts manually
+
+en:
+  ui.button.buy:
+    local: "Buy Now"
+    cloud: "Purchase"
+  
+es:
+  ui.button.buy:
+    local: "Comprar Ahora"
+    cloud: "Comprar"
+```
+
+**To resolve conflicts:**
+
+1. Review the conflicts file
+2. Decide which value to keep
+3. Update your local translation files
+4. Run sync again with `merge` or `overwrite` strategy
+
+## Dry-Run Mode
+
+All commands support `--dry-run` to preview changes without making them:
+
+```bash
+roblox-slang upload --dry-run
+roblox-slang download --dry-run
+roblox-slang sync --dry-run
+```
+
+**Dry-run mode:**
+
+- ✓ Reads local files
+- ✓ Fetches from cloud
+- ✓ Computes changes
+- ✓ Shows statistics
+- ✗ Does NOT upload to cloud
+- ✗ Does NOT write local files
+
+Use dry-run to:
+
+- Preview changes before applying
+- Test configuration
+- Verify API key works
+- Check for conflicts
+
+## Workflows
+
+### Initial Setup
+
+```bash
+# 1. Initialize project
+roblox-slang init
+
+# 2. Add cloud config to slang-roblox.yaml
+# 3. Set API key environment variable
+export ROBLOX_CLOUD_API_KEY="your_key"
+
+# 4. Upload initial translations
+roblox-slang upload
+
+# 5. Verify in Roblox Creator Dashboard
+```
+
+### Regular Development
+
+```bash
+# 1. Make changes to local translations
+# 2. Test locally
 roblox-slang build
+
+# 3. Upload to cloud
+roblox-slang upload
+
+# 4. Enable auto-translation in Roblox Dashboard
+# 5. Download translated versions
+roblox-slang download
 ```
 
-This creates `output/roblox_upload.csv` in Roblox Cloud format.
-
-## CSV Format
-
-Roblox Slang generates CSV with this structure:
-
-```csv
-Source,Context,Key,en,es,id
-"Buy","","ui.buttons.buy","Buy","Comprar","Beli"
-"Sell","","ui.buttons.sell","Sell","Vender","Jual"
-"Hello, {name}!","","ui.messages.greeting","Hello, {name}!","¡Hola, {name}!","Halo, {name}!"
-```
-
-**Columns:**
-
-- **Source** - English text (used by Roblox ATC for matching)
-- **Context** - Disambiguation context (usually empty for manual keys)
-- **Key** - Dot notation key for programmatic lookup
-- **Locale columns** - One column per supported locale
-
-## Upload to Roblox Cloud
-
-### Manual Upload via Creator Dashboard
-
-1. Go to [Creator Dashboard](https://create.roblox.com/)
-2. Select your game
-3. Navigate to **Localization** → **Localization Table**
-4. Click **Update** → **Upload CSV**
-5. Select `output/roblox_upload.csv`
-6. Review changes
-7. Click **Upload**
-
-## Roblox's Automatic Translation
-
-After uploading your CSV, you can enable Roblox's automatic translation feature:
-
-### Enable Automatic Translation
-
-1. Go to Creator Dashboard → **Localization** → **Languages**
-2. For each language, enable:
-   - **Experience Information** (name and description)
-   - **Experience Strings & Products** (in-game text)
-
-### How It Works
-
-- Roblox AI automatically translates blank entries in your localization table
-- Uses per-character quota (initial + monthly)
-- Translations improve over time
-- You can lock entries to prevent automatic updates
-
-**Note:** This is a Roblox Cloud feature, not provided by Roblox Slang.
-
-## Roblox's Automatic Text Capture (ATC)
-
-Roblox can automatically capture UI strings from your game:
-
-### Enable ATC
-
-1. Go to Creator Dashboard → **Localization** → **Settings**
-2. Enable **Capture text from experience UI while users play**
-
-### What ATC Captures
-
-✅ Captures:
-
-- `TextLabel`, `TextButton` with `AutoLocalize` enabled
-- `TextBox.PlaceholderText`
-- GUI text objects
-
-❌ Does NOT capture:
-
-- Default Roblox leaderboards and chat
-- Player-owned items/tools
-- Images with embedded text
-- Badge/Pass names from platform
-
-**Note:** This is a Roblox Cloud feature, not provided by Roblox Slang.
-
-## Translator Portal
-
-Collaborate with human translators via Roblox:
-
-### Invite Translators
-
-1. Go to **Localization** → **Translator Portal**
-2. Click **Invite Translators**
-3. Enter Roblox usernames
-4. Assign languages
-
-### Translator Workflow
-
-Translators can:
-
-- View all translations
-- Edit translations
-- Add context notes
-- Mark translations as reviewed
-
-### Download Updated Translations
-
-After translators make changes in Roblox Cloud:
-
-1. Go to Creator Dashboard → **Localization** → **Localization Table**
-2. Click **Export** → **Download CSV**
-3. Save the CSV file
-4. Import back to Roblox Slang:
+### Team Collaboration
 
 ```bash
-roblox-slang import downloaded_translations.csv
+# 1. Pull latest from cloud
+roblox-slang download
+
+# 2. Make local changes
+# 3. Sync with merge strategy
+roblox-slang sync --strategy merge
+
+# 4. Resolve any conflicts
+# 5. Push to version control
 ```
 
-This imports the updated translations into your local `translations/` directory.
+### Migration from Existing Table
+
+```bash
+# 1. Download existing translations
+roblox-slang download
+
+# 2. Review downloaded files
+# 3. Organize as needed
+# 4. Upload back
+roblox-slang upload
+```
 
 ## Best Practices
 
-### 1. Use Descriptive Source Text
+### Security
 
-Roblox's automatic translation works better with natural language:
+- ✓ Use environment variables for API keys
+- ✓ Add `slang-roblox.yaml` to `.gitignore` if it contains secrets
+- ✓ Use separate API keys for dev/prod
+- ✗ Never commit API keys to version control
 
-❌ **Bad:**
+### Workflow
 
-```json
-{
-  "btn_buy": "Buy"  // Code-like key
-}
-```
+- ✓ Use `--dry-run` before important operations
+- ✓ Run validation before upload
+- ✓ Use `merge` strategy for team collaboration
+- ✓ Review conflicts before resolving
+- ✓ Keep local files as source of truth
 
-✅ **Good:**
+### Performance
 
-```json
-{
-  "ui.buttons.buy": "Buy"  // Natural source text
-}
-```
-
-### 2. Provide Context for Ambiguous Terms
-
-Use context field for disambiguation:
-
-```csv
-Source,Context,Key,en,es
-"Close","ui.buttons.close","ui.buttons.close","Close","Cerrar"
-"Close","adjective.near","adjective.close","Close","Cerca"
-```
-
-### 3. Lock Manual Translations
-
-Prevent Roblox's automatic translation from overwriting manual translations:
-
-1. In Creator Dashboard, select rows
-2. Click **Actions** → **Lock Translation**
-3. Locked rows won't be updated by automatic translation
-
-### 4. Regular Workflow
-
-Recommended workflow for keeping translations in sync:
-
-```bash
-# 1. Build locally
-roblox-slang build
-
-# 2. Upload to Roblox Cloud (manual via Creator Dashboard)
-# - Go to Creator Dashboard
-# - Upload output/roblox_upload.csv
-
-# 3. After translators make changes in Cloud:
-# - Download CSV from Creator Dashboard
-# - Import back: roblox-slang import downloaded.csv
-
-# 4. Rebuild
-roblox-slang build
-```
-
-### 5. Test in Game
-
-Always test translations in-game before publishing:
-
-```lua
--- Test all locales
-local locales = {"en", "es", "id", "pt", "de"}
-for _, locale in ipairs(locales) do
-    local t = Translations.new(locale)
-    print(locale, t.ui.buttons.buy())
-end
-```
-
-## Analytics
-
-Track translation usage via Roblox Cloud:
-
-### Enable Analytics
-
-In `slang-roblox.yaml`:
-
-```yaml
-analytics:
-  enabled: true
-  track_usage: true
-```
-
-### View Analytics
-
-1. Go to Creator Dashboard
-2. Navigate to **Localization** → **Analytics**
-3. View:
-   - Most used translations
-   - Missing translations
-   - Locale distribution
-
-### Optimize Based on Analytics
-
-- Remove unused translations
-- Prioritize translating high-usage keys
-- Add missing translations for popular locales
+- ✓ Upload during off-peak hours for large tables
+- ✓ Use `--skip-validation` only when necessary
+- ✓ Batch changes instead of frequent small uploads
 
 ## Troubleshooting
 
-### Issue: CSV Upload Fails
-
-**Cause:** Invalid CSV format
-
-**Solution:**
-
-1. Validate CSV: `roblox-slang validate --all`
-2. Check for:
-   - Special characters (quotes, commas)
-   - Missing columns
-   - Duplicate keys
-
-### Issue: Automatic Translation Not Working
-
-**Cause:** Feature not enabled or quota exceeded
-
-**Solution:**
-
-1. Check **Languages** tab in Creator Dashboard
-2. Verify automatic translation is enabled
-3. Check quota usage
-
-### Issue: Translations Not Appearing in Game
-
-**Cause:** Localization not enabled or table not published
-
-**Solution:**
-
-1. Check Game Settings → Localization is enabled
-2. Verify Localization Table is published
-3. Restart game servers
-
-### Issue: Parameters Not Working
-
-**Cause:** Parameter syntax mismatch
-
-**Solution:**
-Use Roblox parameter syntax:
-
-```lua
--- ✅ Correct
-translator:FormatByKey("greeting", { name = "Player" })
-
--- ❌ Wrong
-translator:FormatByKey("greeting", "Player")
-```
-
-## Supported Languages
-
-Roblox Cloud supports automatic translation for these languages:
-
-| Code | Language |
-|------|----------|
-| en | English |
-| es | Spanish |
-| pt | Portuguese |
-| de | German |
-| fr | French |
-| it | Italian |
-| ja | Japanese |
-| ko | Korean |
-| zh-CN | Chinese (Simplified) |
-| zh-TW | Chinese (Traditional) |
-| id | Indonesian |
-| ru | Russian |
-| th | Thai |
-| tr | Turkish |
-| vi | Vietnamese |
-| pl | Polish |
-| ar | Arabic |
-
-For complete list, see [Roblox Language Codes](https://create.roblox.com/docs/production/localization/language-codes).
-
-## Migration from Manual Localization
-
-If you have existing manual localization:
-
-### Step 1: Export Existing Table
-
-1. Go to Creator Dashboard → Localization Table
-2. Click **Export** → **Download CSV**
-3. Save as `existing_translations.csv`
-
-### Step 2: Import to Roblox Slang
+### Authentication Errors
 
 ```bash
-roblox-slang import existing_translations.csv
+Error: Authentication failed
 ```
 
-This converts CSV to JSON format in `translations/` directory.
+**Solutions:**
 
-### Step 3: Build and Upload
+- Verify API key is correct
+- Check API key has Localization Table permissions
+- Ensure API key hasn't expired
+- Check API key status in Creator Dashboard
+
+### API Key Status
+
+API keys can have different statuses that affect their usability:
+
+| Status | Reason | Resolution |
+|--------|--------|------------|
+| **Active** | No issues | Key works normally |
+| **Disabled** | User disabled the key | Enable the key in Creator Dashboard |
+| **Expired** | Expiration date passed | Remove or set new expiration date |
+| **Auto-Expired** | Not used/updated for 60 days | Disable then enable the key, or update any property |
+| **Revoked** | (Group keys) Account lost permissions | Click "Regenerate Key" in Creator Dashboard |
+| **Moderated** | Roblox admin changed secret | Click "Regenerate Key" in Creator Dashboard |
+| **User Moderated** | Account under moderation | Resolve moderation issue on account |
+
+**Note**: Roblox automatically expires API keys after 60 days of inactivity for security. To prevent this, either use the key regularly or update any of its properties (name, description, expiration date).
+
+### Table Not Found
 
 ```bash
-roblox-slang build
-# Upload output/roblox_upload.csv via Creator Dashboard
+Error: Table ID not provided
 ```
 
-## See Also
+**Solutions:**
 
-- [Getting Started](../getting-started.md) - Initial setup
-- [Configuration](configuration.md) - Config options
-- [Rojo Integration](../integration/rojo.md) - Use with Rojo
-- [Roblox Localization Docs](https://create.roblox.com/docs/production/localization) - Official documentation
-- [Automatic Translations](https://create.roblox.com/docs/production/localization/automatic-translations) - Roblox's automatic translation feature
+- Add `table_id` to config file
+- Pass `--table-id` flag
+- Verify table ID is correct
+
+### Rate Limiting
+
+```bash
+Error: Rate limit exceeded. Retrying in 5s...
+```
+
+**Solutions:**
+
+- Wait for automatic retry (exponential backoff: 1s, 2s, 4s, 8s)
+- Reduce upload frequency
+- Contact Roblox support for rate limit increase
+
+Roblox Slang automatically handles rate limiting with exponential backoff and respects `Retry-After` headers from the API.
+
+### Validation Errors
+
+```bash
+Error: Validation failed
+```
+
+**Solutions:**
+
+- Fix reported validation errors
+- Use `--skip-validation` to bypass (not recommended)
+- Check translation file syntax
+
+### IP Restriction Errors
+
+```bash
+Error: Insufficient permissions for this operation
+```
+
+**Solutions:**
+
+- Check if your IP is in the allowed list (if IP restrictions are enabled)
+- Update IP restrictions in Creator Dashboard
+- Remove IP restrictions if not needed (except for Roblox place usage)
+
+## API Reference
+
+For detailed information about Roblox Cloud API:
+
+- [Open Cloud API Reference](https://create.roblox.com/docs/cloud/reference) - Complete API documentation
+- [Manage API Keys](https://create.roblox.com/docs/cloud/open-cloud/api-keys) - Official guide for creating and managing API keys
+- [Localization API](https://create.roblox.com/docs/cloud/open-cloud/localization-api) - Localization Tables API endpoints
+- [OAuth 2.0](https://create.roblox.com/docs/cloud/open-cloud/oauth2-overview) - Alternative authentication method
+
+See also [Roblox Slang API Documentation](../reference/cloud-api.md) for implementation-specific details.
+
+## Examples
+
+See [examples/cloud-sync/](../../examples/cloud-sync/) for complete working examples.
+
+## Support
+
+- [GitHub Issues](https://github.com/mathtechstudio/roblox-slang/issues)
+- [Roblox DevForum](https://devforum.roblox.com/)
+- [Documentation](https://github.com/mathtechstudio/roblox-slang)
