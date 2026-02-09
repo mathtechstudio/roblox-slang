@@ -5,19 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-- Nothing yet
-
-### Changed
-
-- Nothing yet
+## [1.1.1] - 2025-02-09
 
 ### Fixed
 
-- Nothing yet
+- Rate limit handling now respects `Retry-After` header from Roblox API instead of hardcoding 1 second backoff
+- Upload command now performs comprehensive validation (parsing, missing keys, conflicts) instead of only config validation
 
 ## [1.1.0] - 2025-02-09
 
