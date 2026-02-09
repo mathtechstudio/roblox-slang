@@ -270,12 +270,16 @@ mod tests {
 
         // added_local: ui.button.sell (en), ui.button.buy (id)
         assert_eq!(diff.added_local.len(), 2);
-        assert!(diff
-            .added_local
-            .contains(&("ui.button.sell".to_string(), "en".to_string(), "Sell".to_string())));
-        assert!(diff
-            .added_local
-            .contains(&("ui.button.buy".to_string(), "id".to_string(), "Beli".to_string())));
+        assert!(diff.added_local.contains(&(
+            "ui.button.sell".to_string(),
+            "en".to_string(),
+            "Sell".to_string()
+        )));
+        assert!(diff.added_local.contains(&(
+            "ui.button.buy".to_string(),
+            "id".to_string(),
+            "Beli".to_string()
+        )));
 
         // added_cloud: ui.button.cancel (en)
         assert_eq!(diff.added_cloud.len(), 1);

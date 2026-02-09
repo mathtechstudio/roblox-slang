@@ -111,7 +111,9 @@ async fn test_update_entries_success() {
     client.set_base_url_for_testing(server.url());
 
     let entries = vec![];
-    let result = client.update_table_entries("test-table-id", &entries, None).await;
+    let result = client
+        .update_table_entries("test-table-id", &entries, None)
+        .await;
 
     assert!(result.is_ok());
 
@@ -291,7 +293,9 @@ async fn test_server_error_503() {
     client.set_base_url_for_testing(server.url());
 
     let entries = vec![];
-    let result = client.update_table_entries("test-table-id", &entries, None).await;
+    let result = client
+        .update_table_entries("test-table-id", &entries, None)
+        .await;
 
     assert!(result.is_err());
     let err = result.unwrap_err();

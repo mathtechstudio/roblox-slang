@@ -120,10 +120,7 @@ impl AuthConfig {
     /// Returns error if the API key is empty or too short.
     pub fn validate(&self) -> Result<()> {
         if self.api_key.is_empty() {
-            return Err(CloudSyncError::ConfigError(
-                "API key cannot be empty".to_string(),
-            )
-            .into());
+            return Err(CloudSyncError::ConfigError("API key cannot be empty".to_string()).into());
         }
 
         if self.api_key.len() < 10 {
@@ -185,10 +182,7 @@ mod tests {
         };
         let result = auth.validate();
         assert!(result.is_err());
-        assert!(result
-            .unwrap_err()
-            .to_string()
-            .contains("cannot be empty"));
+        assert!(result.unwrap_err().to_string().contains("cannot be empty"));
     }
 
     #[test]

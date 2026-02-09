@@ -17,12 +17,7 @@ pub async fn sync(table_id: Option<String>, strategy: Option<String>, dry_run: b
 
     // Get merge strategy from CLI or config
     let strategy_str = strategy
-        .or_else(|| {
-            config
-                .cloud
-                .as_ref()
-                .and_then(|c| c.strategy.clone())
-        })
+        .or_else(|| config.cloud.as_ref().and_then(|c| c.strategy.clone()))
         .unwrap_or_else(|| "merge".to_string());
 
     let merge_strategy = match strategy_str.to_lowercase().as_str() {

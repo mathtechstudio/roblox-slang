@@ -51,7 +51,10 @@ pub async fn download(table_id: Option<String>, dry_run: bool) -> Result<()> {
             "ℹ".cyan()
         );
     } else {
-        println!("\n{} Translations successfully downloaded from Roblox Cloud", "✓".green());
+        println!(
+            "\n{} Translations successfully downloaded from Roblox Cloud",
+            "✓".green()
+        );
     }
 
     Ok(())

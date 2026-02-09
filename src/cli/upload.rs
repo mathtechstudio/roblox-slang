@@ -68,7 +68,10 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
     if dry_run {
         println!("\n{} This was a dry-run. No changes were made.", "ℹ".cyan());
     } else {
-        println!("\n{} Translations successfully uploaded to Roblox Cloud", "✓".green());
+        println!(
+            "\n{} Translations successfully uploaded to Roblox Cloud",
+            "✓".green()
+        );
     }
 
     Ok(())

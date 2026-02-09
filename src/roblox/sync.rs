@@ -638,14 +638,12 @@ mod tests {
         let config = Config::default();
         let orchestrator = SyncOrchestrator::new(client, config);
 
-        let translations = vec![
-            Translation {
-                key: "ui.button".to_string(),
-                locale: "en".to_string(),
-                value: "Buy".to_string(),
-                context: Some("shop".to_string()),
-            },
-        ];
+        let translations = vec![Translation {
+            key: "ui.button".to_string(),
+            locale: "en".to_string(),
+            value: "Buy".to_string(),
+            context: Some("shop".to_string()),
+        }];
 
         let entries = orchestrator.translations_to_entries(&translations);
 

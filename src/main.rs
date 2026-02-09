@@ -142,10 +142,7 @@ enum Commands {
         dry_run: bool,
 
         /// Skip pre-upload validation checks
-        #[arg(
-            long,
-            help = "Skip validation before upload (not recommended)"
-        )]
+        #[arg(long, help = "Skip validation before upload (not recommended)")]
         skip_validation: bool,
     },
 

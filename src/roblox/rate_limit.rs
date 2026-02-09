@@ -214,11 +214,13 @@ mod tests {
                     let current = *count;
                     drop(count);
 
-                    Err::<(), _>(CloudSyncError::RateLimitError {
-                        retry_after: 1,
-                        attempt: current as u32,
-                    }
-                    .into())
+                    Err::<(), _>(
+                        CloudSyncError::RateLimitError {
+                            retry_after: 1,
+                            attempt: current as u32,
+                        }
+                        .into(),
+                    )
                 }
             })
             .await;
@@ -241,10 +243,9 @@ mod tests {
                     *count += 1;
                     drop(count);
 
-                    Err::<(), _>(CloudSyncError::AuthenticationError(
-                        "Invalid API key".to_string(),
+                    Err::<(), _>(
+                        CloudSyncError::AuthenticationError("Invalid API key".to_string()).into(),
                     )
-                    .into())
                 }
             })
             .await;
