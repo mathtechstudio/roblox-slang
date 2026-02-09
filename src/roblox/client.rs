@@ -325,6 +325,13 @@ impl RobloxCloudClient {
         let status = response.status();
         let status_code = status.as_u16();
 
+        // Extract Retry-After header before consuming response body
+        let retry_after_header = response
+            .headers()
+            .get(reqwest::header::RETRY_AFTER)
+            .and_then(|v| v.to_str().ok())
+            .and_then(|s| s.parse::<u64>().ok());
+
         // Try to get error message from response body
         let error_body = response
             .text()
@@ -348,11 +355,12 @@ impl RobloxCloudClient {
             ))
             .into()),
             429 => {
-                // Extract retry-after header if present
-                let retry_after = 1; // Default to 1 second
+                // Use parsed Retry-After header or default to 1 second
+                let retry_after = retry_after_header.unwrap_or(1);
+
                 Err(CloudSyncError::RateLimitError {
                     retry_after,
-                    attempt: 1,
+                    attempt: 1, // Placeholder, the limiter loop tracks attempts
                 }
                 .into())
             }
