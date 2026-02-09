@@ -1,4 +1,10 @@
-# Roblox Slang
+<div align="center">
+    <img src="docs/assets/featured-image.png" alt="Roblox Slang" height="300" />
+</div>
+
+<div>&nbsp;</div>
+
+<div align="center">
 
 [![Version](https://img.shields.io/github/v/release/mathtechstudio/roblox-slang?style=for-the-badge&logo=github)](https://github.com/mathtechstudio/roblox-slang/releases)
 [![Roblox](https://img.shields.io/badge/Platform-Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com)
@@ -7,7 +13,11 @@
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-168_passing-success?style=for-the-badge)](tests/)
 
-Type-safe internationalization (i18n) code generator for Roblox experiences. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
+</div>
+
+<hr />
+
+**Roblox Slang** is a Type-safe internationalization (i18n) code generator for Roblox experiences. Write translations in JSON/YAML, generate type-safe Luau code with autocomplete support.
 
 ## Why Roblox Slang?
 
