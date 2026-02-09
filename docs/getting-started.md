@@ -30,7 +30,7 @@ rokit add --global mathtechstudio/roblox-slang
 
 ```toml
 [tools]
-roblox-slang = "mathtechstudio/roblox-slang@1.1.2-rc.1"
+roblox-slang = "mathtechstudio/roblox-slang@1.1.2"
 ```
 
 #### Option B: Aftman
@@ -51,7 +51,7 @@ aftman add --global mathtechstudio/roblox-slang
 
 ```toml
 [tools]
-roblox-slang = "mathtechstudio/roblox-slang@1.1.2-rc.1"
+roblox-slang = "mathtechstudio/roblox-slang@1.1.2"
 ```
 
 #### Option C: Foreman
@@ -62,7 +62,7 @@ roblox-slang = "mathtechstudio/roblox-slang@1.1.2-rc.1"
 
 ```toml
 [tools]
-roblox-slang = { github = "mathtechstudio/roblox-slang", version = "1.1.2-rc.1" }
+roblox-slang = { github = "mathtechstudio/roblox-slang", version = "1.1.2" }
 ```
 
 ```bash
@@ -73,12 +73,12 @@ foreman install
 
 Download pre-built binaries from [GitHub Releases](https://github.com/mathtechstudio/roblox-slang/releases):
 
-- `roblox-slang-1.1.2-rc.1-linux-x86_64.zip`
-- `roblox-slang-1.1.2-rc.1-linux-aarch64.zip`
-- `roblox-slang-1.1.2-rc.1-windows-x86_64.zip`
-- `roblox-slang-1.1.2-rc.1-windows-aarch64.zip`
-- `roblox-slang-1.1.2-rc.1-macos-x86_64.zip`
-- `roblox-slang-1.1.2-rc.1-macos-aarch64.zip`
+- `roblox-slang-1.1.2-linux-x86_64.zip`
+- `roblox-slang-1.1.2-linux-aarch64.zip`
+- `roblox-slang-1.1.2-windows-x86_64.zip`
+- `roblox-slang-1.1.2-windows-aarch64.zip`
+- `roblox-slang-1.1.2-macos-x86_64.zip`
+- `roblox-slang-1.1.2-macos-aarch64.zip`
 
 Extract the archive and add the binary to your PATH.
 
