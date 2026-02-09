@@ -214,7 +214,6 @@ pub fn get_country_locale_map() -> Vec<(&'static str, &'static str)> {
         ("PL", "pl"),
         // Chinese (Simplified)
         ("CN", "zh-cn"),
-        ("SG", "zh-cn"),
         // Chinese (Traditional)
         ("TW", "zh-tw"),
         ("HK", "zh-tw"),
