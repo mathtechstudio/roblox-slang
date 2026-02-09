@@ -1,5 +1,6 @@
 use crate::config;
 use crate::roblox::{AuthConfig, RobloxCloudClient, SyncOrchestrator};
+use crate::{parser, validator};
 use anyhow::{Context, Result};
 use colored::Colorize;
 use std::path::Path;
@@ -19,9 +20,9 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
     if !skip_validation {
         println!("{} Running pre-upload validation...", "→".blue());
 
-        // Use existing validator - just validate config
+        // Validate config structure
         if let Err(e) = config.validate() {
-            eprintln!("{} Validation failed: {}", "✗".red(), e);
+            eprintln!("{} Config validation failed: {}", "✗".red(), e);
             eprintln!(
                 "\n{} Use --skip-validation to bypass validation",
                 "Hint:".yellow()
@@ -29,7 +30,123 @@ pub async fn upload(table_id: Option<String>, dry_run: bool, skip_validation: bo
             return Err(e);
         }
 
+        // Parse and validate translation data
+        let mut all_translations = Vec::new();
+        let mut parse_errors = Vec::new();
+
+        for locale in &config.supported_locales {
+            // Try JSON first
+            let json_path = Path::new(&config.input_directory).join(format!("{}.json", locale));
+            let yaml_path = Path::new(&config.input_directory).join(format!("{}.yaml", locale));
+            let yml_path = Path::new(&config.input_directory).join(format!("{}.yml", locale));
+
+            let translations = if json_path.exists() {
+                match parser::parse_json_file(&json_path, locale) {
+                    Ok(t) => t,
+                    Err(e) => {
+                        parse_errors.push(format!("Failed to parse {} JSON: {}", locale, e));
+                        continue;
+                    }
+                }
+            } else if yaml_path.exists() {
+                match parser::parse_yaml_file(&yaml_path, locale) {
+                    Ok(t) => t,
+                    Err(e) => {
+                        parse_errors.push(format!("Failed to parse {} YAML: {}", locale, e));
+                        continue;
+                    }
+                }
+            } else if yml_path.exists() {
+                match parser::parse_yaml_file(&yml_path, locale) {
+                    Ok(t) => t,
+                    Err(e) => {
+                        parse_errors.push(format!("Failed to parse {} YAML: {}", locale, e));
+                        continue;
+                    }
+                }
+            } else {
+                parse_errors.push(format!("No translation file found for locale: {}", locale));
+                continue;
+            };
+
+            all_translations.extend(translations);
+        }
+
+        // Report parse errors
+        if !parse_errors.is_empty() {
+            eprintln!("{} Translation parsing failed:", "✗".red());
+            for error in &parse_errors {
+                eprintln!("  - {}", error);
+            }
+            eprintln!(
+                "\n{} Use --skip-validation to bypass validation",
+                "Hint:".yellow()
+            );
+            anyhow::bail!("Translation validation failed");
+        }
+
+        if all_translations.is_empty() {
+            eprintln!("{} No translations found to upload", "✗".red());
+            eprintln!(
+                "\n{} Use --skip-validation to bypass validation",
+                "Hint:".yellow()
+            );
+            anyhow::bail!("No translations found");
+        }
+
+        // Check for missing keys (critical for upload)
+        let missing = validator::missing::detect_missing_keys(
+            &all_translations,
+            &config.base_locale,
+            &config.supported_locales,
+        );
+
+        if !missing.is_empty() {
+            eprintln!(
+                "{} Missing translations detected (this may cause incomplete localization):",
+                "⚠".yellow()
+            );
+            for (locale, keys) in &missing {
+                eprintln!("  {} missing in '{}':", keys.len(), locale.yellow());
+                // Show first 5 missing keys
+                for key in keys.iter().take(5) {
+                    eprintln!("    - {}", key);
+                }
+                if keys.len() > 5 {
+                    eprintln!("    ... and {} more", keys.len() - 5);
+                }
+            }
+            eprintln!(
+                "\n{} Use --skip-validation to upload anyway",
+                "Hint:".yellow()
+            );
+            anyhow::bail!("Missing translations detected");
+        }
+
+        // Check for conflicts (critical for upload)
+        let conflicts = validator::conflicts::detect_conflicts(&all_translations);
+
+        if !conflicts.is_empty() {
+            eprintln!("{} Translation conflicts detected:", "✗".red());
+            for conflict in conflicts.iter().take(10) {
+                eprintln!("  - {}", conflict);
+            }
+            if conflicts.len() > 10 {
+                eprintln!("  ... and {} more conflicts", conflicts.len() - 10);
+            }
+            eprintln!(
+                "\n{} Use --skip-validation to upload anyway",
+                "Hint:".yellow()
+            );
+            anyhow::bail!("Translation conflicts detected");
+        }
+
         println!("{} Validation passed", "✓".green());
+        println!(
+            "  {} translations across {} locales",
+            all_translations.len(),
+            config.supported_locales.len()
+        );
     }
 
     // Load authentication
