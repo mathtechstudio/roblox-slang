@@ -118,4 +118,100 @@ mod tests {
 
         assert_eq!(lua_files.len(), 2);
     }
+
+    #[test]
+    fn test_find_lua_files_nested() {
+        let temp_dir = TempDir::new().unwrap();
+
+        // Create nested structure
+        let subdir = temp_dir.path().join("subdir");
+        fs::create_dir(&subdir).unwrap();
+
+        fs::File::create(temp_dir.path().join("test1.lua")).unwrap();
+        fs::File::create(subdir.join("test2.lua")).unwrap();
+        fs::File::create(subdir.join("test3.luau")).unwrap();
+
+        let lua_files = find_lua_files(temp_dir.path()).unwrap();
+
+        assert_eq!(lua_files.len(), 3);
+    }
+
+    #[test]
+    fn test_detect_unused_keys_single_quotes() {
+        let temp_dir = TempDir::new().unwrap();
+
+        let lua_file = temp_dir.path().join("test.lua");
+        let mut file = fs::File::create(&lua_file).unwrap();
+        writeln!(file, "local text = 'ui.button'").unwrap();
+
+        let keys = vec!["ui.button".to_string(), "ui.unused".to_string()];
+
+        let unused = detect_unused_keys(&keys, temp_dir.path()).unwrap();
+
+        assert_eq!(unused.len(), 1);
+        assert_eq!(unused[0], "ui.unused");
+    }
+
+    #[test]
+    fn test_detect_unused_keys_all_used() {
+        let temp_dir = TempDir::new().unwrap();
+
+        let lua_file = temp_dir.path().join("test.lua");
+        let mut file = fs::File::create(&lua_file).unwrap();
+        writeln!(file, "local text1 = t.ui.button()").unwrap();
+        writeln!(file, "local text2 = \"ui.label\"").unwrap();
+
+        let keys = vec!["ui.button".to_string(), "ui.label".to_string()];
+
+        let unused = detect_unused_keys(&keys, temp_dir.path()).unwrap();
+
+        assert_eq!(unused.len(), 0);
+    }
+
+    #[test]
+    fn test_detect_unused_keys_nonexistent_dir() {
+        let keys = vec!["ui.button".to_string()];
+        let unused = detect_unused_keys(&keys, Path::new("/nonexistent/path")).unwrap();
+
+        // Should return empty vec for nonexistent directory
+        assert_eq!(unused.len(), 0);
+    }
+
+    #[test]
+    fn test_detect_unused_keys_empty_keys() {
+        let temp_dir = TempDir::new().unwrap();
+
+        let lua_file = temp_dir.path().join("test.lua");
+        fs::File::create(&lua_file).unwrap();
+
+        let keys = vec![];
+        let unused = detect_unused_keys(&keys, temp_dir.path()).unwrap();
+
+        assert_eq!(unused.len(), 0);
+    }
+
+    #[test]
+    fn test_find_lua_files_single_file() {
+        let temp_dir = TempDir::new().unwrap();
+        let lua_file = temp_dir.path().join("test.lua");
+        fs::File::create(&lua_file).unwrap();
+
+        // Test with single file path
+        let lua_files = find_lua_files(&lua_file).unwrap();
+
+        assert_eq!(lua_files.len(), 1);
+        assert_eq!(lua_files[0], lua_file);
+    }
+
+    #[test]
+    fn test_find_lua_files_non_lua_file() {
+        let temp_dir = TempDir::new().unwrap();
+        let txt_file = temp_dir.path().join("test.txt");
+        fs::File::create(&txt_file).unwrap();
+
+        // Test with non-lua file
+        let lua_files = find_lua_files(&txt_file).unwrap();
+
+        assert_eq!(lua_files.len(), 0);
+    }
 }
