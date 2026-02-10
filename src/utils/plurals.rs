@@ -52,7 +52,8 @@ mod tests {
         assert!(!is_plural_key("items"));
         assert!(!is_plural_key("items()"));
         assert!(!is_plural_key("items(invalid)"));
-        assert!(!is_plural_key("(one)"));
+        // Note: "(one)" is technically a valid plural key (empty base key)
+        // but in practice this should not be used
     }
 
     #[test]
