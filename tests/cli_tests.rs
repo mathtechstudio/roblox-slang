@@ -231,12 +231,12 @@ id:
 
     // Verify override applied in CSV (not in Luau, as Luau uses LocalizationService)
     let csv = fs::read_to_string(temp.path().join("output/roblox_upload.csv")).unwrap();
-    
+
     assert!(
         csv.contains("Purchase"),
         "Override 'Purchase' should be in generated CSV for upload to Roblox Cloud"
     );
-    
+
     assert!(
         csv.contains("Beli"),
         "Override 'Beli' should be in generated CSV for Indonesian locale"
