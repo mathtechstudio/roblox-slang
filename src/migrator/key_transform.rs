@@ -41,6 +41,35 @@ mod tests {
     }
 
     #[test]
+    fn test_snake_to_camel_multiple_underscores() {
+        assert_eq!(snake_to_camel("hello__world"), "helloWorld");
+        assert_eq!(snake_to_camel("a_b_c_d"), "aBCD");
+    }
+
+    #[test]
+    fn test_snake_to_camel_leading_underscore() {
+        assert_eq!(snake_to_camel("_hello"), "Hello");
+        assert_eq!(snake_to_camel("__hello"), "Hello");
+    }
+
+    #[test]
+    fn test_snake_to_camel_trailing_underscore() {
+        assert_eq!(snake_to_camel("hello_"), "hello");
+        assert_eq!(snake_to_camel("hello__"), "hello");
+    }
+
+    #[test]
+    fn test_snake_to_camel_empty() {
+        assert_eq!(snake_to_camel(""), "");
+    }
+
+    #[test]
+    fn test_snake_to_camel_no_underscores() {
+        assert_eq!(snake_to_camel("hello"), "hello");
+        assert_eq!(snake_to_camel("HELLO"), "HELLO");
+    }
+
+    #[test]
     fn test_transform_key_snake_to_camel() {
         assert_eq!(
             transform_key("hello_world", KeyTransform::SnakeToCamel),
@@ -54,6 +83,19 @@ mod tests {
             transform_key("HELLO_WORLD", KeyTransform::UpperToLower),
             "hello_world"
         );
+        assert_eq!(
+            transform_key("MixedCase", KeyTransform::UpperToLower),
+            "mixedcase"
+        );
+    }
+
+    #[test]
+    fn test_transform_key_dot_to_nested() {
+        // DotToNested doesn't transform the key itself, just returns as-is
+        assert_eq!(
+            transform_key("ui.button.buy", KeyTransform::DotToNested),
+            "ui.button.buy"
+        );
     }
 
     #[test]
@@ -61,6 +103,29 @@ mod tests {
         assert_eq!(
             transform_key("hello_world", KeyTransform::None),
             "hello_world"
+        );
+        assert_eq!(
+            transform_key("HELLO_WORLD", KeyTransform::None),
+            "HELLO_WORLD"
+        );
+    }
+
+    #[test]
+    fn test_transform_key_empty() {
+        assert_eq!(transform_key("", KeyTransform::SnakeToCamel), "");
+        assert_eq!(transform_key("", KeyTransform::UpperToLower), "");
+        assert_eq!(transform_key("", KeyTransform::None), "");
+    }
+
+    #[test]
+    fn test_transform_key_special_chars() {
+        assert_eq!(
+            transform_key("hello-world", KeyTransform::SnakeToCamel),
+            "hello-world"
+        );
+        assert_eq!(
+            transform_key("hello.world", KeyTransform::SnakeToCamel),
+            "hello.world"
         );
     }
 }
