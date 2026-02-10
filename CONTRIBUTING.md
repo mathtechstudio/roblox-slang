@@ -2,29 +2,73 @@
 
 ## Development Setup
 
-```bash
-# Clone and setup
-git clone https://github.com/mathtechstudio/roblox-slang.git
-cd roblox-slang
+### 1. Fork the Repository
 
-# Install Rust (stable recommended)
+Fork the repository on GitHub to your account.
+
+### 2. Clone Your Fork
+
+```bash
+git clone https://github.com/YOUR_USERNAME/roblox-slang.git
+cd roblox-slang
+```
+
+### 3. Add Upstream Remote
+
+```bash
+git remote add upstream https://github.com/mathtechstudio/roblox-slang.git
+```
+
+### 4. Install Rust
+
+```bash
 rustup update stable
 rustup override set stable
+```
 
-# Build and test
+### 5. Build and Test
+
+```bash
 cargo build
 cargo test
 ```
 
-## Pull Request Process
+## Contributing Workflow
 
-1. Fork the repository and create a feature branch
-2. Make your changes with clear, focused commits
-3. Ensure all tests pass: `cargo test`
-4. Run linter: `cargo clippy -- -D warnings`
-5. Format code: `cargo fmt`
-6. Update CHANGELOG.md under `[Unreleased]`
-7. Submit PR to `main` branch
+### 1. Create a Feature Branch
+
+```bash
+git checkout -b feat/your-feature-name
+```
+
+### 2. Make Your Changes
+
+- Write clear, focused commits
+- Follow the commit convention below
+- Write tests for new features
+- Document public APIs
+
+### 3. Test Your Changes
+
+```bash
+cargo test              # Run all tests
+cargo clippy -- -D warnings  # Run linter
+cargo fmt              # Format code
+```
+
+### 4. Update CHANGELOG.md
+
+Add your changes under `[Unreleased]` section.
+
+### 5. Push to Your Fork
+
+```bash
+git push origin feat/your-feature-name
+```
+
+### 6. Submit Pull Request
+
+Submit a PR from your feature branch to the `main` branch of the upstream repository.
 
 ## Commit Convention
 
