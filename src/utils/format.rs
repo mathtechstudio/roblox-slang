@@ -231,12 +231,12 @@ mod tests {
     fn test_extract_nested_braces() {
         let text = "Nested: {outer{inner}}";
         let params = extract_parameters_with_format(text);
-
-        // The parser will extract parameters from nested braces
-        // This is edge case behavior - nested braces are not standard
-        // In practice, this would be invalid syntax
-        // Just verify it doesn't crash
-        let _ = params; // Use the variable to avoid unused warning
+        // The parser does not support nested braces. When it encounters {outer{inner}},
+        // the second '{' resets the buffer, so only "inner" is extracted.
+        // This test documents the current edge case behavior.
+        assert_eq!(params.len(), 1);
+        assert!(params.contains_key("inner"));
+        assert_eq!(params.get("inner"), Some(&FormatSpecifier::None));
     }
 
     #[test]
