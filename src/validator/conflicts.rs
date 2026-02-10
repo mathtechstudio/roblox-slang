@@ -71,4 +71,98 @@ mod tests {
 
         assert_eq!(conflicts.len(), 0);
     }
+
+    #[test]
+    fn test_multiple_conflicts() {
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Purchase".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.label".to_string(),
+                value: "Welcome".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.label".to_string(),
+                value: "Hello".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+        ];
+
+        let conflicts = detect_conflicts(&translations);
+
+        assert_eq!(conflicts.len(), 2);
+    }
+
+    #[test]
+    fn test_same_key_different_locales_no_conflict() {
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Beli".to_string(),
+                locale: "id".to_string(),
+                context: None,
+            },
+        ];
+
+        let conflicts = detect_conflicts(&translations);
+
+        // Same key in different locales is NOT a conflict
+        assert_eq!(conflicts.len(), 0);
+    }
+
+    #[test]
+    fn test_triple_duplicate() {
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Purchase".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Get".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+        ];
+
+        let conflicts = detect_conflicts(&translations);
+
+        // Should report conflict once (not multiple times)
+        assert_eq!(conflicts.len(), 1);
+    }
+
+    #[test]
+    fn test_empty_translations() {
+        let translations = vec![];
+        let conflicts = detect_conflicts(&translations);
+
+        assert_eq!(conflicts.len(), 0);
+    }
 }
