@@ -245,7 +245,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("base_locale cannot be empty"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("base_locale cannot be empty"));
     }
 
     #[test]
@@ -263,7 +266,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("supported_locales cannot be empty"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("supported_locales cannot be empty"));
     }
 
     #[test]
@@ -281,7 +287,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("must be included in supported_locales"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("must be included in supported_locales"));
     }
 
     #[test]
@@ -299,7 +308,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Unsupported locale"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Unsupported locale"));
     }
 
     #[test]
@@ -317,7 +329,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("input_directory cannot be empty"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("input_directory cannot be empty"));
     }
 
     #[test]
@@ -335,7 +350,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("output_directory cannot be empty"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("output_directory cannot be empty"));
     }
 
     #[test]
@@ -353,7 +371,10 @@ mod tests {
 
         let result = config.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("cannot be the same"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("cannot be the same"));
     }
 
     #[test]
@@ -409,7 +430,10 @@ mod tests {
         };
 
         assert!(analytics.enabled);
-        assert_eq!(analytics.callback, Some("game.Analytics.TrackTranslation".to_string()));
+        assert_eq!(
+            analytics.callback,
+            Some("game.Analytics.TrackTranslation".to_string())
+        );
     }
 
     #[test]

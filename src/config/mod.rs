@@ -243,7 +243,10 @@ output_directory: output
 
         let result = load_config(&config_path);
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Configuration file not found"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Configuration file not found"));
     }
 
     #[test]
@@ -255,7 +258,10 @@ output_directory: output
 
         let result = load_config(&config_path);
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Configuration file is empty"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Configuration file is empty"));
     }
 
     #[test]
@@ -273,7 +279,10 @@ supported_locales:
 
         let result = load_config(&config_path);
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Failed to parse configuration file"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Failed to parse configuration file"));
     }
 
     #[test]
@@ -292,7 +301,10 @@ output_directory: output
 
         let result = load_config(&config_path);
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("must be included in supported_locales"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("must be included in supported_locales"));
     }
 
     #[test]
