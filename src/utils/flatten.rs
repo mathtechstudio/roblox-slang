@@ -149,4 +149,82 @@ mod tests {
 
         assert_eq!(unflattened, original);
     }
+
+    #[test]
+    fn test_flatten_with_prefix() {
+        let json = json!({"key": "value"});
+        let result = flatten_json(&json, "prefix".to_string());
+        assert_eq!(result.get("prefix.key"), Some(&"value".to_string()));
+    }
+
+    #[test]
+    fn test_flatten_empty_object() {
+        let json = json!({});
+        let result = flatten_json(&json, String::new());
+        assert_eq!(result.len(), 0);
+    }
+
+    #[test]
+    fn test_flatten_non_string_values() {
+        let json = json!({
+            "number": 42,
+            "boolean": true,
+            "null": null,
+            "array": [1, 2, 3]
+        });
+        let result = flatten_json(&json, String::new());
+        // Non-string values should be skipped
+        assert_eq!(result.len(), 0);
+    }
+
+    #[test]
+    fn test_unflatten_single_key() {
+        let mut flat = HashMap::new();
+        flat.insert("key".to_string(), "value".to_string());
+
+        let result = unflatten_to_json(&flat);
+        assert_eq!(result["key"], "value");
+    }
+
+    #[test]
+    fn test_unflatten_empty() {
+        let flat = HashMap::new();
+        let result = unflatten_to_json(&flat);
+        assert_eq!(result, json!({}));
+    }
+
+    #[test]
+    fn test_unflatten_multiple_roots() {
+        let mut flat = HashMap::new();
+        flat.insert("ui.button".to_string(), "Buy".to_string());
+        flat.insert("shop.item".to_string(), "Item".to_string());
+
+        let result = unflatten_to_json(&flat);
+        assert_eq!(result["ui"]["button"], "Buy");
+        assert_eq!(result["shop"]["item"], "Item");
+    }
+
+    #[test]
+    fn test_unflatten_translations() {
+        use crate::parser::Translation;
+
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.label".to_string(),
+                value: "Label".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+        ];
+
+        let result = unflatten_translations(&translations);
+        assert_eq!(result["ui"]["button"], "Buy");
+        assert_eq!(result["ui"]["label"], "Label");
+    }
 }

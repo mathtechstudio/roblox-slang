@@ -207,3 +207,190 @@ pub fn create_default_overrides(path: &Path) -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use tempfile::TempDir;
+
+    #[test]
+    fn test_load_config_valid() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("slang-roblox.yaml");
+
+        let yaml = r#"
+base_locale: en
+supported_locales:
+  - en
+  - id
+input_directory: translations
+output_directory: output
+"#;
+        fs::write(&config_path, yaml).unwrap();
+
+        let config = load_config(&config_path).unwrap();
+        assert_eq!(config.base_locale, "en");
+        assert_eq!(config.supported_locales, vec!["en", "id"]);
+        assert_eq!(config.input_directory, "translations");
+        assert_eq!(config.output_directory, "output");
+    }
+
+    #[test]
+    fn test_load_config_file_not_found() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("nonexistent.yaml");
+
+        let result = load_config(&config_path);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Configuration file not found"));
+    }
+
+    #[test]
+    fn test_load_config_empty_file() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("empty.yaml");
+
+        fs::write(&config_path, "").unwrap();
+
+        let result = load_config(&config_path);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Configuration file is empty"));
+    }
+
+    #[test]
+    fn test_load_config_invalid_yaml() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("invalid.yaml");
+
+        let yaml = r#"
+base_locale: en
+supported_locales:
+  - en
+  invalid yaml syntax here
+"#;
+        fs::write(&config_path, yaml).unwrap();
+
+        let result = load_config(&config_path);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Failed to parse configuration file"));
+    }
+
+    #[test]
+    fn test_load_config_validation_error() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("invalid_config.yaml");
+
+        let yaml = r#"
+base_locale: en
+supported_locales:
+  - id
+input_directory: translations
+output_directory: output
+"#;
+        fs::write(&config_path, yaml).unwrap();
+
+        let result = load_config(&config_path);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("must be included in supported_locales"));
+    }
+
+    #[test]
+    fn test_create_default_config() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("slang-roblox.yaml");
+
+        create_default_config(&config_path).unwrap();
+
+        assert!(config_path.exists());
+        let content = fs::read_to_string(&config_path).unwrap();
+        assert!(content.contains("base_locale: en"));
+        assert!(content.contains("supported_locales:"));
+        assert!(content.contains("input_directory: translations"));
+        assert!(content.contains("output_directory: output"));
+    }
+
+    #[test]
+    fn test_create_default_overrides() {
+        let temp_dir = TempDir::new().unwrap();
+        let overrides_path = temp_dir.path().join("overrides.yaml");
+
+        create_default_overrides(&overrides_path).unwrap();
+
+        assert!(overrides_path.exists());
+        let content = fs::read_to_string(&overrides_path).unwrap();
+        assert!(content.contains("Translation Overrides"));
+        assert!(content.contains("Example overrides:"));
+    }
+
+    #[test]
+    fn test_load_config_with_namespace() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("config.yaml");
+
+        let yaml = r#"
+base_locale: en
+supported_locales:
+  - en
+input_directory: translations
+output_directory: output
+namespace: MyGame
+"#;
+        fs::write(&config_path, yaml).unwrap();
+
+        let config = load_config(&config_path).unwrap();
+        assert_eq!(config.namespace, Some("MyGame".to_string()));
+    }
+
+    #[test]
+    fn test_load_config_with_overrides() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("config.yaml");
+
+        let yaml = r#"
+base_locale: en
+supported_locales:
+  - en
+input_directory: translations
+output_directory: output
+overrides:
+  enabled: true
+  file: custom_overrides.yaml
+"#;
+        fs::write(&config_path, yaml).unwrap();
+
+        let config = load_config(&config_path).unwrap();
+        assert!(config.overrides.is_some());
+        let overrides = config.overrides.unwrap();
+        assert!(overrides.enabled);
+        assert_eq!(overrides.file, "custom_overrides.yaml");
+    }
+
+    #[test]
+    fn test_load_config_with_analytics() {
+        let temp_dir = TempDir::new().unwrap();
+        let config_path = temp_dir.path().join("config.yaml");
+
+        let yaml = r#"
+base_locale: en
+supported_locales:
+  - en
+input_directory: translations
+output_directory: output
+analytics:
+  enabled: true
+  track_missing: true
+  track_usage: false
+  callback: game.Analytics.Track
+"#;
+        fs::write(&config_path, yaml).unwrap();
+
+        let config = load_config(&config_path).unwrap();
+        assert!(config.analytics.is_some());
+        let analytics = config.analytics.unwrap();
+        assert!(analytics.enabled);
+        assert!(analytics.track_missing);
+        assert!(!analytics.track_usage);
+        assert_eq!(analytics.callback, Some("game.Analytics.Track".to_string()));
+    }
+}

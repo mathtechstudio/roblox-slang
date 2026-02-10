@@ -209,3 +209,214 @@ fn default_override_file() -> String {
 fn default_true() -> bool {
     true
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_config_validate_valid() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["en".to_string(), "id".to_string()],
+            input_directory: "translations".to_string(),
+            output_directory: "output".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        assert!(config.validate().is_ok());
+    }
+
+    #[test]
+    fn test_config_validate_empty_base_locale() {
+        let config = Config {
+            base_locale: "".to_string(),
+            supported_locales: vec!["en".to_string()],
+            input_directory: "translations".to_string(),
+            output_directory: "output".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("base_locale cannot be empty"));
+    }
+
+    #[test]
+    fn test_config_validate_empty_supported_locales() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec![],
+            input_directory: "translations".to_string(),
+            output_directory: "output".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("supported_locales cannot be empty"));
+    }
+
+    #[test]
+    fn test_config_validate_base_locale_not_in_supported() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["id".to_string(), "es".to_string()],
+            input_directory: "translations".to_string(),
+            output_directory: "output".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("must be included in supported_locales"));
+    }
+
+    #[test]
+    fn test_config_validate_unsupported_locale() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["en".to_string(), "invalid-locale".to_string()],
+            input_directory: "translations".to_string(),
+            output_directory: "output".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Unsupported locale"));
+    }
+
+    #[test]
+    fn test_config_validate_empty_input_directory() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["en".to_string()],
+            input_directory: "".to_string(),
+            output_directory: "output".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("input_directory cannot be empty"));
+    }
+
+    #[test]
+    fn test_config_validate_empty_output_directory() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["en".to_string()],
+            input_directory: "translations".to_string(),
+            output_directory: "".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("output_directory cannot be empty"));
+    }
+
+    #[test]
+    fn test_config_validate_same_input_output() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["en".to_string()],
+            input_directory: "same".to_string(),
+            output_directory: "same".to_string(),
+            namespace: None,
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        let result = config.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("cannot be the same"));
+    }
+
+    #[test]
+    fn test_config_with_namespace() {
+        let config = Config {
+            base_locale: "en".to_string(),
+            supported_locales: vec!["en".to_string()],
+            input_directory: "translations".to_string(),
+            output_directory: "output".to_string(),
+            namespace: Some("MyGame".to_string()),
+            overrides: None,
+            analytics: None,
+            cloud: None,
+        };
+
+        assert!(config.validate().is_ok());
+        assert_eq!(config.namespace, Some("MyGame".to_string()));
+    }
+
+    #[test]
+    fn test_override_config_defaults() {
+        let override_config = OverrideConfig {
+            enabled: false,
+            file: default_override_file(),
+        };
+
+        assert!(!override_config.enabled);
+        assert_eq!(override_config.file, "overrides.yaml");
+    }
+
+    #[test]
+    fn test_analytics_config_defaults() {
+        let analytics = AnalyticsConfig {
+            enabled: false,
+            track_missing: default_true(),
+            track_usage: false,
+            callback: None,
+        };
+
+        assert!(!analytics.enabled);
+        assert!(analytics.track_missing);
+        assert!(!analytics.track_usage);
+        assert!(analytics.callback.is_none());
+    }
+
+    #[test]
+    fn test_analytics_config_with_callback() {
+        let analytics = AnalyticsConfig {
+            enabled: true,
+            track_missing: true,
+            track_usage: true,
+            callback: Some("game.Analytics.TrackTranslation".to_string()),
+        };
+
+        assert!(analytics.enabled);
+        assert_eq!(analytics.callback, Some("game.Analytics.TrackTranslation".to_string()));
+    }
+
+    #[test]
+    fn test_default_functions() {
+        assert_eq!(default_input_directory(), "translations");
+        assert_eq!(default_output_directory(), "output");
+        assert_eq!(default_override_file(), "overrides.yaml");
+        assert!(default_true());
+    }
+}
