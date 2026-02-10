@@ -35,20 +35,30 @@ cargo test
 
 ## Contributing Workflow
 
-### 1. Create a Feature Branch
+### 1. Sync Your Main Branch
+
+Before creating a new branch, make sure your `main` branch is up-to-date with the `upstream` repository.
+
+```bash
+git checkout main
+git fetch upstream
+git rebase upstream/main
+```
+
+### 2. Create a Feature Branch
 
 ```bash
 git checkout -b feat/your-feature-name
 ```
 
-### 2. Make Your Changes
+### 3. Make Your Changes
 
 - Write clear, focused commits
 - Follow the commit convention below
 - Write tests for new features
 - Document public APIs
 
-### 3. Test Your Changes
+### 4. Test Your Changes
 
 ```bash
 cargo test              # Run all tests
@@ -56,17 +66,33 @@ cargo clippy -- -D warnings  # Run linter
 cargo fmt              # Format code
 ```
 
-### 4. Update CHANGELOG.md
+### 5. Update CHANGELOG.md
 
-Add your changes under `[Unreleased]` section.
+Add your changes under the [Unreleased] section. If this section does not exist, create it at the top of the file, above the latest release, like this:
 
-### 5. Push to Your Fork
+```markdown
+## [Unreleased]
+
+### Added
+
+- Your change here.
+
+### Fixed
+
+- Your change here.
+
+### And some implementation you have already done.
+
+- Your change here.
+```
+
+### 6. Push to Your Fork
 
 ```bash
 git push origin feat/your-feature-name
 ```
 
-### 6. Submit Pull Request
+### 7. Submit Pull Request
 
 Submit a PR from your feature branch to the `main` branch of the upstream repository.
 
