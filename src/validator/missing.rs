@@ -98,4 +98,111 @@ mod tests {
 
         assert_eq!(missing.len(), 0);
     }
+
+    #[test]
+    fn test_multiple_locales_missing_keys() {
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.label".to_string(),
+                value: "Welcome".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.message".to_string(),
+                value: "Hello".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            // id missing ui.label and ui.message
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Beli".to_string(),
+                locale: "id".to_string(),
+                context: None,
+            },
+            // es missing ui.message
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Comprar".to_string(),
+                locale: "es".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.label".to_string(),
+                value: "Bienvenido".to_string(),
+                locale: "es".to_string(),
+                context: None,
+            },
+        ];
+
+        let supported_locales = vec!["en".to_string(), "id".to_string(), "es".to_string()];
+        let missing = detect_missing_keys(&translations, "en", &supported_locales);
+
+        assert_eq!(missing.len(), 2);
+        assert!(missing.contains_key("id"));
+        assert!(missing.contains_key("es"));
+        assert_eq!(missing["id"].len(), 2);
+        assert_eq!(missing["es"].len(), 1);
+    }
+
+    #[test]
+    fn test_empty_translations() {
+        let translations = vec![];
+        let supported_locales = vec!["en".to_string(), "id".to_string()];
+        let missing = detect_missing_keys(&translations, "en", &supported_locales);
+
+        assert_eq!(missing.len(), 0);
+    }
+
+    #[test]
+    fn test_base_locale_only() {
+        let translations = vec![Translation {
+            key: "ui.button".to_string(),
+            value: "Buy".to_string(),
+            locale: "en".to_string(),
+            context: None,
+        }];
+
+        let supported_locales = vec!["en".to_string()];
+        let missing = detect_missing_keys(&translations, "en", &supported_locales);
+
+        assert_eq!(missing.len(), 0);
+    }
+
+    #[test]
+    fn test_extra_keys_in_non_base_locale() {
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Beli".to_string(),
+                locale: "id".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.extra".to_string(),
+                value: "Extra".to_string(),
+                locale: "id".to_string(),
+                context: None,
+            },
+        ];
+
+        let supported_locales = vec!["en".to_string(), "id".to_string()];
+        let missing = detect_missing_keys(&translations, "en", &supported_locales);
+
+        // Extra keys in non-base locale are not considered "missing"
+        assert_eq!(missing.len(), 0);
+    }
 }
