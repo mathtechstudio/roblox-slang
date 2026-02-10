@@ -203,6 +203,29 @@ mod tests {
     }
 
     #[test]
+    fn test_escape_csv_value_empty() {
+        assert_eq!(escape_csv_value(""), "\"\"");
+    }
+
+    #[test]
+    fn test_escape_csv_value_newline() {
+        assert_eq!(escape_csv_value("Line1\nLine2"), "\"Line1\nLine2\"");
+    }
+
+    #[test]
+    fn test_escape_csv_value_carriage_return() {
+        assert_eq!(escape_csv_value("Line1\rLine2"), "\"Line1\rLine2\"");
+    }
+
+    #[test]
+    fn test_escape_csv_value_multiple_quotes() {
+        assert_eq!(
+            escape_csv_value("\"Quote1\" and \"Quote2\""),
+            "\"\"\"Quote1\"\" and \"\"Quote2\"\"\""
+        );
+    }
+
+    #[test]
     fn test_generate_csv() {
         let translations = vec![
             Translation {
@@ -227,6 +250,95 @@ mod tests {
     }
 
     #[test]
+    fn test_generate_csv_with_context() {
+        let translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: Some("Purchase button".to_string()),
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Beli".to_string(),
+                locale: "id".to_string(),
+                context: Some("Purchase button".to_string()),
+            },
+        ];
+
+        let csv = generate_csv(&translations, "en", &["en".to_string(), "id".to_string()]).unwrap();
+
+        assert!(csv.contains("\"Purchase button\""));
+    }
+
+    #[test]
+    fn test_generate_csv_missing_locale() {
+        let translations = vec![Translation {
+            key: "ui.button".to_string(),
+            value: "Buy".to_string(),
+            locale: "en".to_string(),
+            context: None,
+        }];
+
+        let csv = generate_csv(
+            &translations,
+            "en",
+            &["en".to_string(), "id".to_string(), "es".to_string()],
+        )
+        .unwrap();
+
+        // Should have empty cells for missing locales
+        assert!(csv.contains("\"Buy\",\"\",\"\""));
+    }
+
+    #[test]
+    fn test_generate_csv_sorted_keys() {
+        let translations = vec![
+            Translation {
+                key: "z.key".to_string(),
+                value: "Z".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "a.key".to_string(),
+                value: "A".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "m.key".to_string(),
+                value: "M".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+        ];
+
+        let csv = generate_csv(&translations, "en", &["en".to_string()]).unwrap();
+        let lines: Vec<&str> = csv.lines().collect();
+
+        // Keys should be sorted alphabetically
+        assert!(lines[1].contains("a.key"));
+        assert!(lines[2].contains("m.key"));
+        assert!(lines[3].contains("z.key"));
+    }
+
+    #[test]
+    fn test_generate_csv_special_characters() {
+        let translations = vec![Translation {
+            key: "ui.message".to_string(),
+            value: "Hello, \"World\"!\nNew line".to_string(),
+            locale: "en".to_string(),
+            context: None,
+        }];
+
+        let csv = generate_csv(&translations, "en", &["en".to_string()]).unwrap();
+
+        // Should properly escape quotes and preserve newlines
+        assert!(csv.contains("\"Hello, \"\"World\"\"!\nNew line\""));
+    }
+
+    #[test]
     fn test_parse_csv() {
         let csv_content = r#"Source,Context,Key,en,id
 "Buy","","ui.button","Buy","Beli"
@@ -245,6 +357,58 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_csv_empty_file() {
+        let csv_content = "";
+        let result = parse_csv(csv_content);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_parse_csv_invalid_header() {
+        let csv_content = "Source,Context\n";
+        let result = parse_csv(csv_content);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_parse_csv_empty_cells() {
+        let csv_content = r#"Source,Context,Key,en,id
+"Buy","","ui.button","Buy",""
+"#;
+
+        let translations = parse_csv(csv_content).unwrap();
+
+        // Should only have 1 translation (id is empty)
+        assert_eq!(translations.len(), 1);
+        assert_eq!(translations[0].locale, "en");
+    }
+
+    #[test]
+    fn test_parse_csv_with_context() {
+        let csv_content = r#"Source,Context,Key,en
+"Buy","Purchase button","ui.button","Buy"
+"#;
+
+        let translations = parse_csv(csv_content).unwrap();
+
+        assert_eq!(translations.len(), 1);
+        assert_eq!(translations[0].context, Some("Purchase button".to_string()));
+    }
+
+    #[test]
+    fn test_parse_csv_skip_empty_lines() {
+        let csv_content = r#"Source,Context,Key,en
+
+"Buy","","ui.button","Buy"
+
+"#;
+
+        let translations = parse_csv(csv_content).unwrap();
+
+        assert_eq!(translations.len(), 1);
+    }
+
+    #[test]
     fn test_parse_csv_line() {
         let line = "\"Hello\",\"World\",\"Test\"";
         let values = parse_csv_line(line);
@@ -256,5 +420,74 @@ mod tests {
         let line = "\"Say \"\"Hi\"\"\",\"World\"";
         let values = parse_csv_line(line);
         assert_eq!(values[0], "Say \"Hi\"");
+    }
+
+    #[test]
+    fn test_parse_csv_line_with_commas() {
+        let line = "\"Hello, World\",\"Test\"";
+        let values = parse_csv_line(line);
+        assert_eq!(values, vec!["Hello, World", "Test"]);
+    }
+
+    #[test]
+    fn test_parse_csv_line_unquoted() {
+        let line = "Hello,World,Test";
+        let values = parse_csv_line(line);
+        assert_eq!(values, vec!["Hello", "World", "Test"]);
+    }
+
+    #[test]
+    fn test_parse_csv_line_mixed() {
+        let line = "\"Quoted\",Unquoted,\"Mixed\"";
+        let values = parse_csv_line(line);
+        assert_eq!(values, vec!["Quoted", "Unquoted", "Mixed"]);
+    }
+
+    #[test]
+    fn test_parse_csv_line_empty_values() {
+        let line = "\"\",\"\",\"\"";
+        let values = parse_csv_line(line);
+        assert_eq!(values, vec!["", "", ""]);
+    }
+
+    #[test]
+    fn test_roundtrip_csv() {
+        let original_translations = vec![
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Buy".to_string(),
+                locale: "en".to_string(),
+                context: None,
+            },
+            Translation {
+                key: "ui.button".to_string(),
+                value: "Beli".to_string(),
+                locale: "id".to_string(),
+                context: None,
+            },
+        ];
+
+        // Generate CSV
+        let csv = generate_csv(
+            &original_translations,
+            "en",
+            &["en".to_string(), "id".to_string()],
+        )
+        .unwrap();
+
+        // Parse it back
+        let parsed_translations = parse_csv(&csv).unwrap();
+
+        // Should have same number of translations
+        assert_eq!(parsed_translations.len(), original_translations.len());
+
+        // Check values match
+        for original in &original_translations {
+            assert!(parsed_translations.iter().any(|parsed| {
+                parsed.key == original.key
+                    && parsed.value == original.value
+                    && parsed.locale == original.locale
+            }));
+        }
     }
 }
