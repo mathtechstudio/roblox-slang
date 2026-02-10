@@ -198,7 +198,6 @@ fn test_build_with_mixed_formats() {
 /// The overrides are not being loaded/applied correctly even when enabled in config.
 /// This needs to will be fixed later.
 #[test]
-#[ignore]
 fn test_build_with_overrides() {
     let temp = common::create_test_project_with_translations();
 
@@ -215,10 +214,11 @@ overrides:
 "#;
     fs::write(temp.path().join("slang-roblox.yaml"), config).unwrap();
 
-    // Create overrides
-    let overrides = r#"overrides:
-  ui.buttons.buy:
-    en: "Purchase"
+    // Create overrides with correct format
+    let overrides = r#"en:
+  ui.buttons.buy: "Purchase"
+id:
+  ui.buttons.buy: "Beli"
 "#;
     fs::write(temp.path().join("overrides.yaml"), overrides).unwrap();
 
@@ -229,11 +229,17 @@ overrides:
         .assert()
         .success();
 
-    // Verify override applied
-    let luau = fs::read_to_string(temp.path().join("output/Translations.lua")).unwrap();
+    // Verify override applied in CSV (not in Luau, as Luau uses LocalizationService)
+    let csv = fs::read_to_string(temp.path().join("output/roblox_upload.csv")).unwrap();
+    
     assert!(
-        luau.contains("Purchase"),
-        "Override 'Purchase' should be in generated Luau"
+        csv.contains("Purchase"),
+        "Override 'Purchase' should be in generated CSV for upload to Roblox Cloud"
+    );
+    
+    assert!(
+        csv.contains("Beli"),
+        "Override 'Beli' should be in generated CSV for Indonesian locale"
     );
 }
 
